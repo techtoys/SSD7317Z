@@ -46,9 +46,45 @@ STM32CubeIDE is an all-in-one development tool released by STMicroelectronics. I
 
 https://www.st.com/en/development-tools/stm32cubeide.html#get-software
 
-At time of writing the latest version of STM32CubeIDE was 1.5.1. In this book, all examples have been compiled, linked and tested with no error with the host PC running 64-bit Windows 7 and Windows 10, and all programs are confirmed to run on target development board.
+At time of writing the latest version of STM32CubeIDE was 1.5.1. I am using an old version 1.2.0 with updates but it should be compatible with the latest version. In this book, all examples have been compiled, linked and tested with no error with the host PC running 64-bit Windows 7 and Windows 10, and all programs are confirmed to run on the evaluation board.
+
+In my environment the installation path is set to **C:\ST\STM32CubeIDE_1.2.0** by following the default option. In the installation procedures, you will be asked whether to install the SEGGER J-Link drivers, ST_LINK drivers, and ST-LINK server. Check ST_LINK drivers and ST-LINK server with SEGGER J-Link drivers optional. After installation, a desktop shortcut is created.
+
+![](./Images/STM32CubeIDE.png)
+
+The STM32CubeIDE is based on [Eclipse](https://en.wikipedia.org/wiki/Eclipse_(software)) that uses a directory called *workspace* to store its preferences and configurations. Every time you run STM32CubeIDE, you will see a dialog box similar to screen capture below to ask you for the workspace location. In my case, I just follow the recommended path at **C:\Users\John\STM32CubeIDE\workspace_1.2.0** with *John* as my computer user name. It is not mandatory to set the workspace in C drive. You may use other directories at your convenience.
+
+![](./Images/STM32CubeIDE_workspace.png)
+
+Installation of STM32CubeIDE is a straightforward procedure with all those manpower and effort given by STMicroelectronics to develop the package. If you happen to have an issue, the [ST community](https://community.st.com/s/topic/0TO0X000000y2j7WAA/stm32cubeide) is a good place to find a solution.
 
 ## Download and Build the Hello World Project
+
+Now you see HelloWorld under **Project Explorer**.
+
+![](./Images/Import_HelloWorld_3.png)
+
+
+
+Everything seems fine except there is a yellow exclamation mark on the folder icon of SSD7317Z which means STM32CubeIDE has failed to find its location. It is because the device driver of SSD7317Z is located outside of the HelloWorld project as a shared library. Its relative path was set correctly in my PC but it is not set in your environment yet.
+
+To fix the issue, you need to set two variables: **Path Variables** and **Build Variables**. Right click on the project title, from pop-up menu click on **Properties**.
+
+![](Images/Import_HelloWorld_4.png)
+
+Expand **Resource > Linked Resources > Path Variables**. Click on **Edit** button to point the Path Variable of SSD7317Z to the correct location in your environment. If you are using the same path as procedure above, it will be **D:\xxx\xxx\Drivers**. Please note that the \Drivers folder is the root containing \Inc and \Src folders that contain the header files and source code.
+
+![](Images/Import_HelloWorld_5.png)
+
+Next, expand **C/C++ Build** > **Build Variables** > set SSD7317Z directory to **D:\xxx\xxx\Drivers** for Debug and Release configurations. Close by clicking the **Apply and Close** button. You will see the exclamation mark is now resolved to an arrow indicating a relative path.
+
+![](Images/Import_HelloWorld_6.png)
+
+Now you have successfully got the whole IDE fixed. The last step is to build the project by clicking on **Project > Build All** from the IDE's menu bar. Make sure there is no error and observe that HelloWorld.elf and .bin files are built correctly that are required for debug and standalone operations. We have a lot of warnings but they are not significant for now. 
+
+To run the project on hardware, please connect the MicroUSB port of the evaluation to your PC. On the first-time connection you may be asked to upgrade the ST Link firmware and it is no harm to do it.
+
+In 1-2 seconds you will see the PMOLED show the first screen. Feel free to tryout the touch screen by tapping, swipe up and down on the display. Congratulation! You have finished the first project in this repository.
 
 ## How It Works
 
