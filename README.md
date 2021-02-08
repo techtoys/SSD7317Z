@@ -3,7 +3,7 @@ is a controller IC designed by [Solomon Systech Ltd.](https://www.solomon-systec
 
 Out-cell solution uses a highly conductive and optically transparent Indium Tin Oxide (ITO) printed as grids on a substrate to sense our fingers for changes in capacitance. The substrate is bonded to the top glass of the LCD module by some optically clear adhesive [OCA](https://en.wikipedia.org/wiki/Liquid_optically_clear_adhesive). A major advantage of using out-cell is flexibility: designers have the freedom to mix different types of touch screen with a LCD module for different designs. Disadvantages include a larger thickness and weight because the touch substrate is a separate layer that needs OCA to bond it to top of the LCD module. Additional manufacturing processes also imply longer production time and more parts for quality assurance leading to higher production cost and yield risks.
 
-Novel in-cell solution eliminates the touch layer altogether. Because there is no external substrate carrying the ITO sensing grids required, it turns out a thinner display with better light transmittance can be made. Figure below illustrates the structural difference.
+Novel in-cell solution eliminates the touch layer altogether. Because there is no external substrate carrying the ITO sensing grids, it turns out a thinner display with better light transmittance can be made. Figure below illustrates the structural difference.
 
 ![](./Images/Solomon-Systech-In-Cell-Touch-PMOLED-Technology.png)
 
