@@ -1,8 +1,8 @@
 /****************************************************************************
-* Filename              :   SSD7317.c
-* Description			: 	Initialization table for the touch screen
-* 							of Solomon Systech's SSD7317 (TDDI).
-* 							WSI_96x128 module
+* Filename              : SSD7317.c
+* Description		: Initialization table for the touch screen
+* 			of Solomon Systech's SSD7317 (TDDI).
+* 			WSI_96x128 module
 * Author                :   John Leung
 * Origin Date           :   18/01/2021
 * Version               :   1.0.0
