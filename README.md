@@ -66,7 +66,7 @@ Unzip the file to any location you like. In my case, it is located at **C:\Users
 
 ![](./Images/SSD7317Z_pathing.png)
 
-Return to STM32CubeIDE, right click on **Project Explorer > Import > General > Existing Projects into Workspace > Next**. From the Import Wizard, click **Browse** to select the root directory of **HelloWorld**. The project path will be automatically resolved. Click **Finish** to confirm.
+Return to STM32CubeIDE, right click on **Project Explorer > Import > General > Existing Projects into Workspace > Next**. From the Import Wizard, click **Browse** <img src ="./Images/Number_circle_44x44_1.png" width="24"> to select the root directory of **HelloWorld** <img src ="./Images/Number_circle_44x44_2.png" width="24">. The project path will be automatically resolved. Click **Finish** <img src ="./Images/Number_circle_44x44_3.png" width="24"> to confirm.
 
 ![](./Images/Import_HelloWorld_7.png)
 
