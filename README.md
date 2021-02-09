@@ -60,27 +60,37 @@ Installation of STM32CubeIDE is a straightforward procedure with all those manpo
 
 ## Download and Build the Hello World Project
 
-Now you see HelloWorld under **Project Explorer**.
+The full source code is available from GitHub at https://github.com/techtoys/SSD7317Z. Expand the Code button <img src ="./Images/Download_code_button.png" width="128">followed by **Download ZIP**, you will get a "**SSD7317Z-main.zip**" file.
+
+![](./Images/Downloading_HelloWorld_fr_Github.png)
+
+Unzip the file to any location you like. In my case, it is located at **C:\Users\John\Documents\GitHub\\SSD7317Z** with *John* as my computer user name. You shall see different name in your environment. 
+
+![](./Images/SSD7317Z_pathing.png)
+
+Now turn back to STM32CubeIDE, right click on **Project Explorer > Import > General > Existing Projects into Workspace > Next**. From the Import Wizard, click **Browse** to select the root directory of **HelloWorld**. The project path will be automatically resolved. Click **Finish** to confirm.
+
+![](./Images/Import_HelloWorld_7.png)
+
+Now you see HelloWorld under **Project Explorer**. Everything seems fine except there is a yellow exclamation mark on the folder icon of SSD7317Z that means STM32CubeIDE has failed to resolve its location. It is because the device driver of SSD7317Z is located outside of the HelloWorld project as a shared library. Its relative path was set correctly in my PC but it is not set in your environment yet.
 
 ![](./Images/Import_HelloWorld_3.png)
-
-
-
-Everything seems fine except there is a yellow exclamation mark on the folder icon of SSD7317Z which means STM32CubeIDE has failed to find its location. It is because the device driver of SSD7317Z is located outside of the HelloWorld project as a shared library. Its relative path was set correctly in my PC but it is not set in your environment yet.
 
 To fix the issue, you need to set two variables: **Path Variables** and **Build Variables**. Right click on the project title, from pop-up menu click on **Properties**.
 
 ![](Images/Import_HelloWorld_4.png)
 
-Expand **Resource > Linked Resources > Path Variables**. Click on **Edit** button to point the Path Variable of SSD7317Z to the correct location in your environment. If you are using the same path as procedure above, it will be **D:\xxx\xxx\Drivers**. Please note that the \Drivers folder is the root containing \Inc and \Src folders that contain the header files and source code.
+Expand **Resource > Linked Resources > Path Variables**. Click on **Edit** button to point the Path Variable of SSD7317Z to the correct location in your environment. If you are using the same path as procedure above, it will be **C:\Users\xxx\Documents\Github\SSD7317Z\Drivers** with *xxx* your computer user name. Please note that the \Drivers folder is the root containing \Inc and \Src folders that contain the header files and source code.
 
-![](Images/Import_HelloWorld_5.png)
+![](Images/Import_HelloWorld_8.png)
 
 Next, expand **C/C++ Build** > **Build Variables** > set SSD7317Z directory to **D:\xxx\xxx\Drivers** for Debug and Release configurations. Close by clicking the **Apply and Close** button. You will see the exclamation mark is now resolved to an arrow indicating a relative path.
 
 ![](Images/Import_HelloWorld_6.png)
 
 Now you have successfully got the whole IDE fixed. The last step is to build the project by clicking on **Project > Build All** from the IDE's menu bar. Make sure there is no error and observe that HelloWorld.elf and .bin files are built correctly that are required for debug and standalone operations. We have a lot of warnings but they are not significant for now. 
+
+![](Images/Import_HelloWorld_BuildAll.png)
 
 To run the project on hardware, please connect the MicroUSB port of the evaluation to your PC. On the first-time connection you may be asked to upgrade the ST Link firmware and it is no harm to do it.
 

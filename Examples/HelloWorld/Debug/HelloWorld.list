@@ -7,23 +7,23 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, ALLOC, LOAD, READONLY, DATA
   1 .text         0000ad80  08000190  08000190  00010190  2**4
                   CONTENTS, ALLOC, LOAD, READONLY, CODE
-  2 .rodata       000058ec  0800af10  0800af10  0001af10  2**2
+  2 .rodata       000058e8  0800af10  0800af10  0001af10  2**2
                   CONTENTS, ALLOC, LOAD, READONLY, DATA
-  3 .ARM.extab    00000000  080107fc  080107fc  00030094  2**0
+  3 .ARM.extab    00000000  080107f8  080107f8  00030094  2**0
                   CONTENTS
-  4 .ARM          00000008  080107fc  080107fc  000207fc  2**2
+  4 .ARM          00000008  080107f8  080107f8  000207f8  2**2
                   CONTENTS, ALLOC, LOAD, READONLY, DATA
-  5 .preinit_array 00000000  08010804  08010804  00030094  2**0
+  5 .preinit_array 00000000  08010800  08010800  00030094  2**0
                   CONTENTS, ALLOC, LOAD, DATA
-  6 .init_array   00000004  08010804  08010804  00020804  2**2
+  6 .init_array   00000004  08010800  08010800  00020800  2**2
                   CONTENTS, ALLOC, LOAD, DATA
-  7 .fini_array   00000004  08010808  08010808  00020808  2**2
+  7 .fini_array   00000004  08010804  08010804  00020804  2**2
                   CONTENTS, ALLOC, LOAD, DATA
-  8 .data         00000094  20000000  0801080c  00030000  2**2
+  8 .data         00000094  20000000  08010808  00030000  2**2
                   CONTENTS, ALLOC, LOAD, DATA
-  9 .bss          00000a04  20000094  080108a0  00030094  2**2
+  9 .bss          00000a04  20000094  0801089c  00030094  2**2
                   ALLOC
- 10 ._user_heap_stack 00000600  20000a98  080108a0  00030a98  2**0
+ 10 ._user_heap_stack 00000600  20000a98  0801089c  00030a98  2**0
                   ALLOC
  11 .ARM.attributes 00000030  00000000  00000000  00030094  2**0
                   CONTENTS, READONLY
@@ -37,13 +37,13 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, READONLY, DEBUGGING
  16 .debug_macro  00023197  00000000  00000000  000501a8  2**0
                   CONTENTS, READONLY, DEBUGGING
- 17 .debug_line   00014988  00000000  00000000  0007333f  2**0
+ 17 .debug_line   0001496c  00000000  00000000  0007333f  2**0
                   CONTENTS, READONLY, DEBUGGING
- 18 .debug_str    000d0f80  00000000  00000000  00087cc7  2**0
+ 18 .debug_str    000d0f70  00000000  00000000  00087cab  2**0
                   CONTENTS, READONLY, DEBUGGING
- 19 .comment      0000007b  00000000  00000000  00158c47  2**0
+ 19 .comment      0000007b  00000000  00000000  00158c1b  2**0
                   CONTENTS, READONLY
- 20 .debug_frame  000066dc  00000000  00000000  00158cc4  2**2
+ 20 .debug_frame  000066dc  00000000  00000000  00158c98  2**2
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -1187,11 +1187,11 @@ int main(void)
 		  break;
  8000aaa:	e0ff      	b.n	8000cac <main+0x4f0>
  8000aac:	0800af30 	.word	0x0800af30
- 8000ab0:	0800c79c 	.word	0x0800c79c
- 8000ab4:	0800b98c 	.word	0x0800b98c
- 8000ab8:	0800b938 	.word	0x0800b938
+ 8000ab0:	0800c798 	.word	0x0800c798
+ 8000ab4:	0800b988 	.word	0x0800b988
+ 8000ab8:	0800b934 	.word	0x0800b934
  8000abc:	200000b0 	.word	0x200000b0
- 8000ac0:	0800c7a4 	.word	0x0800c7a4
+ 8000ac0:	0800c7a0 	.word	0x0800c7a0
  8000ac4:	200000b4 	.word	0x200000b4
  8000ac8:	200000b2 	.word	0x200000b2
  8000acc:	200000b7 	.word	0x200000b7
@@ -1510,10 +1510,10 @@ int main(void)
   {
  8000d7e:	e583      	b.n	8000888 <main+0xcc>
  8000d80:	200000b0 	.word	0x200000b0
- 8000d84:	0800c7a4 	.word	0x0800c7a4
+ 8000d84:	0800c7a0 	.word	0x0800c7a0
  8000d88:	200000b4 	.word	0x200000b4
  8000d8c:	200000b2 	.word	0x200000b2
- 8000d90:	0800c79c 	.word	0x0800c79c
+ 8000d90:	0800c798 	.word	0x0800c798
  8000d94:	0800af38 	.word	0x0800af38
  8000d98:	0800af4c 	.word	0x0800af4c
  8000d9c:	0800af50 	.word	0x0800af50
@@ -3686,7 +3686,7 @@ LoopForever:
   ldr   sp, =_estack    /* Set stack pointer */
  80018dc:	20010000 	.word	0x20010000
 	ldr	r3, =_sidata
- 80018e0:	0801080c 	.word	0x0801080c
+ 80018e0:	08010808 	.word	0x08010808
 	ldr	r0, =_sdata
  80018e4:	20000000 	.word	0x20000000
 	ldr	r3, =_edata
@@ -9373,7 +9373,7 @@ HAL_StatusTypeDef HAL_RCC_OscConfig(RCC_OscInitTypeDef  *RCC_OscInitStruct)
  8003b32:	bf00      	nop
  8003b34:	0800b0e4 	.word	0x0800b0e4
  8003b38:	40021000 	.word	0x40021000
- 8003b3c:	0800c7bc 	.word	0x0800c7bc
+ 8003b3c:	0800c7b8 	.word	0x0800c7b8
  8003b40:	20000000 	.word	0x20000000
  8003b44:	20000004 	.word	0x20000004
       if((READ_BIT(RCC->CR, RCC_CR_MSIRDY) != 0U) && (RCC_OscInitStruct->MSIState == RCC_MSI_OFF))
@@ -11153,7 +11153,7 @@ HAL_StatusTypeDef HAL_RCC_ClockConfig(RCC_ClkInitTypeDef  *RCC_ClkInitStruct, ui
  8004616:	bf00      	nop
  8004618:	0800b0e4 	.word	0x0800b0e4
  800461c:	40021000 	.word	0x40021000
- 8004620:	0800c7bc 	.word	0x0800c7bc
+ 8004620:	0800c7b8 	.word	0x0800c7b8
  8004624:	20000000 	.word	0x20000000
  8004628:	20000004 	.word	0x20000004
 
@@ -11356,7 +11356,7 @@ uint32_t HAL_RCC_GetSysClockFreq(void)
  800472a:	f85d 7b04 	ldr.w	r7, [sp], #4
  800472e:	4770      	bx	lr
  8004730:	40021000 	.word	0x40021000
- 8004734:	0800c7d4 	.word	0x0800c7d4
+ 8004734:	0800c7d0 	.word	0x0800c7d0
  8004738:	00f42400 	.word	0x00f42400
  800473c:	007a1200 	.word	0x007a1200
 
@@ -11405,7 +11405,7 @@ uint32_t HAL_RCC_GetPCLK1Freq(void)
  8004778:	4618      	mov	r0, r3
  800477a:	bd80      	pop	{r7, pc}
  800477c:	40021000 	.word	0x40021000
- 8004780:	0800c7cc 	.word	0x0800c7cc
+ 8004780:	0800c7c8 	.word	0x0800c7c8
 
 08004784 <HAL_RCC_GetPCLK2Freq>:
   * @note   Each time PCLK2 changes, this function must be called to update the
@@ -11432,7 +11432,7 @@ uint32_t HAL_RCC_GetPCLK2Freq(void)
  80047a4:	4618      	mov	r0, r3
  80047a6:	bd80      	pop	{r7, pc}
  80047a8:	40021000 	.word	0x40021000
- 80047ac:	0800c7cc 	.word	0x0800c7cc
+ 80047ac:	0800c7c8 	.word	0x0800c7c8
 
 080047b0 <RCC_SetFlashLatencyFromMSIRange>:
             voltage range.
@@ -22064,7 +22064,7 @@ void ssd7317_init(void){
  8008a86:	46bd      	mov	sp, r7
  8008a88:	bd80      	pop	{r7, pc}
  8008a8a:	bf00      	nop
- 8008a8c:	0800c804 	.word	0x0800c804
+ 8008a8c:	0800c800 	.word	0x0800c800
  8008a90:	0800b240 	.word	0x0800b240
  8008a94:	20000494 	.word	0x20000494
 
@@ -24524,7 +24524,7 @@ finger_t ssd7317_get_gesture(void){
  8009a02:	46bd      	mov	sp, r7
  8009a04:	bdb0      	pop	{r4, r5, r7, pc}
  8009a06:	bf00      	nop
- 8009a08:	0800b28c 	.word	0x0800b28c
+ 8009a08:	0800b288 	.word	0x0800b288
 
 08009a0c <ssd7317_put_image>:
  * 				}
@@ -25404,10 +25404,10 @@ uint32_t HAL_DWT_Delay_Init(void){
  8009fae:	4798      	blx	r3
  8009fb0:	3501      	adds	r5, #1
  8009fb2:	e7f2      	b.n	8009f9a <__libc_init_array+0x1e>
- 8009fb4:	08010804 	.word	0x08010804
- 8009fb8:	08010804 	.word	0x08010804
- 8009fbc:	08010804 	.word	0x08010804
- 8009fc0:	08010808 	.word	0x08010808
+ 8009fb4:	08010800 	.word	0x08010800
+ 8009fb8:	08010800 	.word	0x08010800
+ 8009fbc:	08010800 	.word	0x08010800
+ 8009fc0:	08010804 	.word	0x08010804
 
 08009fc4 <memset>:
  8009fc4:	4402      	add	r2, r0
@@ -25538,9 +25538,9 @@ uint32_t HAL_DWT_Delay_Init(void){
  800a0d2:	7018      	strb	r0, [r3, #0]
  800a0d4:	e7e5      	b.n	800a0a2 <_puts_r+0x76>
  800a0d6:	bf00      	nop
- 800a0d8:	08010788 	.word	0x08010788
- 800a0dc:	080107a8 	.word	0x080107a8
- 800a0e0:	08010768 	.word	0x08010768
+ 800a0d8:	08010784 	.word	0x08010784
+ 800a0dc:	080107a4 	.word	0x080107a4
+ 800a0e0:	08010764 	.word	0x08010764
 
 0800a0e4 <puts>:
  800a0e4:	4b02      	ldr	r3, [pc, #8]	; (800a0f0 <puts+0xc>)
@@ -25622,9 +25622,9 @@ uint32_t HAL_DWT_Delay_Init(void){
  800a186:	4638      	mov	r0, r7
  800a188:	bdf8      	pop	{r3, r4, r5, r6, r7, pc}
  800a18a:	bf00      	nop
- 800a18c:	08010788 	.word	0x08010788
- 800a190:	080107a8 	.word	0x080107a8
- 800a194:	08010768 	.word	0x08010768
+ 800a18c:	08010784 	.word	0x08010784
+ 800a190:	080107a4 	.word	0x080107a4
+ 800a194:	08010764 	.word	0x08010764
 
 0800a198 <__swsetup_r>:
  800a198:	4b32      	ldr	r3, [pc, #200]	; (800a264 <__swsetup_r+0xcc>)
@@ -25716,9 +25716,9 @@ uint32_t HAL_DWT_Delay_Init(void){
  800a260:	e7f7      	b.n	800a252 <__swsetup_r+0xba>
  800a262:	bf00      	nop
  800a264:	20000030 	.word	0x20000030
- 800a268:	08010788 	.word	0x08010788
- 800a26c:	080107a8 	.word	0x080107a8
- 800a270:	08010768 	.word	0x08010768
+ 800a268:	08010784 	.word	0x08010784
+ 800a26c:	080107a4 	.word	0x080107a4
+ 800a270:	08010764 	.word	0x08010764
 
 0800a274 <__sflush_r>:
  800a274:	898a      	ldrh	r2, [r1, #12]
@@ -25877,9 +25877,9 @@ uint32_t HAL_DWT_Delay_Init(void){
  800a3c2:	2000      	movs	r0, #0
  800a3c4:	bd38      	pop	{r3, r4, r5, pc}
  800a3c6:	bf00      	nop
- 800a3c8:	08010788 	.word	0x08010788
- 800a3cc:	080107a8 	.word	0x080107a8
- 800a3d0:	08010768 	.word	0x08010768
+ 800a3c8:	08010784 	.word	0x08010784
+ 800a3cc:	080107a4 	.word	0x080107a4
+ 800a3d0:	08010764 	.word	0x08010764
 
 0800a3d4 <std>:
  800a3d4:	2300      	movs	r3, #0
@@ -25975,7 +25975,7 @@ uint32_t HAL_DWT_Delay_Init(void){
  800a4a6:	2301      	movs	r3, #1
  800a4a8:	61a3      	str	r3, [r4, #24]
  800a4aa:	bd10      	pop	{r4, pc}
- 800a4ac:	08010764 	.word	0x08010764
+ 800a4ac:	08010760 	.word	0x08010760
  800a4b0:	0800a41d 	.word	0x0800a41d
 
 0800a4b4 <__sfp>:
@@ -26024,7 +26024,7 @@ uint32_t HAL_DWT_Delay_Init(void){
  800a51c:	e9c4 5512 	strd	r5, r5, [r4, #72]	; 0x48
  800a520:	e7e9      	b.n	800a4f6 <__sfp+0x42>
  800a522:	bf00      	nop
- 800a524:	08010764 	.word	0x08010764
+ 800a524:	08010760 	.word	0x08010760
  800a528:	ffff0001 	.word	0xffff0001
 
 0800a52c <_fwalk_reent>:
@@ -26555,12 +26555,12 @@ uint32_t HAL_DWT_Delay_Init(void){
  800a9d8:	f000 f888 	bl	800aaec <_printf_i>
  800a9dc:	e7ec      	b.n	800a9b8 <_vfiprintf_r+0x1e4>
  800a9de:	bf00      	nop
- 800a9e0:	08010788 	.word	0x08010788
- 800a9e4:	080107c8 	.word	0x080107c8
- 800a9e8:	080107a8 	.word	0x080107a8
- 800a9ec:	08010768 	.word	0x08010768
- 800a9f0:	080107ce 	.word	0x080107ce
- 800a9f4:	080107d2 	.word	0x080107d2
+ 800a9e0:	08010784 	.word	0x08010784
+ 800a9e4:	080107c4 	.word	0x080107c4
+ 800a9e8:	080107a4 	.word	0x080107a4
+ 800a9ec:	08010764 	.word	0x08010764
+ 800a9f0:	080107ca 	.word	0x080107ca
+ 800a9f4:	080107ce 	.word	0x080107ce
  800a9f8:	00000000 	.word	0x00000000
  800a9fc:	0800a7af 	.word	0x0800a7af
 
@@ -26896,8 +26896,8 @@ uint32_t HAL_DWT_Delay_Init(void){
  800acfe:	f884 3042 	strb.w	r3, [r4, #66]	; 0x42
  800ad02:	f104 0542 	add.w	r5, r4, #66	; 0x42
  800ad06:	e76c      	b.n	800abe2 <_printf_i+0xf6>
- 800ad08:	080107d9 	.word	0x080107d9
- 800ad0c:	080107ea 	.word	0x080107ea
+ 800ad08:	080107d5 	.word	0x080107d5
+ 800ad0c:	080107e6 	.word	0x080107e6
 
 0800ad10 <_putc_r>:
  800ad10:	b570      	push	{r4, r5, r6, lr}
@@ -26945,9 +26945,9 @@ uint32_t HAL_DWT_Delay_Init(void){
  800ad6a:	b2e8      	uxtb	r0, r5
  800ad6c:	bd70      	pop	{r4, r5, r6, pc}
  800ad6e:	bf00      	nop
- 800ad70:	08010788 	.word	0x08010788
- 800ad74:	080107a8 	.word	0x080107a8
- 800ad78:	08010768 	.word	0x08010768
+ 800ad70:	08010784 	.word	0x08010784
+ 800ad74:	080107a4 	.word	0x080107a4
+ 800ad78:	08010764 	.word	0x08010764
 
 0800ad7c <_sbrk_r>:
  800ad7c:	b538      	push	{r3, r4, r5, lr}
