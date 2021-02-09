@@ -84,11 +84,11 @@ Expand **Resource > Linked Resources > Path Variables**. Highlight on **SSD7317Z
 
 ![](Images/Import_HelloWorld_8.png)
 
-Next, expand **C/C++ Build** > **Build Variables** > set SSD7317Z directory to **D:\xxx\xxx\Drivers** for Debug and Release configurations. Close by clicking the **Apply and Close** button. You will see the exclamation mark is now resolved to an arrow indicating a relative path.
+Next, expand **C/C++ Build** > **Build Variables** > set SSD7317Z directory to **your path\SSD7317Z\Drivers** for Debug and Release configurations. Close by clicking the **Apply and Close** button. You will see the exclamation mark is now resolved to an arrow indicating a relative path.
 
 ![](Images/Import_HelloWorld_6.png)
 
-Now you have successfully got the whole IDE fixed. The last step is to build the project by clicking on **Project > Build All** from the IDE's menu bar. Make sure there is no error and observe that HelloWorld.elf and .bin files are built correctly that are required for debug and standalone operations. We have a lot of warnings but they are not significant for now. 
+Now you have successfully configured the IDE. The last step is to build the project by clicking on **Project > Build All** from the IDE's menu bar. Make sure there is no error and observe that HelloWorld.elf and .bin files are built correctly that are required for debug and standalone operations. We have a lot of warnings but they are not significant for now. 
 
 ![](Images/Import_HelloWorld_BuildAll.png)
 
