@@ -80,7 +80,7 @@ To fix the issue, you need to set two variables: **Path Variables** and **Build 
 
 ![](Images/Import_HelloWorld_4.png)
 
-Expand **Resource > Linked Resources > Path Variables**. Click on **Edit** button to point the Path Variable of SSD7317Z to the correct location in your environment. If you are using the same path as procedure above, it will be **C:\Users\xxx\Documents\Github\SSD7317Z\Drivers** with *xxx* your computer user name. Please note that the \Drivers folder is the root containing \Inc and \Src folders that contain the header files and source code.
+Expand **Resource > Linked Resources > Path Variables**. Highlight on **SSD7317Z** and click on the **Edit** button to point the path variable of SSD7317Z to the \Drivers folder that is the root containing \Inc and \Src.
 
 ![](Images/Import_HelloWorld_8.png)
 
