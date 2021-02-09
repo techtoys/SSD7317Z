@@ -1,8 +1,8 @@
  /****************************************************************************
-* Filename              :   SSD7317.c
-* Description			: 	Device driver for an PMOLED with
-* 							Touch and Display Driver Integrated (TDDI)
-* 							driver IC on the same die (SSD7317)
+* Filename              : SSD7317.c
+* Description		: Device driver for an PMOLED with
+* 			Touch and Display Driver Integrated (TDDI)
+* 			driver IC on the same die (SSD7317)
 * Author                :   John Leung
 * Origin Date           :   13/02/2020
 * Version               :   1.0.0
@@ -30,13 +30,13 @@
 *****************************************************************************/
 /**
  * @note	How fast is the SPI transfer fast enough?
- * 			A 8MHz SPI is used for data write. An OLED of 96*128 pixels
- * 			is mapped to a frame buffer of (96/8)*128 = 1536bytes.
- * 			DMA SPI transfer takes ~1.25us for each data write.
- * 			Therefore, a frame takes 1536*1.25us = 1,920us (i.e. 1.92ms).
- * 			FR pulse measured at 2.7ms, with a display period of 8.3ms.
- * 			In conclusion, a full frame refresh synchronized with FR pulse is a possible
- * 			way to solve the tearing issue.
+ * 		A 16MHz SPI is used for data write. An OLED of 96*128 pixels
+ * 		is mapped to a frame buffer of (96/8)*128 = 1536bytes.
+ * 		DMA SPI transfer takes ~1.25us for each data write.
+ * 		Therefore, a frame takes 1536*1.25us = 1,920us (i.e. 1.92ms).
+ * 		FR pulse measured at 2.7ms, with a display period of 8.3ms.
+ * 		In conclusion, a full frame refresh synchronized with FR pulse is a possible
+ * 		way to solve the tearing issue.
  */
 
 /*******************************************************************************
@@ -47,14 +47,14 @@
 * Static Variables
 *******************************************************************************/
 
-/*@note `touch_event_flag` is a boolean flag to describe the hardware pin IRQ status.
- * 		On a valid touch event, IRQ pin goes from high to low.
- * 		An GPIO edge trigger interrupt is used in the firmware to detect the pulse
+/*@note touch_event_flag is a boolean flag to describe the hardware pin IRQ status.
+ * 	On a valid touch event, IRQ pin goes from high to low.
+ * 	An GPIO edge trigger interrupt is used in the firmware to detect the pulse
  * */
 static volatile bool touch_event_flag = false;
 
-/*@note `fb_flush_pending` is a boolean flag to indicate that
- * 		there are pending SPI transfer to update the GUI content
+/*@note fb_flush_pending is a boolean flag to indicate that
+ * 	there are pending SPI transfer to update the GUI content
  * */
 static volatile bool fb_flush_pending = false;
 
@@ -92,14 +92,14 @@ static const uint8_t SSD7317_INIT_TBL[]=
 		0x00,	//start from COM0
 
 		0xc8,   //set COM output scan direction
-				//top left corner at (COM95,SEG127), top right corner at (COM0,SEG127)
-				//bottom left corner at (COM95, SEG0), & bottom right corner at (COM0, SEG0)
-				//with byte orientation COM95[LSB] - COM88[MSB].
-				//If we need to display a pattern 10110101 at the top left corner,
-				//we need to send 0xAD by SPI_Write_Data() but not 0xB5.
-				//Most image converter program map MSB to the left-most bit position (COM95) by default.
-				//In case there is no bit reverse from the PC software, we need a macro `BIT_REVERSE(b)`
-				//to flip the bit positions by swapping MSB to LSB.
+			//top left corner at (COM95,SEG127), top right corner at (COM0,SEG127)
+			//bottom left corner at (COM95, SEG0), & bottom right corner at (COM0, SEG0)
+			//with byte orientation COM95[LSB] - COM88[MSB].
+			//If we need to display a pattern 10110101 at the top left corner,
+			//we need to send 0xAD by SPI_Write_Data() but not 0xB5.
+			//Most image converter program map MSB to the left-most bit position (COM95) by default.
+			//In case there is no bit reverse from the PC software, we need a macro `BIT_REVERSE(b)`
+			//to flip the bit positions by swapping MSB to LSB.
 
 		0xa2,	//set display start line
 		0x00,	//set start line 00
@@ -269,9 +269,9 @@ void HAL_SPI_TxCpltCallback(SPI_HandleTypeDef *hspi)
 /**
  * @brief
  * \b		Description:<br>
- * 			Initialize the PMOLED module for display and touch.<br>
+ * 		Initialize the PMOLED module for display and touch.<br>
  * \b Pre-requisite:<br>
- * 			Run system reset and system clock before this function<br>
+ * 		Run system reset and system clock before this function<br>
  *
  * \b Example:
  * @code
@@ -325,7 +325,7 @@ void ssd7317_init(void){
 /**
  *@brief
  *\b	Description:<br>
- *		Enable 12V VCC and then switch OLED On with command 0xAF.
+ *	Enable 12V VCC and then switch OLED On with command 0xAF.
  */
 void ssd7317_display_on(void){
 	const uint8_t cmd[1]={0xaf};
@@ -340,8 +340,8 @@ void ssd7317_display_on(void){
 /**
  *@brief
  *\b	Description:<br>
- *		Switch OLED off with command 0xAE followed by disable 12V VCC.<br>
- *		GDDRAM content is preserved.
+ *	Switch OLED off with command 0xAE followed by disable 12V VCC.
+ *	GDDRAM content is preserved.
  */
 void ssd7317_display_off(void){
 	const uint8_t cmd[1]={0xae};
@@ -356,8 +356,8 @@ void ssd7317_display_off(void){
 /**
  * @brief
  * \b		Description:<br>
- * 			Clear PMOLED display with a color. First, the framebuffer is cleared for a color (BLACK/WHITE)
- * 			and then copied to GDDRAM on synchronization with FR signal to eliminate tearing effect.
+ * 		Clear PMOLED display with a color. First, the framebuffer is cleared for a color (BLACK/WHITE)
+ * 		and then copied to GDDRAM on synchronization with FR signal to eliminate tearing effect.
  *
  * \b Example:
  * @code
@@ -383,7 +383,7 @@ void ssd7317_display_clear(color_t color){
 /**
  * @brief
  * \b		Description:<br>
- * 			Set a pixel on PMOLED display with a color.<br>
+ * 		Set a pixel on PMOLED display with a color.<br>
  * @param	x is the x-coordinate
  * @param	y is the y-coordinate
  * @param	color is BLACK or WHITE
@@ -416,13 +416,12 @@ void ssd7317_set_pixel(int16_t x, int16_t y, color_t color)
 /**
  * @brief
  * \b		Description:<br>
- * 			Function to fill a region in the frame buffer with a pattern and update the GDDRAM on FR signal.<br>
+ * 		Function to fill a region in the frame buffer with a pattern and update the GDDRAM on FR signal.<br>
  * @param area is the area to fill with (x1,y1) the top left and (x2,y2) the lower right corner (inclusive)
  * @param color is a pointer to the pattern in non-volatile media i.e. MCU's Flash
  * @param negative is a boolean parameter to display the image negative if it is 'true'
  *
- * \b Pre-requisite:<br>
- * 		x2>=x1 & y2>=y1<br>
+ * \b Pre-requisite:x2>=x1 & y2>=y1<br>
  */
 void ssd7317_fill_area(rect_t area, const color_t* color, bool negative)
 {
@@ -435,7 +434,7 @@ void ssd7317_fill_area(rect_t area, const color_t* color, bool negative)
 /**
  * @brief
  * \b		Description:<br>
- * 			Function to fill a region in the frame buffer with a single color and update the GDDRAM on FR signal.<br>
+ * 		Function to fill a region in the frame buffer with a single color and update the GDDRAM on FR signal.<br>
  * @param 	area is the area to fill with (x1,y1) the top left and (x2,y2) the lower right corner (inclusive)
  * @param 	color is BLACK or WHITE
  */
@@ -453,7 +452,7 @@ void ssd7317_fill_color(rect_t area, color_t color)
 /**
  * @brief
  * \b		Description:<br>
- * 			Function to set display contrast with default level 0x4f<br>
+ * 		Function to set display contrast with default level 0x4f<br>
  * @param 	level is the contrast level from 01 ~ FFh, a higher value sets higher contrast
  */
 void ssd7317_set_contrast(uint8_t level)
@@ -469,7 +468,7 @@ void ssd7317_set_contrast(uint8_t level)
 /**
  * @brief
  * \b		Description:<br>
- * 			Function to return current screen orientation
+ * 		Function to return current screen orientation
  * @return 	local variable `scr_orientation`
  */
 disp_orientation_t ssd7317_orientation_get()
@@ -480,7 +479,7 @@ disp_orientation_t ssd7317_orientation_get()
 /**
  * @brief
  * \b		Description:<br>
- * 			Function to set current screen orientation
+ * 		Function to set current screen orientation
  * @param 	Enumerated values DISP_0_DEG, DISP_90_DEG, DISP_180_DEG, DISP_270_DEG
  */
 void ssd7317_orientation_set(disp_orientation_t rotation)
@@ -613,7 +612,7 @@ static void MX_SPI1_Init(void)
 
 /**
   * @brief 	I2C1 Initialization Function.
-  *			Initialize I2C interface for touch.
+  *		Initialize I2C interface for touch.
   * 		Direct copy from STM32CubeIDE Code Generation utility.
   * @param 	None
   * @return None
@@ -675,7 +674,7 @@ void spi_write_command(const uint8_t *command, uint16_t len){
   * @brief 	SPI data write (non-DMA).
   * @param 	*data points to the data array to send.
   * @param	len is the data length in byte.
-  * @return None
+  * @return 	None
   */
 void spi_write_data(const uint8_t *data, uint16_t len){
 
@@ -696,8 +695,7 @@ void spi_write_data(const uint8_t *data, uint16_t len){
 }
 
 /**
- * @brief Function to fill a pixel in the frame buffer.
- * 			No actual OLED-write operation is involved.
+ * @brief Function to fill a pixel in the frame buffer. No actual OLED-write operation is involved.
  * @param x is the x-coordinate
  * @param y is the y-coordinate
  * @param color is WHITE/BLACK
@@ -713,8 +711,8 @@ static void fb_set_pixel(int16_t x, int16_t y, color_t color)
 /**
  * @brief
  * \b	Description:<br>
- * 		  Function to fill an area in the frame buffer with a pattern from the Flash.
- *		  No SPI transfer is called yet. Only frame buffer operation invoked.
+ * 	Function to fill an area in the frame buffer with a pattern from the Flash.
+ *	No SPI transfer is called yet. Only frame buffer operation invoked.
  * @param area is the area to fill with (x1,y1) the top left and (x2,y2) the lower right corner (inclusive)
  * @param color is a pointer to the pattern in non-volatile media i.e. MCU's Flash
  */
@@ -761,8 +759,8 @@ static void fb_fill_area(rect_t area, const color_t* color, bool negative)
 /**
  * @brief
  * \b		Description:<br>
- * 			Function to copy framebuffer's content to GDDRAM with the scrolling command (2Ch/2Dh).
- * 			This function is valid for COM-page H mode only.
+ * 		Function to copy framebuffer's content to GDDRAM with the scrolling command (2Ch/2Dh).
+ * 		This function is valid for COM-page H mode only.
  * @param	area (in pixels) in frame buffer to copy from.
  * @param	win is the window (in pixels) on screen for scrolling.
  * @param	dir is the swipe direction, either SWIPE_UP(SWIPE_RL) or SWIPE_DOWN(SWIPE_LR).
@@ -967,8 +965,8 @@ static void fb_spi_transfer(rect_t area)
 /**
  *@brief
  *\b	Description:<br>
- *		Set flag to tell that GUI content to be flushed.
- *		Used in HAL_GPIO_EXTI_Callback().
+ *	Set flag to tell that GUI content to be flushed.
+ *	Used in HAL_GPIO_EXTI_Callback().
  *@param area is the content in frame buffer to copy to GDDRAM
  */
 static void fb_flush_pending_set(rect_t area)
@@ -1000,7 +998,7 @@ static void fb_flush_suspend(void)
 /**
  * @brief
  * \b	Description:
- * 		Clear flush pending flag
+ * 	Clear flush pending flag
  */
 static void fb_flush_pending_clear(void)
 {
@@ -1018,8 +1016,8 @@ static bool fb_flush_pending_get(void)
 /**
  * @brief
  * \b	Description:<br>
- * 		I2C Write with all command and addresses in 16-bit width.<br>
- * 		Byte order: lower byte send first e.g. e.g.reg[7:0] follow by reg[15:8].<br>
+ * 	I2C Write with all command and addresses in 16-bit width.<br>
+ * 	Byte order: lower byte send first e.g. e.g.reg[7:0] follow by reg[15:8].<br>
  * @param slave is the 7-bit slave address
  * @param reg is the register address sending with LSB first i.e. 0xf0 sending first with reg=0x0af0
  * @param *data points to the data buffer to send
@@ -1051,7 +1049,7 @@ static void i2c_write(uint8_t slave, uint16_t reg, const uint8_t *data, uint16_t
 /**
  * @brief
  * \b	Description:<br>
- * 		I2C read from touch controller<br>
+ * 	I2C read from touch controller<br>
  * @param slave is the 7-bit slave address
  * @param reg is the register to read from
  * @param buffer points to an array to keep incoming characters
@@ -1084,11 +1082,9 @@ static void i2c_read(uint8_t slave, uint16_t reg, uint8_t *buffer, uint16_t len)
 /**
  * @brief
  * \b	Description:<br>
- * 		Do CRC checksum according to section 3.3.4 on datasheet<br>
- * @param 	byte_cnt is the size of PM_content, TM_content, & DM_content arrays defined
- * 		  	in SSD7317_Init_table.c.
- * @param 	trig_cmd is the command to trigger a CRC read:
- * 			PM trigger(0x03), DM trigger (0x05), TM trigger (0x09)
+ * 	Do CRC checksum according to section 3.3.4 on datasheet<br>
+ * @param 	byte_cnt is the size of PM_content, TM_content, & DM_content arrays defined in SSD7317_Init_table.c.
+ * @param 	trig_cmd is the command to trigger a CRC read: PM trigger(0x03), DM trigger (0x05), TM trigger (0x09)
  * @return 	CRC value calculated by SSD7317
  */
 static uint16_t touch_crc_checksum(uint16_t byte_cnt, uint8_t trig_cmd)
@@ -1123,7 +1119,7 @@ static uint16_t touch_crc_checksum(uint16_t byte_cnt, uint8_t trig_cmd)
 /**
  *@brief
  *\b	Description:<br>
- *		Initialize touch interface to implement "Reset and Boot" procedures as stated on Section 3<br>
+ *	Initialize touch interface to implement "Reset and Boot" procedures as stated on Section 3<br>
  */
 static void touch_init(void)
 {
@@ -1209,10 +1205,10 @@ static void touch_init(void)
 /**
  * @brief
  * \b		Description:<br>
- * 			Reset OLED's IRQ pin and clear touch event flag for local variable 'Touch_Evt_Flag'<br>
+ * 		Reset OLED's IRQ pin and clear touch event flag for local variable 'Touch_Evt_Flag'<br>
  * \b Note:<br>
- * 			There is a typo error on section 3.3.6. <br>
- * 			The correct sequence should be 0x43 0x00 0x00 0x00.<br>
+ * 		There is a typo error on section 3.3.6. <br>
+ * 		The correct sequence should be 0x43 0x00 0x00 0x00.<br>
  */
 static void touch_event_clear(void)
 {
@@ -1229,7 +1225,7 @@ static void touch_event_clear(void)
 /**
  * @brief
  * \b		Description:<br>
- * 			Set IRQ flag in IRQ handler for a high-to-low IRQ pin transition triggered by a touch event
+ * 		Set IRQ flag in IRQ handler for a high-to-low IRQ pin transition triggered by a touch event
  */
 void touch_event_set(void)
 {
@@ -1239,9 +1235,9 @@ void touch_event_set(void)
 /**
  * @brief
  * \b		Description:<br>
- * 			Get touch event flag<br>
+ * 		Get touch event flag<br>
  * @return 	true for a touch event
- * 			false for no touch event
+ * 		false for no touch event
  */
 inline static bool touch_event_get(void)
 {
@@ -1251,7 +1247,7 @@ inline static bool touch_event_get(void)
 /**
  * @brief
  * \b Description:<br>
- * 			Function to get touch gesture.<br>
+ * Function to get touch gesture.<br>
  * @return finger_t structure with gesture and key number
  */
 finger_t ssd7317_get_gesture(void){
@@ -1374,8 +1370,8 @@ rect_t ssd7317_put_image(uint16_t left, uint16_t top, const tImage* image, bool 
 /**
  * @brief
  * \b		Description:<br>
- * 			Function to scroll an image
- * 			This function is valid for COM-page H mode only.
+ * 		Function to scroll an image
+ * 		This function is valid for COM-page H mode only.
  * @param 	left is the x coordinate of the image's top left at its final position.
  * @param 	top is the y coordinate of the image's top left at its final position.
  * @param	margin is the top/bottom gap to restrain from scrolling
@@ -1466,7 +1462,7 @@ void   ssd7317_scroll_page(rect_t subpage, uint8_t interval, uint8_t accelerate,
 /**
  * @brief
  * \b Description:<br>
- * 		This function applies brake to continuous page scroll(commands 0x26,27,29,2A) by sending 0x2E command
+ * This function applies brake to continuous page scroll(commands 0x26,27,29,2A) by sending 0x2E command
  */
 void   ssd7317_scroll_brake(void)
 {
@@ -1578,7 +1574,7 @@ void   ssd7317_get_stringsize(const tFont* font, const char *str, uint16_t *w, u
 /**
  * @brief
  * \b Description:<br>
- * 			Function to check if a character is in range of the character array created by BitFontCreator.<br>
+ * Function to check if a character is in range of the character array created by BitFontCreator.<br>
  * @param *pFont is a pointer to the type BFC_FONT defined in bfcfont.h
  * @param ch is the character to check in a 16-bit width
  * @return 	0 if not in range
@@ -1675,7 +1671,7 @@ uint16_t ssd7317_put_bfcChar(int16_t x, int16_t y, const BFC_FONT* pFont, const 
 /**
  * @brief
  * \b		Description:<br>
- * 			Write a string with font created by BitFontCreator<br>
+ * 		Write a string with font created by BitFontCreator<br>
  * @param x is the x position
  * @param y is the y position
  * @param *pFont is a pointer to BFC_FONT structure
@@ -1704,7 +1700,7 @@ uint16_t ssd7317_put_bfcString(int16_t x, int16_t y, const BFC_FONT* pFont, cons
 /**
  * @brief
  * \b		Description:<br>
- * 			Get the width and height of a character of BFC_FONT<br>
+ * 		Get the width and height of a character of BFC_FONT<br>
  * @param *pFont is a pointer to BFC_FONT structure
  * @param ch is the target character of unicode
  * @param *w is a pointer to character width
@@ -1725,7 +1721,7 @@ void ssd7317_get_bfcCharSize(const BFC_FONT* pFont, const uint16_t ch, uint16_t 
 /**
  * @brief
  * \b		Description:<br>
- * 			Get the string width and height of BFC_FONT<br>
+ * 		Get the string width and height of BFC_FONT<br>
  * @param *pFont is a pointer to BFC_FONT structure
  * @param *str is a pointer to the target string
  * @param *w is a pointer to the string width
@@ -1733,9 +1729,9 @@ void ssd7317_get_bfcCharSize(const BFC_FONT* pFont, const uint16_t ch, uint16_t 
  *
  * \b Example:
  * @code
- * 			uint16_t w, h;
- * 			//Get string width of "Hello World" on fontFontAwesome13h
- * 			OLED_GetBfcStringSize(&fontFontAwesome13h. "Hello World", &w, &h);
+ * 		uint16_t w, h;
+ * 		//Get string width of "Hello World" on fontFontAwesome13h
+ * 		OLED_GetBfcStringSize(&fontFontAwesome13h. "Hello World", &w, &h);
  * @endcode
  */
 void ssd7317_get_bfcStringSize(const BFC_FONT* pFont, const char *str, uint16_t *w, uint16_t *h)
@@ -1756,8 +1752,8 @@ void ssd7317_get_bfcStringSize(const BFC_FONT* pFont, const char *str, uint16_t 
 
 /**
  * @brief
- * \b		Description:<br>
- * 			Erase the region of a BFC_FONT character with a single color (BLACK/WHITE)<br>
+ * \b	Description:<br>
+ * 	Erase the region of a BFC_FONT character with a single color (BLACK/WHITE)<br>
  * @param x is the x position
  * @param y is the y position
  * @param *pFont is a pointer to BFC_FONT structure
