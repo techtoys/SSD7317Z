@@ -48,29 +48,29 @@ At time of writing the latest version of STM32CubeIDE was 1.5.1. I am using an o
 
 In my environment the installation path is set to **C:\ST\STM32CubeIDE_1.2.0** by following the default option. However, you may use any path you find it convenient. In the installation procedures, you will be asked whether to install the SEGGER J-Link drivers, ST_LINK drivers, and ST-LINK server. Check ST_LINK drivers and ST-LINK server with SEGGER J-Link drivers optional. After installation, a desktop shortcut is created.
 
-![](./Images/STM32CubeIDE.png)
+<img src ="./Images/STM32CubeIDE.png" width="96">
 
-The STM32CubeIDE is based on [Eclipse](https://en.wikipedia.org/wiki/Eclipse_(software)) that uses a directory called *workspace* to store its preferences and configurations. Every time you run STM32CubeIDE, you will see a dialog box similar to the screen capture below to ask you for the workspace location. In my case, I just follow the recommended path at **C:\Users\John\STM32CubeIDE\workspace_1.2.0** with *John* as my computer user name. It is not mandatory to set the workspace in C drive. Again, you may use other directories at your convenience.
+The STM32CubeIDE is based on [Eclipse](https://en.wikipedia.org/wiki/Eclipse_(software)) that uses a directory called *workspace* to store its preferences and configurations. Every time you run STM32CubeIDE, you will see a dialog box similar to the screen capture below to ask you for the workspace location. In my case, I just follow the recommended path at **C:\Users\John\STM32CubeIDE\workspace_1.2.0** with *John* as my computer user name. It is not mandatory to set the workspace in C drive. You may use other directory at your convenience.
 
 ![](./Images/STM32CubeIDE_workspace.png)
 
-Installation of STM32CubeIDE is a straightforward procedure with a lot of manpower and effort given by STMicroelectronics to develop the package. If you happen to have an issue, the [ST community](https://community.st.com/s/topic/0TO0X000000y2j7WAA/stm32cubeide) is a good place to find a solution.
+Installation of STM32CubeIDE is a straightforward procedure. If you happen to have an issue, the [ST community](https://community.st.com/s/topic/0TO0X000000y2j7WAA/stm32cubeide) is a good place to ask for assistance.
 
 ## Download and Build the Hello World Project
 
-The full source code is available from GitHub at https://github.com/techtoys/SSD7317Z. Expand the Code button <img src ="./Images/Download_code_button.png" width="128">followed by **Download ZIP**, you will get a "**SSD7317Z-main.zip**" file.
+Full source code is available from GitHub at https://github.com/techtoys/SSD7317Z. Expand the Code button <img src ="./Images/Download_code_button.png" width="96">followed by **Download ZIP**, you will get a "**SSD7317Z-main.zip**" file.
 
 ![](./Images/Downloading_HelloWorld_fr_Github.png)
 
-Unzip the file to any location you like. In my case, it is located at **C:\Users\John\Documents\GitHub\\SSD7317Z** with *John* as my computer user name. You shall see different name in your environment. 
+Unzip the file to any location you like. In my case, it is located at **C:\Users\John\Documents\GitHub\SSD7317Z** with *John* as my computer user name. I have also modified **SSD7317Z-main** to **SSD7317Z** for simplicity.
 
 ![](./Images/SSD7317Z_pathing.png)
 
-Now turn back to STM32CubeIDE, right click on **Project Explorer > Import > General > Existing Projects into Workspace > Next**. From the Import Wizard, click **Browse** to select the root directory of **HelloWorld**. The project path will be automatically resolved. Click **Finish** to confirm.
+Return to STM32CubeIDE, right click on **Project Explorer > Import > General > Existing Projects into Workspace > Next**. From the Import Wizard, click **Browse** to select the root directory of **HelloWorld**. The project path will be automatically resolved. Click **Finish** to confirm.
 
 ![](./Images/Import_HelloWorld_7.png)
 
-Now you see HelloWorld under **Project Explorer**. Everything seems fine except there is a yellow exclamation mark on the folder icon of SSD7317Z that means STM32CubeIDE has failed to resolve its location. It is because the device driver of SSD7317Z is located outside of the HelloWorld project as a shared library. Its relative path was set correctly in my PC but it is not set in your environment yet.
+You will see HelloWorld under **Project Explorer**. Everything seems fine except there is a yellow exclamation mark on the folder icon of SSD7317Z that means STM32CubeIDE has failed to resolve its location. It is because the device driver of SSD7317Z is located outside of the HelloWorld project as a shared library. Its relative path was set correctly in my PC but it is not set in your environment yet.
 
 ![](./Images/Import_HelloWorld_3.png)
 =======
