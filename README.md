@@ -84,7 +84,7 @@ Expand **Resource > Linked Resources > Path Variables**. Highlight on **SSD7317Z
 
 ![](Images/Import_HelloWorld_8.png)
 
-Next, expand **C/C++ Build** > **Build Variables** > set SSD7317Z directory to **your path\SSD7317Z\Drivers** for Debug and Release configurations. Close by clicking the **Apply and Close** button. You will see the exclamation mark is now resolved to an arrow indicating a relative path.
+Next, expand **C/C++ Build** > **Build Variables** > set SSD7317Z directory to \Drivers folder for Debug and Release configurations. Close by clicking the **Apply and Close** button. You will see the exclamation mark is now resolved to an arrow indicating a relative path.
 
 ![](Images/Import_HelloWorld_6.png)
 
