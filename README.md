@@ -58,7 +58,7 @@ Installation of STM32CubeIDE is a straightforward procedure. If you happen to ha
 
 ## Download and Build the Hello World Project
 
-Full source code is available from GitHub at https://github.com/techtoys/SSD7317Z. Expand the Code button <img src ="./Images/Download_code_button.png" width="96">followed by **Download ZIP**, you will get a "**SSD7317Z-main.zip**" file.
+Full source code is available from GitHub at https://github.com/techtoys/SSD7317Z. By expanding the button <img src ="./Images/Download_code_button.png" width="96">followed by **Download ZIP**, you will get a compressed file "**SSD7317Z-main.zip**".
 
 ![](./Images/Downloading_HelloWorld_fr_Github.png)
 
@@ -73,18 +73,16 @@ Return to STM32CubeIDE, right click on **Project Explorer > Import > General > E
 You will see HelloWorld under **Project Explorer**. Everything seems fine except there is a yellow exclamation mark on the folder icon of SSD7317Z that means STM32CubeIDE has failed to resolve its location. It is because the device driver of SSD7317Z is located outside of the HelloWorld project as a shared library. Its relative path was set correctly in my PC but it is not set in your environment yet.
 
 ![](./Images/Import_HelloWorld_3.png)
-=======
-Everything seems fine except there is a yellow exclamation mark on the folder icon of SSD7317Z that means STM32CubeIDE has failed to find its location. It is because the device driver of SSD7317Z is located outside of the HelloWorld project as a shared library. Its relative path was set correctly in my PC but it is not set in your environment yet.
 
-To fix the issue, you need to set two variables: **Path Variables** and **Build Variables**. Right click on the project title, from pop-up menu click on **Properties**.
+To fix the issue, you need to set two variables: **Path Variables** and **Build Variables**. Right click on the project title, from the pop-up menu click on **Properties**.
 
 ![](Images/Import_HelloWorld_4.png)
 
-Expand **Resource > Linked Resources > Path Variables**. Highlight on **SSD7317Z** and click on the **Edit** button to point the path variable of SSD7317Z to the \Drivers folder that is the root containing \Inc and \Src.
+Expand **Resource > Linked Resources > Path Variables**. Highlight on **SSD7317Z** and click on the **Edit** button to point the path variable of SSD7317Z to the *\Drivers* folder that is the root containing the header *\Inc* and source *\Src* folders of SSD7317Z.
 
 ![](Images/Import_HelloWorld_8.png)
 
-Next, expand **C/C++ Build** > **Build Variables** > set SSD7317Z directory to \Drivers folder for Debug and Release configurations. Close by clicking the **Apply and Close** button. You will see the exclamation mark is now resolved to an arrow indicating a relative path.
+Next, expand **C/C++ Build** > **Build Variables** > set SSD7317Z directory to *\Drivers* folder for Debug and Release configurations. Close by clicking the **Apply and Close** button. You will see the exclamation mark is now resolved to an arrow indicating a relative path.
 
 ![](Images/Import_HelloWorld_6.png)
 
