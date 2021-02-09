@@ -70,7 +70,6 @@ Now turn back to STM32CubeIDE, right click on **Project Explorer > Import > Gene
 
 ![](./Images/Import_HelloWorld_7.png)
 
-<<<<<<< HEAD
 Now you see HelloWorld under **Project Explorer**. Everything seems fine except there is a yellow exclamation mark on the folder icon of SSD7317Z that means STM32CubeIDE has failed to resolve its location. It is because the device driver of SSD7317Z is located outside of the HelloWorld project as a shared library. Its relative path was set correctly in my PC but it is not set in your environment yet.
 
 ![](./Images/Import_HelloWorld_3.png)
