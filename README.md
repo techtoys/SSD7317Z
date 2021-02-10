@@ -112,13 +112,13 @@ In 1-2 seconds you will see the PMOLED show **Hello World** on it.
 
 ## How It Works
 
-## Frame Buffer
+## The Frame Buffer
 
 ## LCD Image Converter
 
 ## The Touch Screen and How It Works
 
-## Hardware Scrolling Feature
+## Scrolling by Hardware
 
 ## Porting the Driver to Your MCU
 
