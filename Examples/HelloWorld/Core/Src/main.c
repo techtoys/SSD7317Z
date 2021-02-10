@@ -22,30 +22,19 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "bfcfont.h"
 #include "SSD7317.h"
+#include "rpc.h"
 #ifdef USE_FULL_ASSERT
 #include <stdio.h>
 #endif
-#include <string.h>
 #include "stdbool.h"
-#include "coffee.h"
-#include "hairdryer.h"
-#include "thermometer.h"
-#include "battery-status-full.h"
-#include "bluetooth.h"
 #include "Tahoma_12h.h"
 
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
-/* Ring buffer for Remote Procedure Call */
-#define RPC_BUF_SIZE 255
-typedef struct {
-	uint16_t ctr;
-	uint8_t  buf[RPC_BUF_SIZE];
-}uart_rx_buf;
+
 /* USER CODE END PTD */
 
 /* Private define ------------------------------------------------------------*/
@@ -70,27 +59,6 @@ DMA_HandleTypeDef hdma_usart2_rx;
 
 /* USER CODE BEGIN PV */
 
-//extern const tImage Swim;
-/* Buffer for Remote Procedure Call */
-uart_rx_buf rpc_rx_buf;
-
-typedef struct ICON{
-	const char *name;	 	//name of the icon
-	const tImage *image; 	//Pointer to tImage
-}icon_t;
-
-#define ICON_MAX	3
-/*Array of icons to scroll*/
-const icon_t icons[ICON_MAX] = {
-		{"Hair Dryer", &hairdryer},
-		{"Temperature", &thermometer},
-		{"Coffee", &coffee},
-};
-
-static int8_t icon_index = 0;
-static uint16_t w, h;
-static bool pan_active=false;
-static bool sleep=false;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -102,8 +70,7 @@ static void MX_I2C1_Init(void);
 static void MX_SPI1_Init(void);
 static void MX_TIM2_Init(void);
 /* USER CODE BEGIN PFP */
-static bool rpc_buffer_empty(void);
-static int8_t rpc_get_command(uint8_t *buf, uint16_t *length, uint32_t timeout);
+
 
 void tone_pwm_set(uint16_t freq);
 void tone_pwm_on(void);
@@ -131,60 +98,6 @@ int __io_putchar(int ch)
 	return ch;
 }
 #endif
-
-/**
- * @brief
- * \b	Description:<br>
- * 			This function returns the number of characters in the communication buffer
- * @return 	`true` if the buffer is empty
- * 			`false` if the buffer is not empty, message removal from the receiving buffer is required
- */
-static bool rpc_buffer_empty(void)
-{
-	bool empty = true;
-
-	if(rpc_rx_buf.ctr > 0)
-		empty = false;
-
-	return empty;
-}
-
-/**
- * @brief
- * \b	Description:<br>
- * 		This function is called to obtain all characters from the
- * 		communication buffer rpc_rx_buf.buf[] to a destination buffer
- * @param 	*buf is a pointer to the buffer you want to store incoming characters.
- * 			Make sure it is large enough to save the characters.
- * 			A safe array size is RPC_BUF_SIZE.
- * @param	*length points to the variable to hold the length of command receive
- * @param	timeout is the CMSIS_RTOS_TimeOutValue or 0 in case of no time-out(wait forever).
- * 			This argument is valid only when FreeRTOS is used.
- * 			For polling method, timeout does not care.
- * @return	If FreeRTOS is used, this is the status code that indicates the
- * 			execution status of the function with the same return code of osSemaphoreAcquire()
- * 			If no FreeRTOS is used, the return value is always 0
- */
-static int8_t rpc_get_command(uint8_t *buf, uint16_t *length, uint32_t timeout)
-{
-	int8_t err = 0;
-
-	*length = 0;
-
-	if(!rpc_buffer_empty()){
-		HAL_UART_DMAPause(&huart2);
-		*length = rpc_rx_buf.ctr;
-
-		for(uint16_t i=0; i<rpc_rx_buf.ctr; i++){
-			*buf++ = rpc_rx_buf.buf[i];
-		}
-		rpc_rx_buf.ctr = 0; //reset the counter
-
-		HAL_UART_DMAResume(&huart2);
-	}
-
-	return err;
-}
 
 /**
  * @brief
@@ -245,29 +158,24 @@ void tone_pwm_set(uint16_t freq)
 	  HAL_TIM_MspPostInit(&htim2);
 }
 
+/**
+ * @brief
+ * \b	Description:<br>
+ *		This function switch PWM Oon for buzzer
+ */
 void tone_pwm_on(void)
 {
 	HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_2);
 }
 
-void tone_pwm_off(void)
-{
-	HAL_TIM_PWM_Stop(&htim2, TIM_CHANNEL_2);
-}
-
 /**
  * @brief
  * \b	Description:<br>
- *		This callback function is called when there is an active -> idle transition
- *		in USART2 IRQ handler (stm32l4xx_it.c). Characters are inserted into the ring buffer
- *		if it has enough room for incoming data from the DMA channel; otherwise, data will be lost.
- *		This function is declared in main.h and called in stm32l4xx.c::USART2_IRQHandler()
+ *		This function switch PWM off for buzzer
  */
-void rpc_idle_callback(void)
+void tone_pwm_off(void)
 {
-	HAL_UART_DMAStop(&huart2);
-	rpc_rx_buf.ctr = (RPC_BUF_SIZE - __HAL_DMA_GET_COUNTER(&hdma_usart2_rx));
-	HAL_UART_Receive_DMA(&huart2, rpc_rx_buf.buf, RPC_BUF_SIZE);
+	HAL_TIM_PWM_Stop(&htim2, TIM_CHANNEL_2);
 }
 
 /* USER CODE END 0 */
@@ -307,13 +215,11 @@ int main(void)
   MX_TIM2_Init();
   /* USER CODE BEGIN 2 */
   ssd7317_init();
-  ssd7317_put_string(6,5,&Tahoma_12h,"10:15",0);
-  ssd7317_put_image(40,0,&bluetooth,0);
-  ssd7317_put_image(70,0,&batterystatusfull,0);
+  rpc_uart_init();
 
-  ssd7317_get_stringsize(&Tahoma_12h, icons[icon_index].name, &w, &h);
-  ssd7317_put_string((OLED_HOR_RES-w)/2, (60-h), &Tahoma_12h, icons[icon_index].name, 0);
-  ssd7317_put_image(16,64, icons[icon_index].image, 0);
+  uint16_t w, h;
+  ssd7317_get_stringsize(&Tahoma_12h, "Hello World", &w, &h);
+  ssd7317_put_string((OLED_HOR_RES-w)/2,(OLED_VER_RES-h)/2,&Tahoma_12h,"Hello World",0);
 
   /* USER CODE END 2 */
 
@@ -324,107 +230,8 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-	  finger_t finger = ssd7317_get_gesture();
-
-	  switch (finger.gesture){
-	  case LONG_TAP_ANYKEY:
-		  ssd7317_display_clear(BLACK);
-		  tone_pwm_set(500);
-		  tone_pwm_on();
-		  HAL_Delay(1000);
-		  tone_pwm_off();
-		  sleep=true;
-		  break;
-	  case SINGLE_TAP_ANYKEY:
-		  if(sleep==true){
-			  sleep=false;
-			  ssd7317_put_string(6,5,&Tahoma_12h,"10:15",0);
-			  ssd7317_put_image(40,0,&bluetooth,0);
-			  ssd7317_put_image(70,0,&batterystatusfull,0);
-			  ssd7317_get_stringsize(&Tahoma_12h, icons[icon_index].name, &w, &h);
-			  ssd7317_put_string((OLED_HOR_RES-w)/2, (60-h), &Tahoma_12h, icons[icon_index].name, 0);
-			  ssd7317_put_image(16,64, icons[icon_index].image, 0);
-		  }
-		  if(pan_active){
-			  ssd7317_scroll_brake();
-			  pan_active=false;
-			  tone_pwm_off();
-		  }else{
-			  tone_pwm_set(1000);
-			  tone_pwm_on();
-			  ssd7317_put_image(16,64, icons[icon_index].image, 1);
-			  tone_pwm_set(500);
-			  HAL_Delay(50);
-			  ssd7317_put_image(16,64, icons[icon_index].image, 0);
-			  tone_pwm_off();
-		  }
-		  break;
-	  case SWIPE_DOWN:
-	  case SWIPE_UP:
-		  if(sleep==true){
-			  sleep=false;
-			  ssd7317_put_string(6,5,&Tahoma_12h,"10:15",0);
-			  ssd7317_put_image(40,0,&bluetooth,0);
-			  ssd7317_put_image(70,0,&batterystatusfull,0);
-		  }
-		  if(finger.tap_down_key == finger.tap_up_key){
-			  rect_t full_page = {0,0,95,127};
-			  ssd7317_scroll_page(full_page,7,5,finger);
-			  pan_active = true;
-			  tone_pwm_set(200);
-			  tone_pwm_on();
-		  }else{
-			  ssd7317_get_stringsize(&Tahoma_12h, icons[icon_index].name, &w, &h);
-			  rect_t erase = {(OLED_HOR_RES-w)/2, 60-h, (OLED_HOR_RES-w)/2 + w -1, 63};
-			  ssd7317_fill_color(erase, BLACK);
-			  if(finger.gesture==SWIPE_DOWN){
-				  if(++icon_index>(ICON_MAX-1)) icon_index=0;
-				  ssd7317_get_stringsize(&Tahoma_12h, icons[icon_index].name, &w, &h);
-				  ssd7317_put_string((OLED_HOR_RES-w)/2, (60-h), &Tahoma_12h, icons[icon_index].name, 0);
-				  ssd7317_scroll_image(16, 64, 64, icons[icon_index].image, finger);
-			  }else{
-			   //finger.gesture==SWIPE_UP
-				  if(--icon_index<0) icon_index=(ICON_MAX-1);
-				  ssd7317_get_stringsize(&Tahoma_12h, icons[icon_index].name, &w, &h);
-				  ssd7317_put_string((OLED_HOR_RES-w)/2, (60-h), &Tahoma_12h, icons[icon_index].name, 0);
-				  ssd7317_get_stringsize(&Tahoma_12h, icons[icon_index].name, &w, &h);
-				  ssd7317_scroll_image(16, 64, 0, icons[icon_index].image, finger);
-			  }
-		  }
-		  break;
-	  }
-
-	  /**
-	   * Remote Procedure Call section below
-	   */
-
-		  uint16_t length;
-		  uint8_t msg[RPC_BUF_SIZE];
-		  rpc_get_command(msg, &length, 0);
-
-		  if(length){
-		#ifdef USE_FULL_ASSERT
-			  printf("Command received:\r\n");
-			  for(uint8_t i=0; i<length; i++)
-			  {
-				  printf("%c", msg[i]);
-			  }
-			  printf("\r\n");
-		#endif
-			  if(length>2){
-				if(msg[0]==0x7E && (msg[1]=='c')) //0x7E 0x63
-				{
-					printf("SPI command sending.\r\n");
-					spi_write_command((const uint8_t *)&msg[2], length-2);
-				}
-				if(msg[0]==0x7E && (msg[1]=='d')) //0x7E 0x64
-				{
-					printf("SPI data sending.\r\n");
-					spi_write_data((const uint8_t *)&msg[2], length-2);
-				}
-			  }
-			  memset(msg, 0x00, length);
-		  }
+	//Remote Procedure Call for spi_write_command() and spi_write_data()
+	rpc_main_task();
   }
 
 

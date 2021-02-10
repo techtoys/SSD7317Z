@@ -38,7 +38,6 @@
 #include "SSD7317_Init_Table.h"
 #include "dwt_stm32_delay.h"
 #include "sysfont.h"
-#include "bfcfont.h"
 #include <stdbool.h>
 #include <stdio.h>
 
@@ -196,13 +195,6 @@ rect_t ssd7317_put_char(uint16_t left, uint16_t top, const tFont* font, uint16_t
 void   ssd7317_get_charsize(const tFont* font, uint16_t ascii_code, uint16_t *w, uint16_t *h);
 rect_t ssd7317_put_string(uint16_t left, uint16_t top, const tFont* font, const char *str, bool negative);
 void   ssd7317_get_stringsize(const tFont* font, const char *str, uint16_t *w, uint16_t *h);
-
-/* Functions for BitFontCreator (Iseatech Software) */
-uint16_t ssd7317_put_bfcChar(int16_t x, int16_t y, const BFC_FONT* pFont, const uint16_t ch, bool negative);
-void ssd7317_erase_bfcChar(int16_t x, int16_t y, const BFC_FONT* pFont, const uint16_t ch, color_t color);
-uint16_t ssd7317_put_bfcString(int16_t x, int16_t y, const BFC_FONT* pFont, const char *str, bool negative);
-void ssd7317_get_bfcCharSize(const BFC_FONT* pFont, const uint16_t ch, uint16_t *w, uint16_t *h);
-void ssd7317_get_bfcStringSize(const BFC_FONT* pFont, const char *str, uint16_t *w, uint16_t *h);
 
 #ifdef __cplusplus
 }
