@@ -11,6 +11,8 @@
 static bool rpc_buffer_empty(void);
 static int8_t rpc_get_command(uint8_t *buf, uint16_t *length, uint32_t timeout);
 
+/* Buffer for Remote Procedure Call */
+static uart_rx_buf rpc_rx_buf;
 
 /**
  * @brief

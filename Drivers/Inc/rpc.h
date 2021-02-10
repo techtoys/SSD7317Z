@@ -57,8 +57,7 @@ typedef struct {
 	uint8_t  buf[RPC_BUF_SIZE];
 }uart_rx_buf;
 
-/* Buffer for Remote Procedure Call */
-static uart_rx_buf rpc_rx_buf;
+
 
 void rpc_uart_init(void);
 void rpc_idle_callback(void);

@@ -469,12 +469,6 @@ static void MX_USART2_UART_Init(void)
     Error_Handler();
   }
   /* USER CODE BEGIN USART2_Init 2 */
-  rpc_rx_buf.ctr = 0;
-  __HAL_UART_ENABLE_IT(&huart2, UART_IT_IDLE);
-  if(HAL_UART_Receive_DMA(&huart2, rpc_rx_buf.buf, RPC_BUF_SIZE)!=HAL_OK)
-  	{
-  		Error_Handler();
-  	}
   /* USER CODE END USART2_Init 2 */
 
 }
