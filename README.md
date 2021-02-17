@@ -80,7 +80,7 @@ Return to STM32CubeIDE, right click on **Project Explorer > Import > General > E
 
 ![](./Images/Import_HelloWorld_7.png)
 
-You will see HelloWorld under **Project Explorer**. Everything seems fine except there is a yellow exclamation mark on the folder icon of SSD7317Z that means STM32CubeIDE has failed to resolve its location. It is because the device driver of SSD7317Z is located outside of the HelloWorld project as a shared library. Its relative path was set correctly in my PC but it is not set in your environment yet.
+You will see **HelloWorld** under **Project Explorer**. Everything seems fine except there is a yellow exclamation mark on the folder icon of SSD7317Z that means STM32CubeIDE has failed to resolve its location. It is because the device driver of SSD7317Z is located outside of the HelloWorld project as a shared library. Its relative path was set correctly in my PC but it is not set in your environment yet.
 
 ![](./Images/Import_HelloWorld_3.png)
 
@@ -111,6 +111,44 @@ In 1-2 seconds you will see the PMOLED show **Hello World** on it.
 <img src="./Images/hello_world_running.png" width=100%>
 
 ## How It Works
+
+To understand how **HelloWorld** work, we have to know more about the memory layout of SSD7317Z. There is a memory region known as the **Graphic Display Data RAM (GDDRAM)** physically mapped to each pixel in an one-bit depth on the screen.
+
+<img src = "./Images/GDDRAM_Layout.png" width = 80%>
+
+Each pixel is placed at the intersection of a particular row and column addressing lines denoted by SEG (short for segment) and COM (short for common) respectively. The full size of GDDRAM is 1,536 bytes arranged in an array of 12x8x128 bits. The COM lines span from 95 to 0 for 96 dots (12x8 dots) in the horizontal direction and SEG lines from 127 to 0 for 128 dots in vertical direction with mapping configured by a particular set of parameters (initialization parameters) which are written to SSD7317Z on startup.
+
+How pixels are rendered down to the COM and SEG addressing scheme is a complex and specialized topic. Fortunately, unless it was our task to design another display driver IC like SSD7317Z, there is no need for us to bother how pixels are scanned and driven inside the module. Instead, we just need to focus on how data is written and stored in GDDRAM from an external perspective. Once a data array is stored in GDDRAM, internal circuitry of SSD7317Z will automatically scan and refresh the screen.
+
+Wiring diagram between Nucleo L432KC and PMOLED for the display part is shown below.
+
+<img src="./Images/SPI_PMOLED_wiring.png" width = 80%>
+
+We need at least four wires (4-wire SPI) to drive the PMOLED. They are 
+
+- SPI_SCK (serial clock)
+
+- SPI_MOSI (master out slave in)
+
+- SPI_NSS (chip select)
+
+- DC (data/command selection)
+
+There is no MISO (master in slave out) required because the PMOLED is a unidirectional device - SPI data flow from the master (MCU) to slave (PMOLED) only, i.e., it is a half duplex device. 
+
+Allocation of PA7 as the reset pin is optional because it is required only in system startup but we still can afford it since there are spared pins available. If there is a need to save MCU pins for future designs, it is possible to use a dedicated reset IC (e.g. STM6321) for the same function. On the evaluation board, that function is performed by a simple RC circuit.
+
+**SPI Data Transfer**
+
+Figure below shows the SPI timing diagram. Data transmission occurs on the rising edge of the serial clock (SPI_SCK) with most significant bit (MSB) first. When the DC line is low, the byte transfered from the SPI_MOSI pin is a command. When it is high, the byte is interpreted as data.
+
+<img src="./Images/SPI_Timing.png" width=80%>
+
+When data is interpreted as pixels, that 8 bits transferred from the SPI port are displayed as black (0) or white (1) dots across the same page (e.g. COM95-COM88) at the column pointed to. The protocol causes a small issue if we need to display pixels less than a multiple of 8 because the minimum transfer size is one byte (8 bits). 
+
+To solve the issue, a frame buffer is allocated from SRAM of the MCU to map the entire GDDRAM to a linear array: `uint8_t frame_buffer[OLED_VER_RES*(OLED_HOR_RES>>3)]`. Please refer to its definition in `SSD7317.c`.
+
+The first data member `frame_buffer[0]` represents 8 pixels at the top left corner from COM95-COM88 at SEG127, `frame_buffer[1]` maps to COM87-COM80 at SEG127, etc.
 
 ## The Frame Buffer
 
