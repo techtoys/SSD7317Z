@@ -60,7 +60,7 @@ In my environment the installation path is set to **C:\ST\STM32CubeIDE_1.2.0** b
 
 <img src ="./Images/STM32CubeIDE.png" width="120">
 
-The STM32CubeIDE is based on [Eclipse](https://en.wikipedia.org/wiki/Eclipse_(software)) that uses a directory called *workspace* to store its preferences and configurations. Every time you run STM32CubeIDE, you will see a dialog box similar to the screen capture below to ask you for the workspace location. In my case, I just follow the recommended path at **C:\Users\John\STM32CubeIDE\workspace_1.2.0** with *John* as my computer user name. It is not mandatory to set the workspace in C drive. You may use other directory at your convenience. From now on, I will refer your installation path as *<your path>*.
+The STM32CubeIDE is based on [Eclipse](https://en.wikipedia.org/wiki/Eclipse_(software)) that uses a directory called *workspace* to store its preferences and configurations. Every time you run STM32CubeIDE, you will see a dialog box similar to the screen capture below to ask you for the workspace location. In my case, I just follow the recommended path at **C:\Users\John\STM32CubeIDE\workspace_1.2.0** with *John* as my computer user name. It is not mandatory to set the workspace in C drive. You may use other directory at your convenience. From now on, I will refer your installation path as *[your path]*.
 
 ![](./Images/STM32CubeIDE_workspace.png)
 
@@ -182,8 +182,6 @@ How major parameters are mapped to the SPI format required by SSD7317Z are summa
 | Minimum tCLKL + tCLKH time = 60ns                | Maximum SPI clock = 16MHz (Baud Rate = 16.0 MBits/s)         |
 | Data transferred with MSB first in 8 bits        | Data Size = 8 Bits with First Bit = MSB First                |
 | Data transferred on a rising SPI clock           | Clock Polarity (CPOL) = Low  ([SPI Wiki](https://en.wikipedia.org/wiki/Serial_Peripheral_Interface#Clock_polarity_and_phase)) |
-
-
 
 When data is interpreted as pixels, the 8 bits transferred from the SPI port are displayed as black (0) or white (1) dots across the same page (e.g. COM95-COM88) at the column pointed to. 
 
