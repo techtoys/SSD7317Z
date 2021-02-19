@@ -207,12 +207,12 @@ int main(void)
   /* USER CODE END SysInit */
 
   /* Initialize all configured peripherals */
-  MX_GPIO_Init();
-  MX_DMA_Init();
-  MX_USART2_UART_Init();
-  MX_I2C1_Init();
-  MX_SPI1_Init();
-  MX_TIM2_Init();
+  //MX_GPIO_Init();
+  //MX_DMA_Init();
+  //MX_USART2_UART_Init();
+  //MX_I2C1_Init();
+  //MX_SPI1_Init();
+  //MX_TIM2_Init();
   /* USER CODE BEGIN 2 */
   ssd7317_init();
   rpc_uart_init();
@@ -489,7 +489,6 @@ static void MX_DMA_Init(void)
   /* DMA1_Channel6_IRQn interrupt configuration */
   HAL_NVIC_SetPriority(DMA1_Channel6_IRQn, 0, 0);
   HAL_NVIC_EnableIRQ(DMA1_Channel6_IRQn);
-
 }
 
 /**

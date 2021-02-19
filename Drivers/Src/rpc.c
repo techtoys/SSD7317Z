@@ -76,6 +76,18 @@ static int8_t rpc_get_command(uint8_t *buf, uint16_t *length, uint32_t timeout)
  */
 void rpc_uart_init(void)
 {
+	/* USER CODE BEGIN USART2_Init 0 */
+	/* DMA controller clock enable before HAL_UART_Init(&huart2) */
+	__HAL_RCC_DMA1_CLK_ENABLE();
+	/* DMA1_Channel6_IRQn interrupt configuration */
+	HAL_NVIC_SetPriority(DMA1_Channel6_IRQn, 0, 0);
+	HAL_NVIC_EnableIRQ(DMA1_Channel6_IRQn);
+	/* USER CODE END USART2_Init 0 */
+
+	/* USER CODE BEGIN USART2_Init 1 */
+
+	/* USER CODE END USART2_Init 1 */
+
 	  huart2.Instance = USART2;
 	  huart2.Init.BaudRate = 115200;
 	  huart2.Init.WordLength = UART_WORDLENGTH_8B;
@@ -90,6 +102,7 @@ void rpc_uart_init(void)
 	  {
 	    Error_Handler();
 	  }
+
 	  /* USER CODE BEGIN USART2_Init 2 */
 	  rpc_rx_buf.ctr = 0;
 	  __HAL_UART_ENABLE_IT(&huart2, UART_IT_IDLE);
@@ -97,6 +110,7 @@ void rpc_uart_init(void)
 	  	{
 	  		Error_Handler();
 	  	}
+	  /* USER CODE END USART2_Init 2 */
 }
 
 /**
