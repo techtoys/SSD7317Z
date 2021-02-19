@@ -60,7 +60,7 @@ In my environment the installation path is set to **C:\ST\STM32CubeIDE_1.2.0** b
 
 <img src ="./Images/STM32CubeIDE.png" width="120">
 
-The STM32CubeIDE is based on [Eclipse](https://en.wikipedia.org/wiki/Eclipse_(software)) that uses a directory called *workspace* to store its preferences and configurations. Every time you run STM32CubeIDE, you will see a dialog box similar to the screen capture below to ask you for the workspace location. In my case, I just follow the recommended path at **C:\Users\John\STM32CubeIDE\workspace_1.2.0** with *John* as my computer user name. It is not mandatory to set the workspace in C drive. You may use other directory at your convenience. From now on, I will refer your installation path as *your path*.
+The STM32CubeIDE is based on [Eclipse](https://en.wikipedia.org/wiki/Eclipse_(software)) that uses a directory called *workspace* to store its preferences and configurations. Every time you run STM32CubeIDE, you will see a dialog box similar to the screen capture below to ask you for the workspace location. In my case, I just follow the recommended path at **C:\Users\John\STM32CubeIDE\workspace_1.2.0** with *John* as my computer user name. It is not mandatory to set the workspace in C drive. You may use other directory at your convenience. From now on, I will refer your installation path as *<your path>*.
 
 ![](./Images/STM32CubeIDE_workspace.png)
 
@@ -122,17 +122,17 @@ How pixels are rendered down to the COM and SEG addressing scheme is a complex a
 
 Wiring diagram between Nucleo L432KC and PMOLED for the display part is shown below.
 
-<img src="./Images/SPI_PMOLED_wiring.png" width = 80%>
+<img src="./Images/SPI_PMOLED_wiring2.png" width = 80%>
 
 We need at least four wires (4-wire SPI) to drive the PMOLED. They are 
 
-- SPI_SCK (serial clock)
+- OLED_SCK (serial clock)
 
-- SPI_MOSI (master out slave in)
+- OLED_MOSI (master out slave in)
 
-- SPI_NSS (chip select)
+- OLED_DCS (chip select)
 
-- DC (data/command selection)
+- OLED_DC (data/command selection)
 
 There is no MISO (master in slave out) required because the PMOLED is a unidirectional device - SPI data flow from the master (MCU) to slave (PMOLED) only, i.e., it is a half duplex device. 
 
@@ -140,11 +140,54 @@ Allocation of PA7 as the reset pin is optional because it is required only in sy
 
 **SPI Data Transfer**
 
-Figure below shows the SPI timing diagram. Data transmission occurs on the rising edge of the serial clock (SPI_SCK) with most significant bit (MSB) first. When the DC line is low, the byte transfered from the SPI_MOSI pin is a command. When it is high, the byte is interpreted as data.
+Figure below shows the SPI timing diagram. Data transmission occurs on the rising edge of the serial clock (SPI_SCK) with most significant bit (MSB) first. The signal DC (D/C#) controls whether the byte is a command (DC=0) or data (DC=1). 
 
 <img src="./Images/SPI_Timing.png" width=80%>
 
-When data is interpreted as pixels, that 8 bits transferred from the SPI port are displayed as black (0) or white (1) dots across the same page (e.g. COM95-COM88) at the column pointed to. The protocol causes a small issue if we need to display pixels less than a multiple of 8 because the minimum transfer size is one byte (8 bits). 
+Correlation between the timing diagram and the source code is found in the function `SSD7317.c :: MX_SPI1_Init(void)`, which is a function to initialize the SPI module of the MCU (STM32L432KC). Listing of `MX_SPI1_Init(void)` is shown below for reference.
+```c
+/* SPI1 Initialization Function. Direct copy from STM32CubeIDE Code Generation utility.*/
+static void MX_SPI1_Init(void)
+{
+	/* SPI1 parameter configuration*/
+	hspi1.Instance = SPI1;
+	hspi1.Init.Mode = SPI_MODE_MASTER;
+	hspi1.Init.Direction = SPI_DIRECTION_1LINE;
+	hspi1.Init.DataSize = SPI_DATASIZE_8BIT;
+	hspi1.Init.CLKPolarity = SPI_POLARITY_LOW;
+	hspi1.Init.CLKPhase = SPI_PHASE_1EDGE;
+	hspi1.Init.NSS = SPI_NSS_HARD_OUTPUT;
+	hspi1.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_2;
+	hspi1.Init.FirstBit = SPI_FIRSTBIT_MSB;
+	hspi1.Init.TIMode = SPI_TIMODE_DISABLE;
+	hspi1.Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;
+	hspi1.Init.CRCPolynomial = 7;
+	hspi1.Init.CRCLength = SPI_CRC_LENGTH_DATASIZE;
+	hspi1.Init.NSSPMode = SPI_NSS_PULSE_ENABLE;
+	if (HAL_SPI_Init(&hspi1) != HAL_OK)
+	{
+		Error_Handler();
+	}
+}
+```
+To be honest with you, I did not invent the code myself that is mostly hardware dependent. If you double click on **HelloWorld.ioc** <img src ="./Images/Number_circle_44x44_1.png" width=32> from the Project Explorer to open the **Device Configuration Tool**, expand  **Connectivity : SPI1**<img src ="./Images/Number_circle_44x44_2.png" width=32>, you will find a more easy-to-understand table under the **Parameter Settings**<img src ="./Images/Number_circle_44x44_3.png" width=32>.
+
+<img src ="./Images/HelloWorld_ioc.png" width=100%>
+
+How major parameters are mapped to the SPI format required by SSD7317Z are summarized in a table below.
+
+| SPI format                                       | Parameters                                                   |
+| ------------------------------------------------ | ------------------------------------------------------------ |
+| Four lines required (D/C#, DCS#, SCLK, and SDIN) | Mode = Half-Duplex Master with Hardware NSS Output Signal<br/>D/C# = OLED_DC<br/>DCS# = OLED_DCS as chip select<br/>SCLK = OLED_SCK<br/>SDIN = OLED_MOSI |
+| Minimum tCLKL + tCLKH time = 60ns                | Maximum SPI clock = 16MHz (Baud Rate = 16.0 MBits/s)         |
+| Data transferred with MSB first in 8 bits        | Data Size = 8 Bits with First Bit = MSB First                |
+| Data transferred on a rising SPI clock           | Clock Polarity (CPOL) = Low  ([SPI Wiki](https://en.wikipedia.org/wiki/Serial_Peripheral_Interface#Clock_polarity_and_phase)) |
+
+
+
+When data is interpreted as pixels, the 8 bits transferred from the SPI port are displayed as black (0) or white (1) dots across the same page (e.g. COM95-COM88) at the column pointed to. 
+
+The protocol causes a small issue if we need to display pixels less than a multiple of 8 because the minimum transfer size is one byte (8 bits). 
 
 To solve the issue, a frame buffer is allocated from SRAM of the MCU to map the entire GDDRAM to a linear array: `uint8_t frame_buffer[OLED_VER_RES*(OLED_HOR_RES>>3)]`. Please refer to its definition in `SSD7317.c`.
 
