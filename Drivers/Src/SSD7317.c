@@ -272,9 +272,7 @@ void HAL_SPI_TxCpltCallback(SPI_HandleTypeDef *hspi)
  * 			{
  * 				HAL_Init(); //system reset
  * 				SystemClock_Config(); //Configure the system clock
- * 				#ifdef USE_FULL_ASSERT
- *					MX_USART2_UART_Init();
- *				#endif
+ *
  * 				ssd7317_init();	//OLED display On after this function
  * 			}
  * @endcode
