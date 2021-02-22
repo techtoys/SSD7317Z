@@ -420,7 +420,7 @@ int main(void)
  800050e:	490e      	ldr	r1, [pc, #56]	; (8000548 <main+0x58>)
  8000510:	480e      	ldr	r0, [pc, #56]	; (800054c <main+0x5c>)
  8000512:	f006 fd6d 	bl	8006ff0 <ssd7317_get_stringsize>
-  ssd7317_put_string((OLED_HOR_RES-w)/2,(OLED_VER_RES-h)/2,&Tahoma_12h,"Hello World",1);
+  ssd7317_put_string((OLED_HOR_RES-w)/2,(OLED_VER_RES-h)/2,&Tahoma_12h,"Hello World",0);
  8000516:	89fb      	ldrh	r3, [r7, #14]
  8000518:	f1c3 0360 	rsb	r3, r3, #96	; 0x60
  800051c:	0fda      	lsrs	r2, r3, #31
@@ -434,7 +434,7 @@ int main(void)
  800052e:	105b      	asrs	r3, r3, #1
  8000530:	b29a      	uxth	r2, r3
  8000532:	4638      	mov	r0, r7
- 8000534:	2301      	movs	r3, #1
+ 8000534:	2300      	movs	r3, #0
  8000536:	9301      	str	r3, [sp, #4]
  8000538:	4b03      	ldr	r3, [pc, #12]	; (8000548 <main+0x58>)
  800053a:	9300      	str	r3, [sp, #0]
@@ -16197,7 +16197,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
  80062d4:	20000168 	.word	0x20000168
 
 080062d8 <ssd7317_init>:
- *				#endif
+ *
  * 				ssd7317_init();	//OLED display On after this function
  * 			}
  * @endcode
@@ -17130,7 +17130,7 @@ static void fb_spi_transfer(rect_t area)
  800689e:	dd05      	ble.n	80068ac <fb_spi_transfer+0x30>
 	{
 		assert_failed((uint8_t *)__FILE__,__LINE__);
- 80068a0:	f240 3199 	movw	r1, #921	; 0x399
+ 80068a0:	f240 3197 	movw	r1, #919	; 0x397
  80068a4:	482a      	ldr	r0, [pc, #168]	; (8006950 <fb_spi_transfer+0xd4>)
  80068a6:	f7f9 fecd 	bl	8000644 <assert_failed>
  80068aa:	e04d      	b.n	8006948 <fb_spi_transfer+0xcc>
@@ -17300,7 +17300,7 @@ static void fb_flush_suspend(void)
 	#ifdef USE_FULL_ASSERT
 				//Error with DMA Flag not protected well. Check timing.
 				assert_failed((uint8_t *)__FILE__, __LINE__);
- 80069aa:	f240 31d7 	movw	r1, #983	; 0x3d7
+ 80069aa:	f240 31d5 	movw	r1, #981	; 0x3d5
  80069ae:	4808      	ldr	r0, [pc, #32]	; (80069d0 <fb_flush_suspend+0x3c>)
  80069b0:	f7f9 fe48 	bl	8000644 <assert_failed>
 	#endif
@@ -17618,7 +17618,7 @@ static uint16_t touch_crc_checksum(uint16_t byte_cnt, uint8_t trig_cmd)
  8006b84:	d106      	bne.n	8006b94 <touch_crc_checksum+0x78>
 #ifdef USE_FULL_ASSERT
 			assert_failed((uint8_t *)__FILE__, __LINE__);
- 8006b86:	f240 414c 	movw	r1, #1100	; 0x44c
+ 8006b86:	f240 414a 	movw	r1, #1098	; 0x44a
  8006b8a:	480b      	ldr	r0, [pc, #44]	; (8006bb8 <touch_crc_checksum+0x9c>)
  8006b8c:	f7f9 fd5a 	bl	8000644 <assert_failed>
 #endif
@@ -17670,7 +17670,7 @@ static void touch_init(void)
  8006bca:	d004      	beq.n	8006bd6 <touch_init+0x1a>
 #ifdef USE_FULL_ASSERT
 		assert_failed((uint8_t *)__FILE__, __LINE__);
- 8006bcc:	f240 4164 	movw	r1, #1124	; 0x464
+ 8006bcc:	f240 4162 	movw	r1, #1122	; 0x462
  8006bd0:	4879      	ldr	r0, [pc, #484]	; (8006db8 <touch_init+0x1fc>)
  8006bd2:	f7f9 fd37 	bl	8000644 <assert_failed>
 #endif
@@ -17690,7 +17690,7 @@ static void touch_init(void)
  8006bec:	d005      	beq.n	8006bfa <touch_init+0x3e>
 #ifdef USE_FULL_ASSERT
 		assert_failed((uint8_t *)__FILE__, __LINE__);
- 8006bee:	f240 416c 	movw	r1, #1132	; 0x46c
+ 8006bee:	f240 416a 	movw	r1, #1130	; 0x46a
  8006bf2:	4871      	ldr	r0, [pc, #452]	; (8006db8 <touch_init+0x1fc>)
  8006bf4:	f7f9 fd26 	bl	8000644 <assert_failed>
  8006bf8:	e0db      	b.n	8006db2 <touch_init+0x1f6>
@@ -17825,7 +17825,7 @@ static void touch_init(void)
  8006cfc:	d004      	beq.n	8006d08 <touch_init+0x14c>
 #ifdef USE_FULL_ASSERT
 			assert_failed((uint8_t *)__FILE__, __LINE__);
- 8006cfe:	f240 4189 	movw	r1, #1161	; 0x489
+ 8006cfe:	f240 4187 	movw	r1, #1159	; 0x487
  8006d02:	482d      	ldr	r0, [pc, #180]	; (8006db8 <touch_init+0x1fc>)
  8006d04:	f7f9 fc9e 	bl	8000644 <assert_failed>
 #endif
@@ -17846,7 +17846,7 @@ static void touch_init(void)
  8006d20:	d004      	beq.n	8006d2c <touch_init+0x170>
 #ifdef USE_FULL_ASSERT
 			assert_failed((uint8_t *)__FILE__, __LINE__);
- 8006d22:	f240 418f 	movw	r1, #1167	; 0x48f
+ 8006d22:	f240 418d 	movw	r1, #1165	; 0x48d
  8006d26:	4824      	ldr	r0, [pc, #144]	; (8006db8 <touch_init+0x1fc>)
  8006d28:	f7f9 fc8c 	bl	8000644 <assert_failed>
 #endif
@@ -17867,7 +17867,7 @@ static void touch_init(void)
  8006d44:	d004      	beq.n	8006d50 <touch_init+0x194>
 #ifdef USE_FULL_ASSERT
 			assert_failed((uint8_t *)__FILE__, __LINE__);
- 8006d46:	f240 4195 	movw	r1, #1173	; 0x495
+ 8006d46:	f240 4193 	movw	r1, #1171	; 0x493
  8006d4a:	481b      	ldr	r0, [pc, #108]	; (8006db8 <touch_init+0x1fc>)
  8006d4c:	f7f9 fc7a 	bl	8000644 <assert_failed>
 #endif
@@ -18164,7 +18164,7 @@ void   ssd7317_get_charsize(const tFont* font, uint16_t ascii_code, uint16_t *w,
 }
  8006f00:	e004      	b.n	8006f0c <ssd7317_get_charsize+0x60>
 			assert_failed((uint8_t *)__FILE__, __LINE__);
- 8006f02:	f240 51df 	movw	r1, #1503	; 0x5df
+ 8006f02:	f240 51dd 	movw	r1, #1501	; 0x5dd
  8006f06:	4803      	ldr	r0, [pc, #12]	; (8006f14 <ssd7317_get_charsize+0x68>)
  8006f08:	f7f9 fb9c 	bl	8000644 <assert_failed>
 }
@@ -18205,7 +18205,7 @@ rect_t ssd7317_put_string(uint16_t left, uint16_t top, const tFont* font, const 
  8006f3e:	d10c      	bne.n	8006f5a <ssd7317_put_string+0x42>
 #ifdef USE_FULL_ASSERT
 			assert_failed((uint8_t *)__FILE__, __LINE__);
- 8006f40:	f240 51ee 	movw	r1, #1518	; 0x5ee
+ 8006f40:	f240 51ec 	movw	r1, #1516	; 0x5ec
  8006f44:	4829      	ldr	r0, [pc, #164]	; (8006fec <ssd7317_put_string+0xd4>)
  8006f46:	f7f9 fb7d 	bl	8000644 <assert_failed>
 			return area;
@@ -18328,7 +18328,7 @@ void   ssd7317_get_stringsize(const tFont* font, const char *str, uint16_t *w, u
  8007008:	d105      	bne.n	8007016 <ssd7317_get_stringsize+0x26>
 #ifdef USE_FULL_ASSERT
 			assert_failed((uint8_t *)__FILE__, __LINE__);
- 800700a:	f240 610f 	movw	r1, #1551	; 0x60f
+ 800700a:	f240 610d 	movw	r1, #1549	; 0x60d
  800700e:	4812      	ldr	r0, [pc, #72]	; (8007058 <ssd7317_get_stringsize+0x68>)
  8007010:	f7f9 fb18 	bl	8000644 <assert_failed>
  8007014:	e01c      	b.n	8007050 <ssd7317_get_stringsize+0x60>
