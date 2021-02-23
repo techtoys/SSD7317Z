@@ -329,7 +329,7 @@ To solve these problems, a frame buffer is declared from MCU's SRAM as a map to 
 
 <img src="./Images/How_px_mapped2_SRAM.png" width=80%>
 
-The penalty of this approach is a larger SRAM usage but it only 1.5KB out of 64KB SRAM in our target MCU that we still can afford it. A more advanced approach is to port the library to some modern graphical frameworks. Examples are [TouchGFX](https://www.st.com/content/st_com/en/stm32-graphic-user-interface.html) and [LVGL](https://lvgl.io/) and both of them need a frame buffer too.
+The penalty of this approach is a larger SRAM usage but it is only 1.5KB out of 64KB SRAM in our target MCU that we still can afford it. A more advanced approach is to port the library to some modern graphical frameworks. Examples are [TouchGFX](https://www.st.com/content/st_com/en/stm32-graphic-user-interface.html) and [LVGL](https://lvgl.io/) and both of them need a frame buffer too.
 
 ## LCD Image Converter
 
