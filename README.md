@@ -297,7 +297,7 @@ int main(void)
 
 ### The Frame Buffer
 
-The third parameter of the function call to `ssd7317_put_string(left,right,&Tahoma_12h,"Hello World",0)` above is a reference of the structure `const tFont Tahoma_12h` which store 95 characters in its map in the MCU's non-volatile FLASH space. Data elements of the starting character **H** in the string **Hello World** are:
+The third parameter of the function call to `ssd7317_put_string(left,right,&Tahoma_12h,"Hello World",0)` above is a reference to the structure `const tFont Tahoma_12h` which store 95 characters in the MCU's non-volatile FLASH space. Data elements of character **H** in **Hello World** are:
 
 ```c
 //0x48 is the ASCII code of H, expand the file Tahoma_12h.h and make a search
@@ -318,14 +318,14 @@ static const uint8_t image_data_Tahoma_12h_0x48[14] = {
     0x00
 };
 ```
-From a broad perspective, we just need to transfer the byte pattern of **H** `{0x00 0x00 0x00 0x41 ...0x00}` from the MCU's FLASH to OLED's GDDRAM by calling `spi_write_data()` and repeat for the remaining characters to get the string **Hello World** displayed.
+From a broad perspective, we just need to transfer the byte pattern of **H** `{0x00 0x00 0x00 0x41 ...0x00}` from the MCU's FLASH to OLED's GDDRAM by calling `spi_write_data()` and repeat for the remaining characters to get **Hello World** displayed.
  <img src="./Images/How_px_mapped2_FLASH.png" width=100%>
-However, there are at least two problems with this approach:
+There are at least two problems with this approach:
 
 1. Reading from the FLASH is always slower than reading from SRAM of an MCU. A longer data reading time leads to slower pixel rendering
 2. Graphical contents of the GUI is not saved
 
-To solve these problems, a frame buffer is declared from MCU's SRAM as a map to the OLED's GDDRAM. Pixels are not written directly to the screen; instead, any graphical content to be updated is written to the frame buffer first and the modified contents in `frame_buffer[]` are flushed from SRAM to GDDRAM by SPI transfer on an FR rising edge to synchronize the blanking period of the OLED. In this approach, the speed of data transfer is faster because it is now data copy from SRAM to SPI to OLED. DMA can be applied in this approach to further shorten SPI transfer latency. Synchronization to an FR rising edge also avoids display [tearing](https://en.wikipedia.org/wiki/Screen_tearing). 
+To solve these problems, a frame buffer is declared from MCU's SRAM as a map to the OLED's GDDRAM. Pixels are not written directly to the screen; instead, any graphical content to be updated is written to the frame buffer first and the modified contents in `frame_buffer[]` are flushed from SRAM to GDDRAM by SPI transfer on an FR rising edge to synchronize the blanking period of the OLED. In this approach, the speed of data transfer is faster because it is now data copy from SRAM to OLED's GDDRAM. DMA can be applied in this approach to further shorten SPI transfer latency. Synchronization to an FR rising edge also avoids display [tearing](https://en.wikipedia.org/wiki/Screen_tearing). 
 
 <img src="./Images/How_px_mapped2_SRAM.png" width=80%>
 
