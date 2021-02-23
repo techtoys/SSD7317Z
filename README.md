@@ -292,22 +292,44 @@ int main(void)
 3. `ssd7317_init()` is the initialization function of SSD7317Z.
 4. `rpc_uart_init()` is the function to initialize the Remote Procedure Call (RPC) module that allows us to input commands from YAT to control the OLED. 
 5. Function `ssd7317_get_stringsize(&Tahoma_12h, "Hello World", &w, &h)` returns the width and height of the string `Hello World` from the font `Tahoma_12h` defined in a header file **Tahoma_12h.h**. I will explain how to create the file in the next section [LCD Image Converter](#lcd-image-converter).
-6. `ssd7317_put_string((OLED_HOR_RES-w)/2,(OLED_VER_RES-h)/2, &Tahoma_12h,"Hello World",0)` does the job to align `Hello World` in the center of the screen, update the frame buffer, and get the string displayed on the next FR event.
+6. `ssd7317_put_string((OLED_HOR_RES-w)/2,(OLED_VER_RES-h)/2, &Tahoma_12h,"Hello World",0)` is the key function to align `Hello World` in the center of the screen, update the frame buffer, and get the string displayed on the next FR event. 
 7. `rpc_main_task()` is the task of RPC that runs periodically (polling) in the infinite loop.
 
 ### The Frame Buffer
 
-Although it is possible to draw pixels by `spi_write_data(*pattern)` with pixel data move from FLASH to GDDRAM, in this way we would need to update the whole screen on every content refresh. Pixels are not written directly to the screen; instead, a frame buffer `uint8_t frame_buffer[OLED_VER_RES*(OLED_HOR_RES>>3)]` is defined to map the screen content of the OLED to SRAM of the MCU. How pixels are mapped to the frame buffer is illustrated in the figure below.
+The third parameter of the function call to `ssd7317_put_string(left,right,&Tahoma_12h,"Hello World",0)` above is a reference of the structure `const tFont Tahoma_12h` which store 95 characters in its map in the MCU's non-volatile FLASH space. Data elements of the starting character **H** in the string **Hello World** are:
+
+```c
+//0x48 is the ASCII code of H, expand the file Tahoma_12h.h and make a search
+static const uint8_t image_data_Tahoma_12h_0x48[14] = { 
+    0x00, 
+    0x00, 
+    0x00, 
+    0x41, 
+    0x41, 
+    0x41, 
+    0x41, 
+    0x7f, 
+    0x41, 
+    0x41, 
+    0x41, 
+    0x41, 
+    0x00, 
+    0x00
+};
+```
+From a broad perspective, we just need to transfer the byte pattern of **H** `{0x00 0x00 0x00 0x41 ...0x00}` from the MCU's FLASH to OLED's GDDRAM by calling `spi_write_data()` and repeat for the remaining characters to get the string **Hello World** displayed.
+ <img src="./Images/How_px_mapped2_FLASH.png" width=100%>
+However, there are at least two problems with this approach:
+
+1. Reading from the FLASH is always slower than reading from SRAM of an MCU. A longer data reading time leads to slower pixel rendering
+2. Graphical contents of the GUI is not saved
+
+To solve these problems, a frame buffer is declared from MCU's SRAM as a map to the OLED's GDDRAM. Pixels are not written directly to the screen; instead, any graphical content to be updated is written to the frame buffer first and the modified contents in `frame_buffer[]` are flushed from SRAM to GDDRAM by SPI transfer on an FR rising edge to synchronize the blanking period of the OLED. In this approach, the speed of data transfer is faster because it is now data copy from SRAM to SPI to OLED. DMA can be applied in this approach to further shorten SPI transfer latency. Synchronization to an FR rising edge also avoids display [tearing](https://en.wikipedia.org/wiki/Screen_tearing). 
 
 <img src="./Images/How_px_mapped2_SRAM.png" width=80%>
 
-
-
-
-
-
-
-
+The penalty of this approach is a larger SRAM usage but it only 1.5KB out of 64KB SRAM in our target MCU that we still can afford it. A more advanced approach is to port the library to some modern graphical frameworks. Examples are [TouchGFX](https://www.st.com/content/st_com/en/stm32-graphic-user-interface.html) and [LVGL](https://lvgl.io/) and both of them need a frame buffer too.
 
 ## LCD Image Converter
 
