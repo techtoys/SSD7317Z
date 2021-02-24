@@ -348,7 +348,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 
 On an FR-rising edge if there is pending data to flush `(fb_flush_pending_get()==true)`, the function `fb_spi_transfer()` is called to copy `frame_buffer[area]` from MCU's SRAM to OLED's GDDRAM via SPI.
 
-The waveform to drive the screen when **Hello World** was written by `ssd7317_put_string()` has been captured by a Logic Analyzer shown below.
+The waveform to draw on the screen with string **Hello World** has been captured by a Logic Analyzer shown below.
 
 <img src="./Images/FR_LogicAnalyzer.png" width=100%>
 
