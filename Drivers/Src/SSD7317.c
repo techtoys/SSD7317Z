@@ -64,7 +64,10 @@ static const uint8_t SSD7317_INIT_TBL[]=
 		0xae,	//display off (sleep mode)
 
 		0xd5,	//Set Front Clock Divider /Oscillator Frequency
-		0xf0,	//value 0xf0 set frame frequency to 160Hz
+		0xc0,	//Parameter after 0xd5 :
+				//A[3:0] sets divide ratio of the display clock, reset value is 0000b, i.e. divide ratio=1.
+				//A[7:4] sets the oscillator frequency, reset value is 1011b in range 0000b~1111b
+				//value 0xc0 set a frame frequency 100Hz (max value 0xf0 set a frame frequency 160Hz)
 
 		0x20,	//Set Memory Addressing Mode
 		0x01,	//COM-page mode
@@ -1517,7 +1520,6 @@ rect_t ssd7317_put_string(uint16_t left, uint16_t top, const tFont* font, const 
 			return area;
 #endif
 	}
-
 
 	uint16_t _x = left;
 	char ch = 0;

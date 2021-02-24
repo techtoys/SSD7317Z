@@ -1,7 +1,7 @@
 # SSD7317Z
 is a controller IC designed by [Solomon Systech Ltd.](https://www.solomon-systech.com/) with touch screen and display controller circuits fabricated on the same die. Photo below shows a conventional *out-cell* screen with separated touch screen and LCD module on the left versus the *in-cell* screen with a single Touch and Display Driver Integration (TDDI) IC driver on the right.
 
-<img src="./Images/compare_outcell_incell.png" width=100%>
+<img src="./Images/compare_outcell_incell.png" width=80%>
 
 An *out-cell* solution uses a highly conductive and optically transparent Indium Tin Oxide (ITO) printed as grids on a substrate to sense our finger for changes in capacitance. The substrate is bonded to the top glass of the LCD module by some optically clear adhesive [OCA](https://en.wikipedia.org/wiki/Liquid_optically_clear_adhesive). A major advantage of an *out-cell* is flexibility: engineers have the freedom to mix different types of touch screen with a LCD module for different designs. Disadvantages include a larger thickness and weight because the touch substrate is a separate layer that needs OCA to bond it to the top of the LCD module. Additional manufacturing processes also lead to longer production time, more complex quality assurance, higher production cost and yield risks.
 
@@ -327,9 +327,32 @@ There are at least two problems with this approach:
 
 To solve these problems, a frame buffer is declared from MCU's SRAM as a map to the OLED's GDDRAM. Pixels are not written directly to the screen; instead, any graphical content to be updated is written to the frame buffer first and the modified contents in `frame_buffer[]` are flushed from SRAM to GDDRAM by SPI transfer on an FR rising edge to synchronize the blanking period of the OLED. With this approach, the speed of data transfer is faster because it is now data copy from SRAM to OLED's GDDRAM. DMA can be applied to further shorten SPI transfer latency. Synchronization to an FR rising edge also avoids display [tearing](https://en.wikipedia.org/wiki/Screen_tearing). 
 
-<img src="./Images/How_px_mapped2_SRAM.png" width=80%>
+<img src="./Images/How_px_mapped2_SRAM.png" width=100%>
 
 For a small display of 96*128 pixels in black and white, the frame buffer occupies an extra 1.5KB out of 64KB SRAM in our target MCU. A more advanced approach is to port the library to some modern graphical frameworks. Examples are [TouchGFX](https://www.st.com/content/st_com/en/stm32-graphic-user-interface.html) and [LVGL](https://lvgl.io/) and both of them need a frame buffer too.
+
+Listing below shows the code snippet of an GPIO external interrupt detection callback that listens to an FR rising edge. The FR signal is an output signal triggered by SSD7317Z in each blanking period of the OLED, that means it is a perpetual output signal determined by the frame rate of the OLED.
+
+```c
+//EXTI callback function in SSD7317.c
+void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) 
+{
+	if (GPIO_Pin==OLED_FR_Pin)// FR signal synchronized
+	{	// Copy frame buffer to GDDRAM on-the-spot of this interrupt callback if there is pending data to flush
+		if(fb_flush_pending_get()){
+			fb_spi_transfer(fb_flush_area);
+		}
+	}
+}
+```
+
+On an FR-rising edge if there is pending data to flush `(fb_flush_pending_get()==true)`, the SPI transfer function `fb_spi_transfer()` is called to copy `frame_buffer[area]` from MCU's SRAM to OLED's GDDRAM via SPI.
+
+The moment when the string **Hello World** was written by `ssd7317_put_string()`was captured by a Logic Analyzer as shown below.
+
+<img src="./Images/FR_LogicAnalyzer.png" width=100%>
+
+
 
 ## LCD Image Converter
 
