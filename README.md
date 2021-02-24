@@ -331,7 +331,7 @@ To solve these problems, a frame buffer is declared from MCU's SRAM as a map to 
 
 For a small display of 96*128 pixels in black and white, the frame buffer occupies an extra 1.5KB out of 64KB SRAM in our target MCU. A more advanced approach is to port the library to some modern graphical frameworks. Examples are [TouchGFX](https://www.st.com/content/st_com/en/stm32-graphic-user-interface.html) and [LVGL](https://lvgl.io/) and both of them need a frame buffer too.
 
-Listing below shows the code snippet of an GPIO external interrupt detection callback that listens to an FR rising edge. The FR signal is an output signal triggered by SSD7317Z in each blanking period of the OLED, that means it is a perpetual output signal determined by the frame rate of the OLED.
+Listing below shows the code snippet of the GPIO external interrupt detection callback that listens to an FR rising edge. The FR signal is an output signal triggered by SSD7317Z in each blanking period of the OLED, that means it is a perpetual output signal determined by the frame rate of the OLED.
 
 ```c
 //EXTI callback function in SSD7317.c
@@ -346,9 +346,9 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 }
 ```
 
-On an FR-rising edge if there is pending data to flush `(fb_flush_pending_get()==true)`, the SPI transfer function `fb_spi_transfer()` is called to copy `frame_buffer[area]` from MCU's SRAM to OLED's GDDRAM via SPI.
+On an FR-rising edge if there is pending data to flush `(fb_flush_pending_get()==true)`, the function `fb_spi_transfer()` is called to copy `frame_buffer[area]` from MCU's SRAM to OLED's GDDRAM via SPI.
 
-The moment when the string **Hello World** was written by `ssd7317_put_string()`was captured by a Logic Analyzer as shown below.
+The waveform to drive the screen when **Hello World** was written by `ssd7317_put_string()` has been captured by a Logic Analyzer shown below.
 
 <img src="./Images/FR_LogicAnalyzer.png" width=100%>
 
