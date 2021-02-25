@@ -348,17 +348,17 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 
 On an FR-rising edge if there is pending data to flush `(fb_flush_pending_get()==true)`, the function `fb_spi_transfer()` is called to copy `frame_buffer[area]` from MCU's SRAM to OLED's GDDRAM via SPI.
 
-The waveform to draw on the screen for the string **Hello World** has been captured by a Logic Analyzer shown below.
+The waveform to draw on the screen for the string **Hello World** was captured by a Logic Analyzer shown below.
 
 <img src="./Images/FR_LogicAnalyzer.png" width=100%>
 
-By boosting the the Logic Analyzer's sampling rate to 100MHz (SPI frequency is 16MHz), we can close up on the SPI data that got written starting from the segment address set `0x21`.
+By boosting the Logic Analyzer's sampling rate to 100MHz (SPI frequency is 16MHz), we can close up on the SPI data that got written starting from segment address set `0x21`.
 
 <img src="./Images/FR_LogicAnalyzer_Closeup.png" width=100%>
 
 To wrap it up, the program works by copying the bit patterns of the string **Hello World** from FLASH to the frame buffer `(frame_buffer[])`, then a flag is set for flush pending to wait for an FR rising edge. On an FR rising edge, the HAL function `HAL_SPI_Transmit()` is applied to copy the dirty area of the frame buffer to GDDRAM of the OLED by SPI.
 
-<img src = "./Images/FR_SPI_Tx_Flowchart.png" width =100%>
+<img src = "./Images/FR_SPI_Tx_Flowchart.png" width=70%>
 
 ## LCD Image Converter
 
