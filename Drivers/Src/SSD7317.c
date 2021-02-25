@@ -809,8 +809,8 @@ void ssd7317_scroll_area(rect_t area, rect_t win, finger_t dir)
 
 		//Send command to scroll by 1 column (segment)
 		spi_write_command((const uint8_t*)cmd, 8);
-		//delay for a 2/frame_freq = 2/160Hz = 12.5ms
-		HAL_Delay(12);
+		//delay for a 2/frame_freq = 2/100Hz = 20ms
+		HAL_Delay(20);
 		//DC pin set high for data send in next SPI transfer
 		HAL_GPIO_WritePin(OLED_DC_GPIO_Port, OLED_DC_Pin, GPIO_PIN_SET);
 
@@ -1473,14 +1473,23 @@ rect_t ssd7317_put_char(uint16_t left, uint16_t top, const tFont* font, uint16_t
 {
 	const tChar* pChar = font->chars;
 
-	uint16_t _code = ascii_code-pChar[0].code; //need to offset the first array member
+	rect_t area = {0,0,0,0};
 
-	uint16_t height = pChar[_code].image->height;
-	uint16_t width  = pChar[_code].image->width;
+	if((pChar[0].code>ascii_code) || (ascii_code>(pChar[0].code+font->length-1))){
+#ifdef USE_FULL_ASSERT
+			assert_failed((uint8_t *)__FILE__, __LINE__); //character out of range
+			return area;
+#endif
+	}
+	uint16_t _code = ascii_code-pChar[0].code; //need to offset the first array member
 
 	const uint8_t* pData = pChar[_code].image->data;
 
-	rect_t area = {left, top, (left+width-1), (top+height-1)};
+	area.x1 = left;
+	area.y1 = top;
+	area.x2 = (left+pChar[_code].image->width-1);
+	area.y2 = (top+pChar[_code].image->height-1);
+
 	ssd7317_fill_area(area, pData, negative);
 
 	return area;
@@ -1512,30 +1521,54 @@ void   ssd7317_get_charsize(const tFont* font, uint16_t ascii_code, uint16_t *w,
  */
 rect_t ssd7317_put_string(uint16_t left, uint16_t top, const tFont* font, const char *str, bool negative)
 {
-	rect_t area = {0,0,0,0};
+	rect_t err={0,0,0,0};
 
+	/* make sure *font and *str are not NULL pointer */
 	if(font==0 || str==0){
 #ifdef USE_FULL_ASSERT
 			assert_failed((uint8_t *)__FILE__, __LINE__);
-			return area;
+			return err;
 #endif
 	}
 
+	const tChar* pChar = font->chars;
+
+	/* make sure all characters in range*/
+	const char *pStr = str;
+
+	while(*pStr != '\0')
+	{
+		if((pChar[0].code>*pStr) || (*pStr>(pChar[0].code+font->length-1))){
+	#ifdef USE_FULL_ASSERT
+				assert_failed((uint8_t *)__FILE__, __LINE__); //character out of range
+				return err;
+	#endif
+		}
+		pStr++;
+	}
+
+	/* Now, data assert all pass. We can get each char from the string and put it in frame buffer */
+	rect_t area= {left,top,left,top + (font->chars->image->height-1)};
+
 	uint16_t _x = left;
-	char ch = 0;
 
 	while(*str != '\0')
 	{
-		ch = *str;
-		area = ssd7317_put_char(_x, top, font, ch, negative);
-		_x += (area.x2-area.x1+1);
+		uint16_t _code = *str - pChar[0].code; //need to offset the first array member
+		const uint8_t* pData = pChar[_code].image->data;
+
+		_x += (pChar[_code].image->width);
+		area.x2 = _x-1;
+		fb_fill_area(area,pData,negative);
+		area.x1 = _x+1; //increment for new area.x1
+
 		str++;
 	}
 
+	fb_flush_suspend();	//wait until previous SPI flushes finished
+	fb_flush_pending_set(area); //set flag to indicate frame buffer flush pending and wait for a FR pulse
+
 	area.x1 = left;
-	area.x2 = _x;
-	area.y1 = top;
-	area.y2 = top + (font->chars->image->height-1);
 
 	return area;
 }

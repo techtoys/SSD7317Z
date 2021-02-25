@@ -3656,6 +3656,8 @@ Discarded input sections
                 0x0000000000000000       0x44 SSD7317Z/Src/SSD7317.o
  .text.ssd7317_set_pixel
                 0x0000000000000000       0x5c SSD7317Z/Src/SSD7317.o
+ .text.ssd7317_fill_area
+                0x0000000000000000       0x38 SSD7317Z/Src/SSD7317.o
  .text.ssd7317_fill_color
                 0x0000000000000000       0x7a SSD7317Z/Src/SSD7317.o
  .text.ssd7317_set_contrast
@@ -3679,6 +3681,8 @@ Discarded input sections
                 0x0000000000000000      0x12c SSD7317Z/Src/SSD7317.o
  .text.ssd7317_scroll_brake
                 0x0000000000000000       0x1c SSD7317Z/Src/SSD7317.o
+ .text.ssd7317_put_char
+                0x0000000000000000       0xdc SSD7317Z/Src/SSD7317.o
  .debug_macro   0x0000000000000000      0xa60 SSD7317Z/Src/SSD7317.o
  .debug_macro   0x0000000000000000      0x1b3 SSD7317Z/Src/SSD7317.o
  .debug_macro   0x0000000000000000       0x2e SSD7317Z/Src/SSD7317.o
@@ -4271,7 +4275,7 @@ LOAD c:/st/stm32cubeide_1.2.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.exte
                 0x0000000008000000                g_pfnVectors
                 0x000000000800018c                . = ALIGN (0x4)
 
-.text           0x000000000800018c     0x7b7c
+.text           0x000000000800018c     0x7b24
                 0x000000000800018c                . = ALIGN (0x4)
  *(.text)
  .text          0x000000000800018c       0x40 c:/st/stm32cubeide_1.2.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.4.0.202007081208/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/thumb/v7e-m/fpv4-sp/hard/crtbegin.o
@@ -4654,759 +4658,753 @@ LOAD c:/st/stm32cubeide_1.2.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.exte
  .text.ssd7317_display_on
                 0x0000000008006354       0x22 SSD7317Z/Src/SSD7317.o
                 0x0000000008006354                ssd7317_display_on
- .text.ssd7317_fill_area
-                0x0000000008006376       0x38 SSD7317Z/Src/SSD7317.o
-                0x0000000008006376                ssd7317_fill_area
- *fill*         0x00000000080063ae        0x2 
+ *fill*         0x0000000008006376        0x2 
  .text.MX_GPIO_Init
-                0x00000000080063b0      0x108 SSD7317Z/Src/SSD7317.o
+                0x0000000008006378      0x108 SSD7317Z/Src/SSD7317.o
  .text.MX_SPI1_Init
-                0x00000000080064b8       0x7c SSD7317Z/Src/SSD7317.o
+                0x0000000008006480       0x7c SSD7317Z/Src/SSD7317.o
  .text.MX_I2C1_Init
-                0x0000000008006534       0x80 SSD7317Z/Src/SSD7317.o
+                0x00000000080064fc       0x80 SSD7317Z/Src/SSD7317.o
  .text.spi_write_command
-                0x00000000080065b4       0x48 SSD7317Z/Src/SSD7317.o
-                0x00000000080065b4                spi_write_command
+                0x000000000800657c       0x48 SSD7317Z/Src/SSD7317.o
+                0x000000000800657c                spi_write_command
  .text.spi_write_data
-                0x00000000080065fc       0x48 SSD7317Z/Src/SSD7317.o
-                0x00000000080065fc                spi_write_data
+                0x00000000080065c4       0x48 SSD7317Z/Src/SSD7317.o
+                0x00000000080065c4                spi_write_data
  .text.fb_set_pixel
-                0x0000000008006644       0xcc SSD7317Z/Src/SSD7317.o
+                0x000000000800660c       0xcc SSD7317Z/Src/SSD7317.o
  .text.fb_fill_area
-                0x0000000008006710       0xee SSD7317Z/Src/SSD7317.o
- *fill*         0x00000000080067fe        0x2 
+                0x00000000080066d8       0xee SSD7317Z/Src/SSD7317.o
+ *fill*         0x00000000080067c6        0x2 
  .text.fb_clear
-                0x0000000008006800       0x7c SSD7317Z/Src/SSD7317.o
+                0x00000000080067c8       0x7c SSD7317Z/Src/SSD7317.o
  .text.fb_spi_transfer
-                0x000000000800687c       0xe4 SSD7317Z/Src/SSD7317.o
+                0x0000000008006844       0xe4 SSD7317Z/Src/SSD7317.o
  .text.fb_flush_pending_set
-                0x0000000008006960       0x34 SSD7317Z/Src/SSD7317.o
+                0x0000000008006928       0x34 SSD7317Z/Src/SSD7317.o
  .text.fb_flush_suspend
-                0x0000000008006994       0x40 SSD7317Z/Src/SSD7317.o
+                0x000000000800695c       0x40 SSD7317Z/Src/SSD7317.o
  .text.fb_flush_pending_clear
-                0x00000000080069d4       0x18 SSD7317Z/Src/SSD7317.o
+                0x000000000800699c       0x18 SSD7317Z/Src/SSD7317.o
  .text.fb_flush_pending_get
-                0x00000000080069ec       0x18 SSD7317Z/Src/SSD7317.o
+                0x00000000080069b4       0x18 SSD7317Z/Src/SSD7317.o
  .text.i2c_write
-                0x0000000008006a04       0x90 SSD7317Z/Src/SSD7317.o
+                0x00000000080069cc       0x90 SSD7317Z/Src/SSD7317.o
  .text.i2c_read
-                0x0000000008006a94       0x88 SSD7317Z/Src/SSD7317.o
+                0x0000000008006a5c       0x88 SSD7317Z/Src/SSD7317.o
  .text.touch_crc_checksum
-                0x0000000008006b1c       0xa0 SSD7317Z/Src/SSD7317.o
+                0x0000000008006ae4       0xa0 SSD7317Z/Src/SSD7317.o
  .text.touch_init
-                0x0000000008006bbc      0x20c SSD7317Z/Src/SSD7317.o
+                0x0000000008006b84      0x20c SSD7317Z/Src/SSD7317.o
  .text.touch_event_clear
-                0x0000000008006dc8       0x2c SSD7317Z/Src/SSD7317.o
+                0x0000000008006d90       0x2c SSD7317Z/Src/SSD7317.o
  .text.touch_event_set
-                0x0000000008006df4       0x18 SSD7317Z/Src/SSD7317.o
- .text.ssd7317_put_char
-                0x0000000008006e0c       0xa0 SSD7317Z/Src/SSD7317.o
-                0x0000000008006e0c                ssd7317_put_char
+                0x0000000008006dbc       0x18 SSD7317Z/Src/SSD7317.o
  .text.ssd7317_get_charsize
-                0x0000000008006eac       0x6c SSD7317Z/Src/SSD7317.o
-                0x0000000008006eac                ssd7317_get_charsize
+                0x0000000008006dd4       0x6c SSD7317Z/Src/SSD7317.o
+                0x0000000008006dd4                ssd7317_get_charsize
  .text.ssd7317_put_string
-                0x0000000008006f18       0xd8 SSD7317Z/Src/SSD7317.o
-                0x0000000008006f18                ssd7317_put_string
+                0x0000000008006e40      0x158 SSD7317Z/Src/SSD7317.o
+                0x0000000008006e40                ssd7317_put_string
  .text.ssd7317_get_stringsize
-                0x0000000008006ff0       0x6c SSD7317Z/Src/SSD7317.o
-                0x0000000008006ff0                ssd7317_get_stringsize
+                0x0000000008006f98       0x6c SSD7317Z/Src/SSD7317.o
+                0x0000000008006f98                ssd7317_get_stringsize
  .text.HAL_DWT_Delay_Init
-                0x000000000800705c       0x60 SSD7317Z/Src/dwt_stm32_delay.o
-                0x000000000800705c                HAL_DWT_Delay_Init
+                0x0000000008007004       0x60 SSD7317Z/Src/dwt_stm32_delay.o
+                0x0000000008007004                HAL_DWT_Delay_Init
  .text.rpc_buffer_empty
-                0x00000000080070bc       0x28 SSD7317Z/Src/rpc.o
+                0x0000000008007064       0x28 SSD7317Z/Src/rpc.o
  .text.rpc_get_command
-                0x00000000080070e4       0x7c SSD7317Z/Src/rpc.o
+                0x000000000800708c       0x7c SSD7317Z/Src/rpc.o
  .text.rpc_uart_init
-                0x0000000008007160       0xc4 SSD7317Z/Src/rpc.o
-                0x0000000008007160                rpc_uart_init
+                0x0000000008007108       0xc4 SSD7317Z/Src/rpc.o
+                0x0000000008007108                rpc_uart_init
  .text.rpc_idle_callback
-                0x0000000008007224       0x3c SSD7317Z/Src/rpc.o
-                0x0000000008007224                rpc_idle_callback
+                0x00000000080071cc       0x3c SSD7317Z/Src/rpc.o
+                0x00000000080071cc                rpc_idle_callback
  .text.rpc_main_task
-                0x0000000008007260       0xc8 SSD7317Z/Src/rpc.o
-                0x0000000008007260                rpc_main_task
- .text.__errno  0x0000000008007328        0xc c:/st/stm32cubeide_1.2.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.4.0.202007081208/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-errno.o)
-                0x0000000008007328                __errno
+                0x0000000008007208       0xc8 SSD7317Z/Src/rpc.o
+                0x0000000008007208                rpc_main_task
+ .text.__errno  0x00000000080072d0        0xc c:/st/stm32cubeide_1.2.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.4.0.202007081208/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-errno.o)
+                0x00000000080072d0                __errno
  .text.__libc_init_array
-                0x0000000008007334       0x48 c:/st/stm32cubeide_1.2.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.4.0.202007081208/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-init.o)
-                0x0000000008007334                __libc_init_array
- .text.memset   0x000000000800737c       0x10 c:/st/stm32cubeide_1.2.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.4.0.202007081208/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-memset.o)
-                0x000000000800737c                memset
- .text.putchar  0x000000000800738c       0x28 c:/st/stm32cubeide_1.2.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.4.0.202007081208/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-putchar.o)
-                0x000000000800738c                putchar
- .text._puts_r  0x00000000080073b4       0xb8 c:/st/stm32cubeide_1.2.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.4.0.202007081208/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-puts.o)
-                0x00000000080073b4                _puts_r
- .text.puts     0x000000000800746c       0x10 c:/st/stm32cubeide_1.2.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.4.0.202007081208/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-puts.o)
-                0x000000000800746c                puts
+                0x00000000080072dc       0x48 c:/st/stm32cubeide_1.2.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.4.0.202007081208/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-init.o)
+                0x00000000080072dc                __libc_init_array
+ .text.memset   0x0000000008007324       0x10 c:/st/stm32cubeide_1.2.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.4.0.202007081208/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-memset.o)
+                0x0000000008007324                memset
+ .text.putchar  0x0000000008007334       0x28 c:/st/stm32cubeide_1.2.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.4.0.202007081208/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-putchar.o)
+                0x0000000008007334                putchar
+ .text._puts_r  0x000000000800735c       0xb8 c:/st/stm32cubeide_1.2.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.4.0.202007081208/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-puts.o)
+                0x000000000800735c                _puts_r
+ .text.puts     0x0000000008007414       0x10 c:/st/stm32cubeide_1.2.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.4.0.202007081208/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-puts.o)
+                0x0000000008007414                puts
  .text.__swbuf_r
-                0x000000000800747c       0xa4 c:/st/stm32cubeide_1.2.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.4.0.202007081208/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-wbuf.o)
-                0x000000000800747c                __swbuf_r
+                0x0000000008007424       0xa4 c:/st/stm32cubeide_1.2.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.4.0.202007081208/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-wbuf.o)
+                0x0000000008007424                __swbuf_r
  .text.__swsetup_r
-                0x0000000008007520       0xdc c:/st/stm32cubeide_1.2.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.4.0.202007081208/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-wsetup.o)
-                0x0000000008007520                __swsetup_r
+                0x00000000080074c8       0xdc c:/st/stm32cubeide_1.2.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.4.0.202007081208/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-wsetup.o)
+                0x00000000080074c8                __swsetup_r
  .text.__sflush_r
-                0x00000000080075fc      0x10c c:/st/stm32cubeide_1.2.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.4.0.202007081208/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-fflush.o)
-                0x00000000080075fc                __sflush_r
+                0x00000000080075a4      0x10c c:/st/stm32cubeide_1.2.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.4.0.202007081208/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-fflush.o)
+                0x00000000080075a4                __sflush_r
  .text._fflush_r
-                0x0000000008007708       0x54 c:/st/stm32cubeide_1.2.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.4.0.202007081208/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-fflush.o)
-                0x0000000008007708                _fflush_r
- .text.std      0x000000000800775c       0x48 c:/st/stm32cubeide_1.2.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.4.0.202007081208/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-findfp.o)
+                0x00000000080076b0       0x54 c:/st/stm32cubeide_1.2.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.4.0.202007081208/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-fflush.o)
+                0x00000000080076b0                _fflush_r
+ .text.std      0x0000000008007704       0x48 c:/st/stm32cubeide_1.2.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.4.0.202007081208/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-findfp.o)
  .text._cleanup_r
-                0x00000000080077a4        0xc c:/st/stm32cubeide_1.2.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.4.0.202007081208/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-findfp.o)
-                0x00000000080077a4                _cleanup_r
+                0x000000000800774c        0xc c:/st/stm32cubeide_1.2.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.4.0.202007081208/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-findfp.o)
+                0x000000000800774c                _cleanup_r
  .text.__sfmoreglue
-                0x00000000080077b0       0x2c c:/st/stm32cubeide_1.2.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.4.0.202007081208/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-findfp.o)
-                0x00000000080077b0                __sfmoreglue
- .text.__sinit  0x00000000080077dc       0x60 c:/st/stm32cubeide_1.2.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.4.0.202007081208/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-findfp.o)
-                0x00000000080077dc                __sinit
- .text.__sfp    0x000000000800783c       0x78 c:/st/stm32cubeide_1.2.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.4.0.202007081208/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-findfp.o)
-                0x000000000800783c                __sfp
+                0x0000000008007758       0x2c c:/st/stm32cubeide_1.2.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.4.0.202007081208/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-findfp.o)
+                0x0000000008007758                __sfmoreglue
+ .text.__sinit  0x0000000008007784       0x60 c:/st/stm32cubeide_1.2.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.4.0.202007081208/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-findfp.o)
+                0x0000000008007784                __sinit
+ .text.__sfp    0x00000000080077e4       0x78 c:/st/stm32cubeide_1.2.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.4.0.202007081208/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-findfp.o)
+                0x00000000080077e4                __sfp
  .text._fwalk_reent
-                0x00000000080078b4       0x3c c:/st/stm32cubeide_1.2.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.4.0.202007081208/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-fwalk.o)
-                0x00000000080078b4                _fwalk_reent
+                0x000000000800785c       0x3c c:/st/stm32cubeide_1.2.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.4.0.202007081208/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-fwalk.o)
+                0x000000000800785c                _fwalk_reent
  .text.__swhatbuf_r
-                0x00000000080078f0       0x48 c:/st/stm32cubeide_1.2.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.4.0.202007081208/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-makebuf.o)
-                0x00000000080078f0                __swhatbuf_r
+                0x0000000008007898       0x48 c:/st/stm32cubeide_1.2.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.4.0.202007081208/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-makebuf.o)
+                0x0000000008007898                __swhatbuf_r
  .text.__smakebuf_r
-                0x0000000008007938       0x80 c:/st/stm32cubeide_1.2.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.4.0.202007081208/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-makebuf.o)
-                0x0000000008007938                __smakebuf_r
- .text._free_r  0x00000000080079b8       0x9c c:/st/stm32cubeide_1.2.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.4.0.202007081208/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-nano-freer.o)
-                0x00000000080079b8                _free_r
+                0x00000000080078e0       0x80 c:/st/stm32cubeide_1.2.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.4.0.202007081208/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-makebuf.o)
+                0x00000000080078e0                __smakebuf_r
+ .text._free_r  0x0000000008007960       0x9c c:/st/stm32cubeide_1.2.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.4.0.202007081208/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-nano-freer.o)
+                0x0000000008007960                _free_r
  .text._malloc_r
-                0x0000000008007a54       0xb4 c:/st/stm32cubeide_1.2.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.4.0.202007081208/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-nano-mallocr.o)
-                0x0000000008007a54                _malloc_r
- .text._putc_r  0x0000000008007b08       0x6c c:/st/stm32cubeide_1.2.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.4.0.202007081208/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-putc.o)
-                0x0000000008007b08                _putc_r
- .text._sbrk_r  0x0000000008007b74       0x20 c:/st/stm32cubeide_1.2.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.4.0.202007081208/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-sbrkr.o)
-                0x0000000008007b74                _sbrk_r
- .text.__sread  0x0000000008007b94       0x22 c:/st/stm32cubeide_1.2.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.4.0.202007081208/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-stdio.o)
-                0x0000000008007b94                __sread
+                0x00000000080079fc       0xb4 c:/st/stm32cubeide_1.2.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.4.0.202007081208/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-nano-mallocr.o)
+                0x00000000080079fc                _malloc_r
+ .text._putc_r  0x0000000008007ab0       0x6c c:/st/stm32cubeide_1.2.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.4.0.202007081208/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-putc.o)
+                0x0000000008007ab0                _putc_r
+ .text._sbrk_r  0x0000000008007b1c       0x20 c:/st/stm32cubeide_1.2.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.4.0.202007081208/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-sbrkr.o)
+                0x0000000008007b1c                _sbrk_r
+ .text.__sread  0x0000000008007b3c       0x22 c:/st/stm32cubeide_1.2.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.4.0.202007081208/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-stdio.o)
+                0x0000000008007b3c                __sread
  .text.__swrite
-                0x0000000008007bb6       0x38 c:/st/stm32cubeide_1.2.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.4.0.202007081208/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-stdio.o)
-                0x0000000008007bb6                __swrite
- .text.__sseek  0x0000000008007bee       0x24 c:/st/stm32cubeide_1.2.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.4.0.202007081208/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-stdio.o)
-                0x0000000008007bee                __sseek
+                0x0000000008007b5e       0x38 c:/st/stm32cubeide_1.2.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.4.0.202007081208/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-stdio.o)
+                0x0000000008007b5e                __swrite
+ .text.__sseek  0x0000000008007b96       0x24 c:/st/stm32cubeide_1.2.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.4.0.202007081208/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-stdio.o)
+                0x0000000008007b96                __sseek
  .text.__sclose
-                0x0000000008007c12        0x8 c:/st/stm32cubeide_1.2.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.4.0.202007081208/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-stdio.o)
-                0x0000000008007c12                __sclose
- *fill*         0x0000000008007c1a        0x2 
+                0x0000000008007bba        0x8 c:/st/stm32cubeide_1.2.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.4.0.202007081208/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-stdio.o)
+                0x0000000008007bba                __sclose
+ *fill*         0x0000000008007bc2        0x2 
  .text._write_r
-                0x0000000008007c1c       0x24 c:/st/stm32cubeide_1.2.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.4.0.202007081208/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-writer.o)
-                0x0000000008007c1c                _write_r
+                0x0000000008007bc4       0x24 c:/st/stm32cubeide_1.2.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.4.0.202007081208/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-writer.o)
+                0x0000000008007bc4                _write_r
  .text._close_r
-                0x0000000008007c40       0x20 c:/st/stm32cubeide_1.2.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.4.0.202007081208/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-closer.o)
-                0x0000000008007c40                _close_r
+                0x0000000008007be8       0x20 c:/st/stm32cubeide_1.2.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.4.0.202007081208/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-closer.o)
+                0x0000000008007be8                _close_r
  .text._fstat_r
-                0x0000000008007c60       0x24 c:/st/stm32cubeide_1.2.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.4.0.202007081208/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-fstatr.o)
-                0x0000000008007c60                _fstat_r
+                0x0000000008007c08       0x24 c:/st/stm32cubeide_1.2.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.4.0.202007081208/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-fstatr.o)
+                0x0000000008007c08                _fstat_r
  .text._isatty_r
-                0x0000000008007c84       0x20 c:/st/stm32cubeide_1.2.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.4.0.202007081208/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-isattyr.o)
-                0x0000000008007c84                _isatty_r
+                0x0000000008007c2c       0x20 c:/st/stm32cubeide_1.2.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.4.0.202007081208/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-isattyr.o)
+                0x0000000008007c2c                _isatty_r
  .text._lseek_r
-                0x0000000008007ca4       0x24 c:/st/stm32cubeide_1.2.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.4.0.202007081208/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-lseekr.o)
-                0x0000000008007ca4                _lseek_r
+                0x0000000008007c4c       0x24 c:/st/stm32cubeide_1.2.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.4.0.202007081208/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-lseekr.o)
+                0x0000000008007c4c                _lseek_r
  .text.__malloc_lock
-                0x0000000008007cc8        0x2 c:/st/stm32cubeide_1.2.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.4.0.202007081208/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-mlock.o)
-                0x0000000008007cc8                __malloc_lock
+                0x0000000008007c70        0x2 c:/st/stm32cubeide_1.2.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.4.0.202007081208/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-mlock.o)
+                0x0000000008007c70                __malloc_lock
  .text.__malloc_unlock
-                0x0000000008007cca        0x2 c:/st/stm32cubeide_1.2.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.4.0.202007081208/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-mlock.o)
-                0x0000000008007cca                __malloc_unlock
- .text._read_r  0x0000000008007ccc       0x24 c:/st/stm32cubeide_1.2.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.4.0.202007081208/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-readr.o)
-                0x0000000008007ccc                _read_r
+                0x0000000008007c72        0x2 c:/st/stm32cubeide_1.2.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.4.0.202007081208/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-mlock.o)
+                0x0000000008007c72                __malloc_unlock
+ .text._read_r  0x0000000008007c74       0x24 c:/st/stm32cubeide_1.2.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.4.0.202007081208/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-readr.o)
+                0x0000000008007c74                _read_r
  *(.glue_7)
- .glue_7        0x0000000008007cf0        0x0 linker stubs
+ .glue_7        0x0000000008007c98        0x0 linker stubs
  *(.glue_7t)
- .glue_7t       0x0000000008007cf0        0x0 linker stubs
+ .glue_7t       0x0000000008007c98        0x0 linker stubs
  *(.eh_frame)
- .eh_frame      0x0000000008007cf0        0x0 c:/st/stm32cubeide_1.2.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.4.0.202007081208/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/thumb/v7e-m/fpv4-sp/hard/crtbegin.o
+ .eh_frame      0x0000000008007c98        0x0 c:/st/stm32cubeide_1.2.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.4.0.202007081208/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/thumb/v7e-m/fpv4-sp/hard/crtbegin.o
  *(.init)
- .init          0x0000000008007cf0        0x4 c:/st/stm32cubeide_1.2.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.4.0.202007081208/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/thumb/v7e-m/fpv4-sp/hard/crti.o
-                0x0000000008007cf0                _init
- .init          0x0000000008007cf4        0x8 c:/st/stm32cubeide_1.2.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.4.0.202007081208/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/thumb/v7e-m/fpv4-sp/hard/crtn.o
+ .init          0x0000000008007c98        0x4 c:/st/stm32cubeide_1.2.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.4.0.202007081208/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/thumb/v7e-m/fpv4-sp/hard/crti.o
+                0x0000000008007c98                _init
+ .init          0x0000000008007c9c        0x8 c:/st/stm32cubeide_1.2.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.4.0.202007081208/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/thumb/v7e-m/fpv4-sp/hard/crtn.o
  *(.fini)
- .fini          0x0000000008007cfc        0x4 c:/st/stm32cubeide_1.2.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.4.0.202007081208/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/thumb/v7e-m/fpv4-sp/hard/crti.o
-                0x0000000008007cfc                _fini
- .fini          0x0000000008007d00        0x8 c:/st/stm32cubeide_1.2.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.4.0.202007081208/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/thumb/v7e-m/fpv4-sp/hard/crtn.o
-                0x0000000008007d08                . = ALIGN (0x4)
-                0x0000000008007d08                _etext = .
+ .fini          0x0000000008007ca4        0x4 c:/st/stm32cubeide_1.2.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.4.0.202007081208/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/thumb/v7e-m/fpv4-sp/hard/crti.o
+                0x0000000008007ca4                _fini
+ .fini          0x0000000008007ca8        0x8 c:/st/stm32cubeide_1.2.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.4.0.202007081208/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/thumb/v7e-m/fpv4-sp/hard/crtn.o
+                0x0000000008007cb0                . = ALIGN (0x4)
+                0x0000000008007cb0                _etext = .
 
-.vfp11_veneer   0x0000000008007d08        0x0
- .vfp11_veneer  0x0000000008007d08        0x0 linker stubs
+.vfp11_veneer   0x0000000008007cb0        0x0
+ .vfp11_veneer  0x0000000008007cb0        0x0 linker stubs
 
-.v4_bx          0x0000000008007d08        0x0
- .v4_bx         0x0000000008007d08        0x0 linker stubs
+.v4_bx          0x0000000008007cb0        0x0
+ .v4_bx         0x0000000008007cb0        0x0 linker stubs
 
-.iplt           0x0000000008007d08        0x0
- .iplt          0x0000000008007d08        0x0 c:/st/stm32cubeide_1.2.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.4.0.202007081208/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/thumb/v7e-m/fpv4-sp/hard/crtbegin.o
+.iplt           0x0000000008007cb0        0x0
+ .iplt          0x0000000008007cb0        0x0 c:/st/stm32cubeide_1.2.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.4.0.202007081208/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/thumb/v7e-m/fpv4-sp/hard/crtbegin.o
 
-.rodata         0x0000000008007d08     0x5108
-                0x0000000008007d08                . = ALIGN (0x4)
+.rodata         0x0000000008007cb0     0x5108
+                0x0000000008007cb0                . = ALIGN (0x4)
  *(.rodata)
- .rodata        0x0000000008007d08        0xc Core/Src/main.o
- .rodata        0x0000000008007d14       0x3b Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_cortex.o
- *fill*         0x0000000008007d4f        0x1 
- .rodata        0x0000000008007d50       0x38 Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_dma.o
- .rodata        0x0000000008007d88       0x39 Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_gpio.o
- *fill*         0x0000000008007dc1        0x3 
- .rodata        0x0000000008007dc4       0x38 Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_i2c.o
- .rodata        0x0000000008007dfc       0x3b Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_i2c_ex.o
- *fill*         0x0000000008007e37        0x1 
- .rodata        0x0000000008007e38       0x3b Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr_ex.o
- *fill*         0x0000000008007e73        0x1 
- .rodata        0x0000000008007e74       0x38 Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_rcc.o
- .rodata        0x0000000008007eac       0x3b Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_rcc_ex.o
- *fill*         0x0000000008007ee7        0x1 
- .rodata        0x0000000008007ee8       0x38 Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_spi.o
- .rodata        0x0000000008007f20       0x39 Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_uart.o
- *fill*         0x0000000008007f59        0x3 
- .rodata        0x0000000008007f5c       0x87 SSD7317Z/Src/SSD7317.o
- *fill*         0x0000000008007fe3        0x1 
- .rodata        0x0000000008007fe4       0x12 SSD7317Z/Src/rpc.o
+ .rodata        0x0000000008007cb0        0xc Core/Src/main.o
+ .rodata        0x0000000008007cbc       0x3b Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_cortex.o
+ *fill*         0x0000000008007cf7        0x1 
+ .rodata        0x0000000008007cf8       0x38 Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_dma.o
+ .rodata        0x0000000008007d30       0x39 Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_gpio.o
+ *fill*         0x0000000008007d69        0x3 
+ .rodata        0x0000000008007d6c       0x38 Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_i2c.o
+ .rodata        0x0000000008007da4       0x3b Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_i2c_ex.o
+ *fill*         0x0000000008007ddf        0x1 
+ .rodata        0x0000000008007de0       0x3b Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_pwr_ex.o
+ *fill*         0x0000000008007e1b        0x1 
+ .rodata        0x0000000008007e1c       0x38 Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_rcc.o
+ .rodata        0x0000000008007e54       0x3b Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_rcc_ex.o
+ *fill*         0x0000000008007e8f        0x1 
+ .rodata        0x0000000008007e90       0x38 Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_spi.o
+ .rodata        0x0000000008007ec8       0x39 Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_uart.o
+ *fill*         0x0000000008007f01        0x3 
+ .rodata        0x0000000008007f04       0x87 SSD7317Z/Src/SSD7317.o
+ *fill*         0x0000000008007f8b        0x1 
+ .rodata        0x0000000008007f8c       0x12 SSD7317Z/Src/rpc.o
  *(.rodata*)
- *fill*         0x0000000008007ff6        0x2 
+ *fill*         0x0000000008007f9e        0x2 
  .rodata.image_data_Tahoma_12h_0x20
-                0x0000000008007ff8        0xe Core/Src/main.o
- *fill*         0x0000000008008006        0x2 
+                0x0000000008007fa0        0xe Core/Src/main.o
+ *fill*         0x0000000008007fae        0x2 
  .rodata.Tahoma_12h_0x20
-                0x0000000008008008        0xc Core/Src/main.o
+                0x0000000008007fb0        0xc Core/Src/main.o
  .rodata.image_data_Tahoma_12h_0x21
-                0x0000000008008014        0xe Core/Src/main.o
- *fill*         0x0000000008008022        0x2 
+                0x0000000008007fbc        0xe Core/Src/main.o
+ *fill*         0x0000000008007fca        0x2 
  .rodata.Tahoma_12h_0x21
-                0x0000000008008024        0xc Core/Src/main.o
+                0x0000000008007fcc        0xc Core/Src/main.o
  .rodata.image_data_Tahoma_12h_0x22
-                0x0000000008008030        0xe Core/Src/main.o
- *fill*         0x000000000800803e        0x2 
+                0x0000000008007fd8        0xe Core/Src/main.o
+ *fill*         0x0000000008007fe6        0x2 
  .rodata.Tahoma_12h_0x22
-                0x0000000008008040        0xc Core/Src/main.o
+                0x0000000008007fe8        0xc Core/Src/main.o
  .rodata.image_data_Tahoma_12h_0x23
-                0x000000000800804c       0x1c Core/Src/main.o
+                0x0000000008007ff4       0x1c Core/Src/main.o
  .rodata.Tahoma_12h_0x23
-                0x0000000008008068        0xc Core/Src/main.o
+                0x0000000008008010        0xc Core/Src/main.o
  .rodata.image_data_Tahoma_12h_0x24
-                0x0000000008008074        0xe Core/Src/main.o
- *fill*         0x0000000008008082        0x2 
+                0x000000000800801c        0xe Core/Src/main.o
+ *fill*         0x000000000800802a        0x2 
  .rodata.Tahoma_12h_0x24
-                0x0000000008008084        0xc Core/Src/main.o
+                0x000000000800802c        0xc Core/Src/main.o
  .rodata.image_data_Tahoma_12h_0x25
-                0x0000000008008090       0x1c Core/Src/main.o
+                0x0000000008008038       0x1c Core/Src/main.o
  .rodata.Tahoma_12h_0x25
-                0x00000000080080ac        0xc Core/Src/main.o
+                0x0000000008008054        0xc Core/Src/main.o
  .rodata.image_data_Tahoma_12h_0x26
-                0x00000000080080b8        0xe Core/Src/main.o
- *fill*         0x00000000080080c6        0x2 
+                0x0000000008008060        0xe Core/Src/main.o
+ *fill*         0x000000000800806e        0x2 
  .rodata.Tahoma_12h_0x26
-                0x00000000080080c8        0xc Core/Src/main.o
+                0x0000000008008070        0xc Core/Src/main.o
  .rodata.image_data_Tahoma_12h_0x27
-                0x00000000080080d4        0xe Core/Src/main.o
- *fill*         0x00000000080080e2        0x2 
+                0x000000000800807c        0xe Core/Src/main.o
+ *fill*         0x000000000800808a        0x2 
  .rodata.Tahoma_12h_0x27
-                0x00000000080080e4        0xc Core/Src/main.o
+                0x000000000800808c        0xc Core/Src/main.o
  .rodata.image_data_Tahoma_12h_0x28
-                0x00000000080080f0        0xe Core/Src/main.o
- *fill*         0x00000000080080fe        0x2 
+                0x0000000008008098        0xe Core/Src/main.o
+ *fill*         0x00000000080080a6        0x2 
  .rodata.Tahoma_12h_0x28
-                0x0000000008008100        0xc Core/Src/main.o
+                0x00000000080080a8        0xc Core/Src/main.o
  .rodata.image_data_Tahoma_12h_0x29
-                0x000000000800810c        0xe Core/Src/main.o
- *fill*         0x000000000800811a        0x2 
+                0x00000000080080b4        0xe Core/Src/main.o
+ *fill*         0x00000000080080c2        0x2 
  .rodata.Tahoma_12h_0x29
-                0x000000000800811c        0xc Core/Src/main.o
+                0x00000000080080c4        0xc Core/Src/main.o
  .rodata.image_data_Tahoma_12h_0x2a
-                0x0000000008008128        0xe Core/Src/main.o
- *fill*         0x0000000008008136        0x2 
+                0x00000000080080d0        0xe Core/Src/main.o
+ *fill*         0x00000000080080de        0x2 
  .rodata.Tahoma_12h_0x2a
-                0x0000000008008138        0xc Core/Src/main.o
+                0x00000000080080e0        0xc Core/Src/main.o
  .rodata.image_data_Tahoma_12h_0x2b
-                0x0000000008008144        0xe Core/Src/main.o
- *fill*         0x0000000008008152        0x2 
+                0x00000000080080ec        0xe Core/Src/main.o
+ *fill*         0x00000000080080fa        0x2 
  .rodata.Tahoma_12h_0x2b
-                0x0000000008008154        0xc Core/Src/main.o
+                0x00000000080080fc        0xc Core/Src/main.o
  .rodata.image_data_Tahoma_12h_0x2c
-                0x0000000008008160        0xe Core/Src/main.o
- *fill*         0x000000000800816e        0x2 
+                0x0000000008008108        0xe Core/Src/main.o
+ *fill*         0x0000000008008116        0x2 
  .rodata.Tahoma_12h_0x2c
-                0x0000000008008170        0xc Core/Src/main.o
+                0x0000000008008118        0xc Core/Src/main.o
  .rodata.image_data_Tahoma_12h_0x2d
-                0x000000000800817c        0xe Core/Src/main.o
- *fill*         0x000000000800818a        0x2 
+                0x0000000008008124        0xe Core/Src/main.o
+ *fill*         0x0000000008008132        0x2 
  .rodata.Tahoma_12h_0x2d
-                0x000000000800818c        0xc Core/Src/main.o
+                0x0000000008008134        0xc Core/Src/main.o
  .rodata.image_data_Tahoma_12h_0x2e
-                0x0000000008008198        0xe Core/Src/main.o
- *fill*         0x00000000080081a6        0x2 
+                0x0000000008008140        0xe Core/Src/main.o
+ *fill*         0x000000000800814e        0x2 
  .rodata.Tahoma_12h_0x2e
-                0x00000000080081a8        0xc Core/Src/main.o
+                0x0000000008008150        0xc Core/Src/main.o
  .rodata.image_data_Tahoma_12h_0x2f
-                0x00000000080081b4        0xe Core/Src/main.o
- *fill*         0x00000000080081c2        0x2 
+                0x000000000800815c        0xe Core/Src/main.o
+ *fill*         0x000000000800816a        0x2 
  .rodata.Tahoma_12h_0x2f
-                0x00000000080081c4        0xc Core/Src/main.o
+                0x000000000800816c        0xc Core/Src/main.o
  .rodata.image_data_Tahoma_12h_0x30
-                0x00000000080081d0        0xe Core/Src/main.o
- *fill*         0x00000000080081de        0x2 
+                0x0000000008008178        0xe Core/Src/main.o
+ *fill*         0x0000000008008186        0x2 
  .rodata.Tahoma_12h_0x30
-                0x00000000080081e0        0xc Core/Src/main.o
+                0x0000000008008188        0xc Core/Src/main.o
  .rodata.image_data_Tahoma_12h_0x31
-                0x00000000080081ec        0xe Core/Src/main.o
- *fill*         0x00000000080081fa        0x2 
+                0x0000000008008194        0xe Core/Src/main.o
+ *fill*         0x00000000080081a2        0x2 
  .rodata.Tahoma_12h_0x31
-                0x00000000080081fc        0xc Core/Src/main.o
+                0x00000000080081a4        0xc Core/Src/main.o
  .rodata.image_data_Tahoma_12h_0x32
-                0x0000000008008208        0xe Core/Src/main.o
- *fill*         0x0000000008008216        0x2 
+                0x00000000080081b0        0xe Core/Src/main.o
+ *fill*         0x00000000080081be        0x2 
  .rodata.Tahoma_12h_0x32
-                0x0000000008008218        0xc Core/Src/main.o
+                0x00000000080081c0        0xc Core/Src/main.o
  .rodata.image_data_Tahoma_12h_0x33
-                0x0000000008008224        0xe Core/Src/main.o
- *fill*         0x0000000008008232        0x2 
+                0x00000000080081cc        0xe Core/Src/main.o
+ *fill*         0x00000000080081da        0x2 
  .rodata.Tahoma_12h_0x33
-                0x0000000008008234        0xc Core/Src/main.o
+                0x00000000080081dc        0xc Core/Src/main.o
  .rodata.image_data_Tahoma_12h_0x34
-                0x0000000008008240        0xe Core/Src/main.o
- *fill*         0x000000000800824e        0x2 
+                0x00000000080081e8        0xe Core/Src/main.o
+ *fill*         0x00000000080081f6        0x2 
  .rodata.Tahoma_12h_0x34
-                0x0000000008008250        0xc Core/Src/main.o
+                0x00000000080081f8        0xc Core/Src/main.o
  .rodata.image_data_Tahoma_12h_0x35
-                0x000000000800825c        0xe Core/Src/main.o
- *fill*         0x000000000800826a        0x2 
+                0x0000000008008204        0xe Core/Src/main.o
+ *fill*         0x0000000008008212        0x2 
  .rodata.Tahoma_12h_0x35
-                0x000000000800826c        0xc Core/Src/main.o
+                0x0000000008008214        0xc Core/Src/main.o
  .rodata.image_data_Tahoma_12h_0x36
-                0x0000000008008278        0xe Core/Src/main.o
- *fill*         0x0000000008008286        0x2 
+                0x0000000008008220        0xe Core/Src/main.o
+ *fill*         0x000000000800822e        0x2 
  .rodata.Tahoma_12h_0x36
-                0x0000000008008288        0xc Core/Src/main.o
+                0x0000000008008230        0xc Core/Src/main.o
  .rodata.image_data_Tahoma_12h_0x37
-                0x0000000008008294        0xe Core/Src/main.o
- *fill*         0x00000000080082a2        0x2 
+                0x000000000800823c        0xe Core/Src/main.o
+ *fill*         0x000000000800824a        0x2 
  .rodata.Tahoma_12h_0x37
-                0x00000000080082a4        0xc Core/Src/main.o
+                0x000000000800824c        0xc Core/Src/main.o
  .rodata.image_data_Tahoma_12h_0x38
-                0x00000000080082b0        0xe Core/Src/main.o
- *fill*         0x00000000080082be        0x2 
+                0x0000000008008258        0xe Core/Src/main.o
+ *fill*         0x0000000008008266        0x2 
  .rodata.Tahoma_12h_0x38
-                0x00000000080082c0        0xc Core/Src/main.o
+                0x0000000008008268        0xc Core/Src/main.o
  .rodata.image_data_Tahoma_12h_0x39
-                0x00000000080082cc        0xe Core/Src/main.o
- *fill*         0x00000000080082da        0x2 
+                0x0000000008008274        0xe Core/Src/main.o
+ *fill*         0x0000000008008282        0x2 
  .rodata.Tahoma_12h_0x39
-                0x00000000080082dc        0xc Core/Src/main.o
+                0x0000000008008284        0xc Core/Src/main.o
  .rodata.image_data_Tahoma_12h_0x3a
-                0x00000000080082e8        0xe Core/Src/main.o
- *fill*         0x00000000080082f6        0x2 
+                0x0000000008008290        0xe Core/Src/main.o
+ *fill*         0x000000000800829e        0x2 
  .rodata.Tahoma_12h_0x3a
-                0x00000000080082f8        0xc Core/Src/main.o
+                0x00000000080082a0        0xc Core/Src/main.o
  .rodata.image_data_Tahoma_12h_0x3b
-                0x0000000008008304        0xe Core/Src/main.o
- *fill*         0x0000000008008312        0x2 
+                0x00000000080082ac        0xe Core/Src/main.o
+ *fill*         0x00000000080082ba        0x2 
  .rodata.Tahoma_12h_0x3b
-                0x0000000008008314        0xc Core/Src/main.o
+                0x00000000080082bc        0xc Core/Src/main.o
  .rodata.image_data_Tahoma_12h_0x3c
-                0x0000000008008320       0x1c Core/Src/main.o
+                0x00000000080082c8       0x1c Core/Src/main.o
  .rodata.Tahoma_12h_0x3c
-                0x000000000800833c        0xc Core/Src/main.o
+                0x00000000080082e4        0xc Core/Src/main.o
  .rodata.image_data_Tahoma_12h_0x3d
-                0x0000000008008348       0x1c Core/Src/main.o
+                0x00000000080082f0       0x1c Core/Src/main.o
  .rodata.Tahoma_12h_0x3d
-                0x0000000008008364        0xc Core/Src/main.o
+                0x000000000800830c        0xc Core/Src/main.o
  .rodata.image_data_Tahoma_12h_0x3e
-                0x0000000008008370       0x1c Core/Src/main.o
+                0x0000000008008318       0x1c Core/Src/main.o
  .rodata.Tahoma_12h_0x3e
-                0x000000000800838c        0xc Core/Src/main.o
+                0x0000000008008334        0xc Core/Src/main.o
  .rodata.image_data_Tahoma_12h_0x3f
-                0x0000000008008398        0xe Core/Src/main.o
- *fill*         0x00000000080083a6        0x2 
+                0x0000000008008340        0xe Core/Src/main.o
+ *fill*         0x000000000800834e        0x2 
  .rodata.Tahoma_12h_0x3f
-                0x00000000080083a8        0xc Core/Src/main.o
+                0x0000000008008350        0xc Core/Src/main.o
  .rodata.image_data_Tahoma_12h_0x40
-                0x00000000080083b4       0x1c Core/Src/main.o
+                0x000000000800835c       0x1c Core/Src/main.o
  .rodata.Tahoma_12h_0x40
-                0x00000000080083d0        0xc Core/Src/main.o
+                0x0000000008008378        0xc Core/Src/main.o
  .rodata.image_data_Tahoma_12h_0x41
-                0x00000000080083dc        0xe Core/Src/main.o
- *fill*         0x00000000080083ea        0x2 
+                0x0000000008008384        0xe Core/Src/main.o
+ *fill*         0x0000000008008392        0x2 
  .rodata.Tahoma_12h_0x41
-                0x00000000080083ec        0xc Core/Src/main.o
+                0x0000000008008394        0xc Core/Src/main.o
  .rodata.image_data_Tahoma_12h_0x42
-                0x00000000080083f8        0xe Core/Src/main.o
- *fill*         0x0000000008008406        0x2 
+                0x00000000080083a0        0xe Core/Src/main.o
+ *fill*         0x00000000080083ae        0x2 
  .rodata.Tahoma_12h_0x42
-                0x0000000008008408        0xc Core/Src/main.o
+                0x00000000080083b0        0xc Core/Src/main.o
  .rodata.image_data_Tahoma_12h_0x43
-                0x0000000008008414        0xe Core/Src/main.o
- *fill*         0x0000000008008422        0x2 
+                0x00000000080083bc        0xe Core/Src/main.o
+ *fill*         0x00000000080083ca        0x2 
  .rodata.Tahoma_12h_0x43
-                0x0000000008008424        0xc Core/Src/main.o
+                0x00000000080083cc        0xc Core/Src/main.o
  .rodata.image_data_Tahoma_12h_0x44
-                0x0000000008008430        0xe Core/Src/main.o
- *fill*         0x000000000800843e        0x2 
+                0x00000000080083d8        0xe Core/Src/main.o
+ *fill*         0x00000000080083e6        0x2 
  .rodata.Tahoma_12h_0x44
-                0x0000000008008440        0xc Core/Src/main.o
+                0x00000000080083e8        0xc Core/Src/main.o
  .rodata.image_data_Tahoma_12h_0x45
-                0x000000000800844c        0xe Core/Src/main.o
- *fill*         0x000000000800845a        0x2 
+                0x00000000080083f4        0xe Core/Src/main.o
+ *fill*         0x0000000008008402        0x2 
  .rodata.Tahoma_12h_0x45
-                0x000000000800845c        0xc Core/Src/main.o
+                0x0000000008008404        0xc Core/Src/main.o
  .rodata.image_data_Tahoma_12h_0x46
-                0x0000000008008468        0xe Core/Src/main.o
- *fill*         0x0000000008008476        0x2 
+                0x0000000008008410        0xe Core/Src/main.o
+ *fill*         0x000000000800841e        0x2 
  .rodata.Tahoma_12h_0x46
-                0x0000000008008478        0xc Core/Src/main.o
+                0x0000000008008420        0xc Core/Src/main.o
  .rodata.image_data_Tahoma_12h_0x47
-                0x0000000008008484        0xe Core/Src/main.o
- *fill*         0x0000000008008492        0x2 
+                0x000000000800842c        0xe Core/Src/main.o
+ *fill*         0x000000000800843a        0x2 
  .rodata.Tahoma_12h_0x47
-                0x0000000008008494        0xc Core/Src/main.o
+                0x000000000800843c        0xc Core/Src/main.o
  .rodata.image_data_Tahoma_12h_0x48
-                0x00000000080084a0        0xe Core/Src/main.o
- *fill*         0x00000000080084ae        0x2 
+                0x0000000008008448        0xe Core/Src/main.o
+ *fill*         0x0000000008008456        0x2 
  .rodata.Tahoma_12h_0x48
-                0x00000000080084b0        0xc Core/Src/main.o
+                0x0000000008008458        0xc Core/Src/main.o
  .rodata.image_data_Tahoma_12h_0x49
-                0x00000000080084bc        0xe Core/Src/main.o
- *fill*         0x00000000080084ca        0x2 
+                0x0000000008008464        0xe Core/Src/main.o
+ *fill*         0x0000000008008472        0x2 
  .rodata.Tahoma_12h_0x49
-                0x00000000080084cc        0xc Core/Src/main.o
+                0x0000000008008474        0xc Core/Src/main.o
  .rodata.image_data_Tahoma_12h_0x4a
-                0x00000000080084d8        0xe Core/Src/main.o
- *fill*         0x00000000080084e6        0x2 
+                0x0000000008008480        0xe Core/Src/main.o
+ *fill*         0x000000000800848e        0x2 
  .rodata.Tahoma_12h_0x4a
-                0x00000000080084e8        0xc Core/Src/main.o
+                0x0000000008008490        0xc Core/Src/main.o
  .rodata.image_data_Tahoma_12h_0x4b
-                0x00000000080084f4        0xe Core/Src/main.o
- *fill*         0x0000000008008502        0x2 
+                0x000000000800849c        0xe Core/Src/main.o
+ *fill*         0x00000000080084aa        0x2 
  .rodata.Tahoma_12h_0x4b
-                0x0000000008008504        0xc Core/Src/main.o
+                0x00000000080084ac        0xc Core/Src/main.o
  .rodata.image_data_Tahoma_12h_0x4c
-                0x0000000008008510        0xe Core/Src/main.o
- *fill*         0x000000000800851e        0x2 
+                0x00000000080084b8        0xe Core/Src/main.o
+ *fill*         0x00000000080084c6        0x2 
  .rodata.Tahoma_12h_0x4c
-                0x0000000008008520        0xc Core/Src/main.o
+                0x00000000080084c8        0xc Core/Src/main.o
  .rodata.image_data_Tahoma_12h_0x4d
-                0x000000000800852c       0x1c Core/Src/main.o
+                0x00000000080084d4       0x1c Core/Src/main.o
  .rodata.Tahoma_12h_0x4d
-                0x0000000008008548        0xc Core/Src/main.o
+                0x00000000080084f0        0xc Core/Src/main.o
  .rodata.image_data_Tahoma_12h_0x4e
-                0x0000000008008554        0xe Core/Src/main.o
- *fill*         0x0000000008008562        0x2 
+                0x00000000080084fc        0xe Core/Src/main.o
+ *fill*         0x000000000800850a        0x2 
  .rodata.Tahoma_12h_0x4e
-                0x0000000008008564        0xc Core/Src/main.o
+                0x000000000800850c        0xc Core/Src/main.o
  .rodata.image_data_Tahoma_12h_0x4f
-                0x0000000008008570       0x1c Core/Src/main.o
+                0x0000000008008518       0x1c Core/Src/main.o
  .rodata.Tahoma_12h_0x4f
-                0x000000000800858c        0xc Core/Src/main.o
+                0x0000000008008534        0xc Core/Src/main.o
  .rodata.image_data_Tahoma_12h_0x50
-                0x0000000008008598        0xe Core/Src/main.o
- *fill*         0x00000000080085a6        0x2 
+                0x0000000008008540        0xe Core/Src/main.o
+ *fill*         0x000000000800854e        0x2 
  .rodata.Tahoma_12h_0x50
-                0x00000000080085a8        0xc Core/Src/main.o
+                0x0000000008008550        0xc Core/Src/main.o
  .rodata.image_data_Tahoma_12h_0x51
-                0x00000000080085b4       0x1c Core/Src/main.o
+                0x000000000800855c       0x1c Core/Src/main.o
  .rodata.Tahoma_12h_0x51
-                0x00000000080085d0        0xc Core/Src/main.o
+                0x0000000008008578        0xc Core/Src/main.o
  .rodata.image_data_Tahoma_12h_0x52
-                0x00000000080085dc        0xe Core/Src/main.o
- *fill*         0x00000000080085ea        0x2 
+                0x0000000008008584        0xe Core/Src/main.o
+ *fill*         0x0000000008008592        0x2 
  .rodata.Tahoma_12h_0x52
-                0x00000000080085ec        0xc Core/Src/main.o
+                0x0000000008008594        0xc Core/Src/main.o
  .rodata.image_data_Tahoma_12h_0x53
-                0x00000000080085f8        0xe Core/Src/main.o
- *fill*         0x0000000008008606        0x2 
+                0x00000000080085a0        0xe Core/Src/main.o
+ *fill*         0x00000000080085ae        0x2 
  .rodata.Tahoma_12h_0x53
-                0x0000000008008608        0xc Core/Src/main.o
+                0x00000000080085b0        0xc Core/Src/main.o
  .rodata.image_data_Tahoma_12h_0x54
-                0x0000000008008614        0xe Core/Src/main.o
- *fill*         0x0000000008008622        0x2 
+                0x00000000080085bc        0xe Core/Src/main.o
+ *fill*         0x00000000080085ca        0x2 
  .rodata.Tahoma_12h_0x54
-                0x0000000008008624        0xc Core/Src/main.o
+                0x00000000080085cc        0xc Core/Src/main.o
  .rodata.image_data_Tahoma_12h_0x55
-                0x0000000008008630        0xe Core/Src/main.o
- *fill*         0x000000000800863e        0x2 
+                0x00000000080085d8        0xe Core/Src/main.o
+ *fill*         0x00000000080085e6        0x2 
  .rodata.Tahoma_12h_0x55
-                0x0000000008008640        0xc Core/Src/main.o
+                0x00000000080085e8        0xc Core/Src/main.o
  .rodata.image_data_Tahoma_12h_0x56
-                0x000000000800864c        0xe Core/Src/main.o
- *fill*         0x000000000800865a        0x2 
+                0x00000000080085f4        0xe Core/Src/main.o
+ *fill*         0x0000000008008602        0x2 
  .rodata.Tahoma_12h_0x56
-                0x000000000800865c        0xc Core/Src/main.o
+                0x0000000008008604        0xc Core/Src/main.o
  .rodata.image_data_Tahoma_12h_0x57
-                0x0000000008008668       0x1c Core/Src/main.o
+                0x0000000008008610       0x1c Core/Src/main.o
  .rodata.Tahoma_12h_0x57
-                0x0000000008008684        0xc Core/Src/main.o
+                0x000000000800862c        0xc Core/Src/main.o
  .rodata.image_data_Tahoma_12h_0x58
-                0x0000000008008690        0xe Core/Src/main.o
- *fill*         0x000000000800869e        0x2 
+                0x0000000008008638        0xe Core/Src/main.o
+ *fill*         0x0000000008008646        0x2 
  .rodata.Tahoma_12h_0x58
-                0x00000000080086a0        0xc Core/Src/main.o
+                0x0000000008008648        0xc Core/Src/main.o
  .rodata.image_data_Tahoma_12h_0x59
-                0x00000000080086ac        0xe Core/Src/main.o
- *fill*         0x00000000080086ba        0x2 
+                0x0000000008008654        0xe Core/Src/main.o
+ *fill*         0x0000000008008662        0x2 
  .rodata.Tahoma_12h_0x59
-                0x00000000080086bc        0xc Core/Src/main.o
+                0x0000000008008664        0xc Core/Src/main.o
  .rodata.image_data_Tahoma_12h_0x5a
-                0x00000000080086c8        0xe Core/Src/main.o
- *fill*         0x00000000080086d6        0x2 
+                0x0000000008008670        0xe Core/Src/main.o
+ *fill*         0x000000000800867e        0x2 
  .rodata.Tahoma_12h_0x5a
-                0x00000000080086d8        0xc Core/Src/main.o
+                0x0000000008008680        0xc Core/Src/main.o
  .rodata.image_data_Tahoma_12h_0x5b
-                0x00000000080086e4        0xe Core/Src/main.o
- *fill*         0x00000000080086f2        0x2 
+                0x000000000800868c        0xe Core/Src/main.o
+ *fill*         0x000000000800869a        0x2 
  .rodata.Tahoma_12h_0x5b
-                0x00000000080086f4        0xc Core/Src/main.o
+                0x000000000800869c        0xc Core/Src/main.o
  .rodata.image_data_Tahoma_12h_0x5c
-                0x0000000008008700        0xe Core/Src/main.o
- *fill*         0x000000000800870e        0x2 
+                0x00000000080086a8        0xe Core/Src/main.o
+ *fill*         0x00000000080086b6        0x2 
  .rodata.Tahoma_12h_0x5c
-                0x0000000008008710        0xc Core/Src/main.o
+                0x00000000080086b8        0xc Core/Src/main.o
  .rodata.image_data_Tahoma_12h_0x5d
-                0x000000000800871c        0xe Core/Src/main.o
- *fill*         0x000000000800872a        0x2 
+                0x00000000080086c4        0xe Core/Src/main.o
+ *fill*         0x00000000080086d2        0x2 
  .rodata.Tahoma_12h_0x5d
-                0x000000000800872c        0xc Core/Src/main.o
+                0x00000000080086d4        0xc Core/Src/main.o
  .rodata.image_data_Tahoma_12h_0x5e
-                0x0000000008008738       0x1c Core/Src/main.o
+                0x00000000080086e0       0x1c Core/Src/main.o
  .rodata.Tahoma_12h_0x5e
-                0x0000000008008754        0xc Core/Src/main.o
+                0x00000000080086fc        0xc Core/Src/main.o
  .rodata.image_data_Tahoma_12h_0x5f
-                0x0000000008008760        0xe Core/Src/main.o
- *fill*         0x000000000800876e        0x2 
+                0x0000000008008708        0xe Core/Src/main.o
+ *fill*         0x0000000008008716        0x2 
  .rodata.Tahoma_12h_0x5f
-                0x0000000008008770        0xc Core/Src/main.o
+                0x0000000008008718        0xc Core/Src/main.o
  .rodata.image_data_Tahoma_12h_0x60
-                0x000000000800877c        0xe Core/Src/main.o
- *fill*         0x000000000800878a        0x2 
+                0x0000000008008724        0xe Core/Src/main.o
+ *fill*         0x0000000008008732        0x2 
  .rodata.Tahoma_12h_0x60
-                0x000000000800878c        0xc Core/Src/main.o
+                0x0000000008008734        0xc Core/Src/main.o
  .rodata.image_data_Tahoma_12h_0x61
-                0x0000000008008798        0xe Core/Src/main.o
- *fill*         0x00000000080087a6        0x2 
+                0x0000000008008740        0xe Core/Src/main.o
+ *fill*         0x000000000800874e        0x2 
  .rodata.Tahoma_12h_0x61
-                0x00000000080087a8        0xc Core/Src/main.o
+                0x0000000008008750        0xc Core/Src/main.o
  .rodata.image_data_Tahoma_12h_0x62
-                0x00000000080087b4        0xe Core/Src/main.o
- *fill*         0x00000000080087c2        0x2 
+                0x000000000800875c        0xe Core/Src/main.o
+ *fill*         0x000000000800876a        0x2 
  .rodata.Tahoma_12h_0x62
-                0x00000000080087c4        0xc Core/Src/main.o
+                0x000000000800876c        0xc Core/Src/main.o
  .rodata.image_data_Tahoma_12h_0x63
-                0x00000000080087d0        0xe Core/Src/main.o
- *fill*         0x00000000080087de        0x2 
+                0x0000000008008778        0xe Core/Src/main.o
+ *fill*         0x0000000008008786        0x2 
  .rodata.Tahoma_12h_0x63
-                0x00000000080087e0        0xc Core/Src/main.o
+                0x0000000008008788        0xc Core/Src/main.o
  .rodata.image_data_Tahoma_12h_0x64
-                0x00000000080087ec        0xe Core/Src/main.o
- *fill*         0x00000000080087fa        0x2 
+                0x0000000008008794        0xe Core/Src/main.o
+ *fill*         0x00000000080087a2        0x2 
  .rodata.Tahoma_12h_0x64
-                0x00000000080087fc        0xc Core/Src/main.o
+                0x00000000080087a4        0xc Core/Src/main.o
  .rodata.image_data_Tahoma_12h_0x65
-                0x0000000008008808        0xe Core/Src/main.o
- *fill*         0x0000000008008816        0x2 
+                0x00000000080087b0        0xe Core/Src/main.o
+ *fill*         0x00000000080087be        0x2 
  .rodata.Tahoma_12h_0x65
-                0x0000000008008818        0xc Core/Src/main.o
+                0x00000000080087c0        0xc Core/Src/main.o
  .rodata.image_data_Tahoma_12h_0x66
-                0x0000000008008824        0xe Core/Src/main.o
- *fill*         0x0000000008008832        0x2 
+                0x00000000080087cc        0xe Core/Src/main.o
+ *fill*         0x00000000080087da        0x2 
  .rodata.Tahoma_12h_0x66
-                0x0000000008008834        0xc Core/Src/main.o
+                0x00000000080087dc        0xc Core/Src/main.o
  .rodata.image_data_Tahoma_12h_0x67
-                0x0000000008008840        0xe Core/Src/main.o
- *fill*         0x000000000800884e        0x2 
+                0x00000000080087e8        0xe Core/Src/main.o
+ *fill*         0x00000000080087f6        0x2 
  .rodata.Tahoma_12h_0x67
-                0x0000000008008850        0xc Core/Src/main.o
+                0x00000000080087f8        0xc Core/Src/main.o
  .rodata.image_data_Tahoma_12h_0x68
-                0x000000000800885c        0xe Core/Src/main.o
- *fill*         0x000000000800886a        0x2 
+                0x0000000008008804        0xe Core/Src/main.o
+ *fill*         0x0000000008008812        0x2 
  .rodata.Tahoma_12h_0x68
-                0x000000000800886c        0xc Core/Src/main.o
+                0x0000000008008814        0xc Core/Src/main.o
  .rodata.image_data_Tahoma_12h_0x69
-                0x0000000008008878        0xe Core/Src/main.o
- *fill*         0x0000000008008886        0x2 
+                0x0000000008008820        0xe Core/Src/main.o
+ *fill*         0x000000000800882e        0x2 
  .rodata.Tahoma_12h_0x69
-                0x0000000008008888        0xc Core/Src/main.o
+                0x0000000008008830        0xc Core/Src/main.o
  .rodata.image_data_Tahoma_12h_0x6a
-                0x0000000008008894        0xe Core/Src/main.o
- *fill*         0x00000000080088a2        0x2 
+                0x000000000800883c        0xe Core/Src/main.o
+ *fill*         0x000000000800884a        0x2 
  .rodata.Tahoma_12h_0x6a
-                0x00000000080088a4        0xc Core/Src/main.o
+                0x000000000800884c        0xc Core/Src/main.o
  .rodata.image_data_Tahoma_12h_0x6b
-                0x00000000080088b0        0xe Core/Src/main.o
- *fill*         0x00000000080088be        0x2 
+                0x0000000008008858        0xe Core/Src/main.o
+ *fill*         0x0000000008008866        0x2 
  .rodata.Tahoma_12h_0x6b
-                0x00000000080088c0        0xc Core/Src/main.o
+                0x0000000008008868        0xc Core/Src/main.o
  .rodata.image_data_Tahoma_12h_0x6c
-                0x00000000080088cc        0xe Core/Src/main.o
- *fill*         0x00000000080088da        0x2 
+                0x0000000008008874        0xe Core/Src/main.o
+ *fill*         0x0000000008008882        0x2 
  .rodata.Tahoma_12h_0x6c
-                0x00000000080088dc        0xc Core/Src/main.o
+                0x0000000008008884        0xc Core/Src/main.o
  .rodata.image_data_Tahoma_12h_0x6d
-                0x00000000080088e8       0x1c Core/Src/main.o
+                0x0000000008008890       0x1c Core/Src/main.o
  .rodata.Tahoma_12h_0x6d
-                0x0000000008008904        0xc Core/Src/main.o
+                0x00000000080088ac        0xc Core/Src/main.o
  .rodata.image_data_Tahoma_12h_0x6e
-                0x0000000008008910        0xe Core/Src/main.o
- *fill*         0x000000000800891e        0x2 
+                0x00000000080088b8        0xe Core/Src/main.o
+ *fill*         0x00000000080088c6        0x2 
  .rodata.Tahoma_12h_0x6e
-                0x0000000008008920        0xc Core/Src/main.o
+                0x00000000080088c8        0xc Core/Src/main.o
  .rodata.image_data_Tahoma_12h_0x6f
-                0x000000000800892c        0xe Core/Src/main.o
- *fill*         0x000000000800893a        0x2 
+                0x00000000080088d4        0xe Core/Src/main.o
+ *fill*         0x00000000080088e2        0x2 
  .rodata.Tahoma_12h_0x6f
-                0x000000000800893c        0xc Core/Src/main.o
+                0x00000000080088e4        0xc Core/Src/main.o
  .rodata.image_data_Tahoma_12h_0x70
-                0x0000000008008948        0xe Core/Src/main.o
- *fill*         0x0000000008008956        0x2 
+                0x00000000080088f0        0xe Core/Src/main.o
+ *fill*         0x00000000080088fe        0x2 
  .rodata.Tahoma_12h_0x70
-                0x0000000008008958        0xc Core/Src/main.o
+                0x0000000008008900        0xc Core/Src/main.o
  .rodata.image_data_Tahoma_12h_0x71
-                0x0000000008008964        0xe Core/Src/main.o
- *fill*         0x0000000008008972        0x2 
+                0x000000000800890c        0xe Core/Src/main.o
+ *fill*         0x000000000800891a        0x2 
  .rodata.Tahoma_12h_0x71
-                0x0000000008008974        0xc Core/Src/main.o
+                0x000000000800891c        0xc Core/Src/main.o
  .rodata.image_data_Tahoma_12h_0x72
-                0x0000000008008980        0xe Core/Src/main.o
- *fill*         0x000000000800898e        0x2 
+                0x0000000008008928        0xe Core/Src/main.o
+ *fill*         0x0000000008008936        0x2 
  .rodata.Tahoma_12h_0x72
-                0x0000000008008990        0xc Core/Src/main.o
+                0x0000000008008938        0xc Core/Src/main.o
  .rodata.image_data_Tahoma_12h_0x73
-                0x000000000800899c        0xe Core/Src/main.o
- *fill*         0x00000000080089aa        0x2 
+                0x0000000008008944        0xe Core/Src/main.o
+ *fill*         0x0000000008008952        0x2 
  .rodata.Tahoma_12h_0x73
-                0x00000000080089ac        0xc Core/Src/main.o
+                0x0000000008008954        0xc Core/Src/main.o
  .rodata.image_data_Tahoma_12h_0x74
-                0x00000000080089b8        0xe Core/Src/main.o
- *fill*         0x00000000080089c6        0x2 
+                0x0000000008008960        0xe Core/Src/main.o
+ *fill*         0x000000000800896e        0x2 
  .rodata.Tahoma_12h_0x74
-                0x00000000080089c8        0xc Core/Src/main.o
+                0x0000000008008970        0xc Core/Src/main.o
  .rodata.image_data_Tahoma_12h_0x75
-                0x00000000080089d4        0xe Core/Src/main.o
- *fill*         0x00000000080089e2        0x2 
+                0x000000000800897c        0xe Core/Src/main.o
+ *fill*         0x000000000800898a        0x2 
  .rodata.Tahoma_12h_0x75
-                0x00000000080089e4        0xc Core/Src/main.o
+                0x000000000800898c        0xc Core/Src/main.o
  .rodata.image_data_Tahoma_12h_0x76
-                0x00000000080089f0        0xe Core/Src/main.o
- *fill*         0x00000000080089fe        0x2 
+                0x0000000008008998        0xe Core/Src/main.o
+ *fill*         0x00000000080089a6        0x2 
  .rodata.Tahoma_12h_0x76
-                0x0000000008008a00        0xc Core/Src/main.o
+                0x00000000080089a8        0xc Core/Src/main.o
  .rodata.image_data_Tahoma_12h_0x77
-                0x0000000008008a0c       0x1c Core/Src/main.o
+                0x00000000080089b4       0x1c Core/Src/main.o
  .rodata.Tahoma_12h_0x77
-                0x0000000008008a28        0xc Core/Src/main.o
+                0x00000000080089d0        0xc Core/Src/main.o
  .rodata.image_data_Tahoma_12h_0x78
-                0x0000000008008a34        0xe Core/Src/main.o
- *fill*         0x0000000008008a42        0x2 
+                0x00000000080089dc        0xe Core/Src/main.o
+ *fill*         0x00000000080089ea        0x2 
  .rodata.Tahoma_12h_0x78
-                0x0000000008008a44        0xc Core/Src/main.o
+                0x00000000080089ec        0xc Core/Src/main.o
  .rodata.image_data_Tahoma_12h_0x79
-                0x0000000008008a50        0xe Core/Src/main.o
- *fill*         0x0000000008008a5e        0x2 
+                0x00000000080089f8        0xe Core/Src/main.o
+ *fill*         0x0000000008008a06        0x2 
  .rodata.Tahoma_12h_0x79
-                0x0000000008008a60        0xc Core/Src/main.o
+                0x0000000008008a08        0xc Core/Src/main.o
  .rodata.image_data_Tahoma_12h_0x7a
-                0x0000000008008a6c        0xe Core/Src/main.o
- *fill*         0x0000000008008a7a        0x2 
+                0x0000000008008a14        0xe Core/Src/main.o
+ *fill*         0x0000000008008a22        0x2 
  .rodata.Tahoma_12h_0x7a
-                0x0000000008008a7c        0xc Core/Src/main.o
+                0x0000000008008a24        0xc Core/Src/main.o
  .rodata.image_data_Tahoma_12h_0x7b
-                0x0000000008008a88        0xe Core/Src/main.o
- *fill*         0x0000000008008a96        0x2 
+                0x0000000008008a30        0xe Core/Src/main.o
+ *fill*         0x0000000008008a3e        0x2 
  .rodata.Tahoma_12h_0x7b
-                0x0000000008008a98        0xc Core/Src/main.o
+                0x0000000008008a40        0xc Core/Src/main.o
  .rodata.image_data_Tahoma_12h_0x7c
-                0x0000000008008aa4        0xe Core/Src/main.o
- *fill*         0x0000000008008ab2        0x2 
+                0x0000000008008a4c        0xe Core/Src/main.o
+ *fill*         0x0000000008008a5a        0x2 
  .rodata.Tahoma_12h_0x7c
-                0x0000000008008ab4        0xc Core/Src/main.o
+                0x0000000008008a5c        0xc Core/Src/main.o
  .rodata.image_data_Tahoma_12h_0x7d
-                0x0000000008008ac0        0xe Core/Src/main.o
- *fill*         0x0000000008008ace        0x2 
+                0x0000000008008a68        0xe Core/Src/main.o
+ *fill*         0x0000000008008a76        0x2 
  .rodata.Tahoma_12h_0x7d
-                0x0000000008008ad0        0xc Core/Src/main.o
+                0x0000000008008a78        0xc Core/Src/main.o
  .rodata.image_data_Tahoma_12h_0x7e
-                0x0000000008008adc       0x1c Core/Src/main.o
+                0x0000000008008a84       0x1c Core/Src/main.o
  .rodata.Tahoma_12h_0x7e
-                0x0000000008008af8        0xc Core/Src/main.o
+                0x0000000008008aa0        0xc Core/Src/main.o
  .rodata.Tahoma_12h_array
-                0x0000000008008b04      0x2f8 Core/Src/main.o
+                0x0000000008008aac      0x2f8 Core/Src/main.o
  .rodata.Tahoma_12h
-                0x0000000008008dfc        0x8 Core/Src/main.o
-                0x0000000008008dfc                Tahoma_12h
+                0x0000000008008da4        0x8 Core/Src/main.o
+                0x0000000008008da4                Tahoma_12h
  .rodata.AHBPrescTable
-                0x0000000008008e04       0x10 Core/Src/system_stm32l4xx.o
-                0x0000000008008e04                AHBPrescTable
+                0x0000000008008dac       0x10 Core/Src/system_stm32l4xx.o
+                0x0000000008008dac                AHBPrescTable
  .rodata.APBPrescTable
-                0x0000000008008e14        0x8 Core/Src/system_stm32l4xx.o
-                0x0000000008008e14                APBPrescTable
+                0x0000000008008dbc        0x8 Core/Src/system_stm32l4xx.o
+                0x0000000008008dbc                APBPrescTable
  .rodata.MSIRangeTable
-                0x0000000008008e1c       0x30 Core/Src/system_stm32l4xx.o
-                0x0000000008008e1c                MSIRangeTable
+                0x0000000008008dc4       0x30 Core/Src/system_stm32l4xx.o
+                0x0000000008008dc4                MSIRangeTable
  .rodata.SSD7317_INIT_TBL
-                0x0000000008008e4c       0x2b SSD7317Z/Src/SSD7317.o
- *fill*         0x0000000008008e77        0x1 
+                0x0000000008008df4       0x2b SSD7317Z/Src/SSD7317.o
+ *fill*         0x0000000008008e1f        0x1 
  .rodata.PM_content
-                0x0000000008008e78     0x3000 SSD7317Z/Src/SSD7317_Init_Table.o
+                0x0000000008008e20     0x3000 SSD7317Z/Src/SSD7317_Init_Table.o
  .rodata.TM_content
-                0x000000000800be78      0x734 SSD7317Z/Src/SSD7317_Init_Table.o
+                0x000000000800be20      0x734 SSD7317Z/Src/SSD7317_Init_Table.o
  .rodata.DM_content
-                0x000000000800c5ac      0x800 SSD7317Z/Src/SSD7317_Init_Table.o
+                0x000000000800c554      0x800 SSD7317Z/Src/SSD7317_Init_Table.o
  .rodata._global_impure_ptr
-                0x000000000800cdac        0x4 c:/st/stm32cubeide_1.2.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.4.0.202007081208/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-impure.o)
-                0x000000000800cdac                _global_impure_ptr
+                0x000000000800cd54        0x4 c:/st/stm32cubeide_1.2.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.4.0.202007081208/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-impure.o)
+                0x000000000800cd54                _global_impure_ptr
  .rodata.__sf_fake_stderr
-                0x000000000800cdb0       0x20 c:/st/stm32cubeide_1.2.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.4.0.202007081208/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-findfp.o)
-                0x000000000800cdb0                __sf_fake_stderr
+                0x000000000800cd58       0x20 c:/st/stm32cubeide_1.2.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.4.0.202007081208/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-findfp.o)
+                0x000000000800cd58                __sf_fake_stderr
  .rodata.__sf_fake_stdin
-                0x000000000800cdd0       0x20 c:/st/stm32cubeide_1.2.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.4.0.202007081208/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-findfp.o)
-                0x000000000800cdd0                __sf_fake_stdin
+                0x000000000800cd78       0x20 c:/st/stm32cubeide_1.2.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.4.0.202007081208/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-findfp.o)
+                0x000000000800cd78                __sf_fake_stdin
  .rodata.__sf_fake_stdout
-                0x000000000800cdf0       0x20 c:/st/stm32cubeide_1.2.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.4.0.202007081208/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-findfp.o)
-                0x000000000800cdf0                __sf_fake_stdout
-                0x000000000800ce10                . = ALIGN (0x4)
+                0x000000000800cd98       0x20 c:/st/stm32cubeide_1.2.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.4.0.202007081208/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-findfp.o)
+                0x000000000800cd98                __sf_fake_stdout
+                0x000000000800cdb8                . = ALIGN (0x4)
 
-.ARM.extab      0x000000000800ce10        0x0
-                0x000000000800ce10                . = ALIGN (0x4)
+.ARM.extab      0x000000000800cdb8        0x0
+                0x000000000800cdb8                . = ALIGN (0x4)
  *(.ARM.extab* .gnu.linkonce.armextab.*)
-                0x000000000800ce10                . = ALIGN (0x4)
+                0x000000000800cdb8                . = ALIGN (0x4)
 
-.ARM            0x000000000800ce10        0x8
-                0x000000000800ce10                . = ALIGN (0x4)
-                0x000000000800ce10                __exidx_start = .
+.ARM            0x000000000800cdb8        0x8
+                0x000000000800cdb8                . = ALIGN (0x4)
+                0x000000000800cdb8                __exidx_start = .
  *(.ARM.exidx*)
- .ARM.exidx     0x000000000800ce10        0x8 c:/st/stm32cubeide_1.2.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.4.0.202007081208/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/thumb/v7e-m/fpv4-sp/hard\libgcc.a(_udivmoddi4.o)
-                0x000000000800ce18                __exidx_end = .
-                0x000000000800ce18                . = ALIGN (0x4)
+ .ARM.exidx     0x000000000800cdb8        0x8 c:/st/stm32cubeide_1.2.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.4.0.202007081208/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/thumb/v7e-m/fpv4-sp/hard\libgcc.a(_udivmoddi4.o)
+                0x000000000800cdc0                __exidx_end = .
+                0x000000000800cdc0                . = ALIGN (0x4)
 
-.rel.dyn        0x000000000800ce18        0x0
- .rel.iplt      0x000000000800ce18        0x0 c:/st/stm32cubeide_1.2.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.4.0.202007081208/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/thumb/v7e-m/fpv4-sp/hard/crtbegin.o
+.rel.dyn        0x000000000800cdc0        0x0
+ .rel.iplt      0x000000000800cdc0        0x0 c:/st/stm32cubeide_1.2.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.4.0.202007081208/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/thumb/v7e-m/fpv4-sp/hard/crtbegin.o
 
-.preinit_array  0x000000000800ce18        0x0
-                0x000000000800ce18                . = ALIGN (0x4)
-                0x000000000800ce18                PROVIDE (__preinit_array_start = .)
+.preinit_array  0x000000000800cdc0        0x0
+                0x000000000800cdc0                . = ALIGN (0x4)
+                0x000000000800cdc0                PROVIDE (__preinit_array_start = .)
  *(.preinit_array*)
-                0x000000000800ce18                PROVIDE (__preinit_array_end = .)
-                0x000000000800ce18                . = ALIGN (0x4)
+                0x000000000800cdc0                PROVIDE (__preinit_array_end = .)
+                0x000000000800cdc0                . = ALIGN (0x4)
 
-.init_array     0x000000000800ce18        0x4
-                0x000000000800ce18                . = ALIGN (0x4)
-                0x000000000800ce18                PROVIDE (__init_array_start = .)
+.init_array     0x000000000800cdc0        0x4
+                0x000000000800cdc0                . = ALIGN (0x4)
+                0x000000000800cdc0                PROVIDE (__init_array_start = .)
  *(SORT_BY_NAME(.init_array.*))
  *(.init_array*)
- .init_array    0x000000000800ce18        0x4 c:/st/stm32cubeide_1.2.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.4.0.202007081208/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/thumb/v7e-m/fpv4-sp/hard/crtbegin.o
-                0x000000000800ce1c                PROVIDE (__init_array_end = .)
-                0x000000000800ce1c                . = ALIGN (0x4)
+ .init_array    0x000000000800cdc0        0x4 c:/st/stm32cubeide_1.2.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.4.0.202007081208/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/thumb/v7e-m/fpv4-sp/hard/crtbegin.o
+                0x000000000800cdc4                PROVIDE (__init_array_end = .)
+                0x000000000800cdc4                . = ALIGN (0x4)
 
-.fini_array     0x000000000800ce1c        0x4
-                0x000000000800ce1c                . = ALIGN (0x4)
+.fini_array     0x000000000800cdc4        0x4
+                0x000000000800cdc4                . = ALIGN (0x4)
                 [!provide]                        PROVIDE (__fini_array_start = .)
  *(SORT_BY_NAME(.fini_array.*))
  *(.fini_array*)
- .fini_array    0x000000000800ce1c        0x4 c:/st/stm32cubeide_1.2.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.4.0.202007081208/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/thumb/v7e-m/fpv4-sp/hard/crtbegin.o
+ .fini_array    0x000000000800cdc4        0x4 c:/st/stm32cubeide_1.2.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.4.0.202007081208/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/thumb/v7e-m/fpv4-sp/hard/crtbegin.o
                 [!provide]                        PROVIDE (__fini_array_end = .)
-                0x000000000800ce20                . = ALIGN (0x4)
-                0x000000000800ce20                _sidata = LOADADDR (.data)
+                0x000000000800cdc8                . = ALIGN (0x4)
+                0x000000000800cdc8                _sidata = LOADADDR (.data)
 
-.data           0x0000000020000000       0x94 load address 0x000000000800ce20
+.data           0x0000000020000000       0x94 load address 0x000000000800cdc8
                 0x0000000020000000                . = ALIGN (0x4)
                 0x0000000020000000                _sdata = .
  *(.data)
@@ -5435,11 +5433,11 @@ LOAD c:/st/stm32cubeide_1.2.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.exte
                 0x0000000020000094                . = ALIGN (0x4)
                 0x0000000020000094                _edata = .
 
-.igot.plt       0x0000000020000094        0x0 load address 0x000000000800ceb4
+.igot.plt       0x0000000020000094        0x0 load address 0x000000000800ce5c
  .igot.plt      0x0000000020000094        0x0 c:/st/stm32cubeide_1.2.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.4.0.202007081208/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/thumb/v7e-m/fpv4-sp/hard/crtbegin.o
                 0x0000000020000094                . = ALIGN (0x4)
 
-.bss            0x0000000020000094      0x9fc load address 0x000000000800ceb4
+.bss            0x0000000020000094      0x9fc load address 0x000000000800ce5c
                 0x0000000020000094                _sbss = .
                 0x0000000020000094                __bss_start__ = _sbss
  *(.bss)
@@ -5484,7 +5482,7 @@ LOAD c:/st/stm32cubeide_1.2.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.exte
                 0x0000000020000a90                __bss_end__ = _ebss
 
 ._user_heap_stack
-                0x0000000020000a90      0x600 load address 0x000000000800ceb4
+                0x0000000020000a90      0x600 load address 0x000000000800ce5c
                 0x0000000020000a90                . = ALIGN (0x8)
                 [!provide]                        PROVIDE (end = .)
                 0x0000000020000a90                PROVIDE (_end = .)
@@ -5612,7 +5610,7 @@ LOAD c:/st/stm32cubeide_1.2.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.exte
                 0x0000000000000ae9       0x22 c:/st/stm32cubeide_1.2.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.4.0.202007081208/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/thumb/v7e-m/fpv4-sp/hard/crtn.o
 OUTPUT(HelloWorld.elf elf32-littlearm)
 
-.debug_info     0x0000000000000000    0x185c3
+.debug_info     0x0000000000000000    0x185ec
  .debug_info    0x0000000000000000     0x3253 Core/Src/main.o
  .debug_info    0x0000000000003253     0x208a Core/Src/stm32l4xx_hal_msp.o
  .debug_info    0x00000000000052dd     0x115c Core/Src/stm32l4xx_it.o
@@ -5632,10 +5630,10 @@ OUTPUT(HelloWorld.elf elf32-littlearm)
  .debug_info    0x000000000001049f     0x178d Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_spi.o
  .debug_info    0x0000000000011c2c     0x183d Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_uart.o
  .debug_info    0x0000000000013469      0xa37 Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_uart_ex.o
- .debug_info    0x0000000000013ea0     0x2b6e SSD7317Z/Src/SSD7317.o
- .debug_info    0x0000000000016a0e      0x19d SSD7317Z/Src/SSD7317_Init_Table.o
- .debug_info    0x0000000000016bab      0x465 SSD7317Z/Src/dwt_stm32_delay.o
- .debug_info    0x0000000000017010     0x15b3 SSD7317Z/Src/rpc.o
+ .debug_info    0x0000000000013ea0     0x2b97 SSD7317Z/Src/SSD7317.o
+ .debug_info    0x0000000000016a37      0x19d SSD7317Z/Src/SSD7317_Init_Table.o
+ .debug_info    0x0000000000016bd4      0x465 SSD7317Z/Src/dwt_stm32_delay.o
+ .debug_info    0x0000000000017039     0x15b3 SSD7317Z/Src/rpc.o
 
 .debug_abbrev   0x0000000000000000     0x2ce2
  .debug_abbrev  0x0000000000000000      0x309 Core/Src/main.o
@@ -5847,7 +5845,7 @@ OUTPUT(HelloWorld.elf elf32-littlearm)
  .debug_macro   0x00000000000233bd       0x16 SSD7317Z/Src/rpc.o
  .debug_macro   0x00000000000233d3       0x20 SSD7317Z/Src/rpc.o
 
-.debug_line     0x0000000000000000    0x10199
+.debug_line     0x0000000000000000    0x101be
  .debug_line    0x0000000000000000      0xb29 Core/Src/main.o
  .debug_line    0x0000000000000b29      0xa83 Core/Src/stm32l4xx_hal_msp.o
  .debug_line    0x00000000000015ac      0xa8b Core/Src/stm32l4xx_it.o
@@ -5867,12 +5865,12 @@ OUTPUT(HelloWorld.elf elf32-littlearm)
  .debug_line    0x000000000000abab     0x1371 Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_spi.o
  .debug_line    0x000000000000bf1c     0x13fa Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_uart.o
  .debug_line    0x000000000000d316      0x8e0 Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_uart_ex.o
- .debug_line    0x000000000000dbf6      0xfaa SSD7317Z/Src/SSD7317.o
- .debug_line    0x000000000000eba0      0x3f4 SSD7317Z/Src/SSD7317_Init_Table.o
- .debug_line    0x000000000000ef94      0x791 SSD7317Z/Src/dwt_stm32_delay.o
- .debug_line    0x000000000000f725      0xa74 SSD7317Z/Src/rpc.o
+ .debug_line    0x000000000000dbf6      0xfcf SSD7317Z/Src/SSD7317.o
+ .debug_line    0x000000000000ebc5      0x3f4 SSD7317Z/Src/SSD7317_Init_Table.o
+ .debug_line    0x000000000000efb9      0x791 SSD7317Z/Src/dwt_stm32_delay.o
+ .debug_line    0x000000000000f74a      0xa74 SSD7317Z/Src/rpc.o
 
-.debug_str      0x0000000000000000    0xcf818
+.debug_str      0x0000000000000000    0xcf81d
  .debug_str     0x0000000000000000    0xca36b Core/Src/main.o
                                       0xcaea9 (size before relaxing)
  .debug_str     0x00000000000ca36b       0xf3 Core/Src/stm32l4xx_hal_msp.o
@@ -5911,13 +5909,13 @@ OUTPUT(HelloWorld.elf elf32-littlearm)
                                       0xc509d (size before relaxing)
  .debug_str     0x00000000000cee40      0x185 Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_uart_ex.o
                                       0xc4889 (size before relaxing)
- .debug_str     0x00000000000cefc5      0x657 SSD7317Z/Src/SSD7317.o
-                                      0xc9d82 (size before relaxing)
- .debug_str     0x00000000000cf61c       0x6a SSD7317Z/Src/SSD7317_Init_Table.o
+ .debug_str     0x00000000000cefc5      0x65c SSD7317Z/Src/SSD7317.o
+                                      0xc9d87 (size before relaxing)
+ .debug_str     0x00000000000cf621       0x6a SSD7317Z/Src/SSD7317_Init_Table.o
                                        0x3cd1 (size before relaxing)
- .debug_str     0x00000000000cf686       0x80 SSD7317Z/Src/dwt_stm32_delay.o
+ .debug_str     0x00000000000cf68b       0x80 SSD7317Z/Src/dwt_stm32_delay.o
                                       0xc4415 (size before relaxing)
- .debug_str     0x00000000000cf706      0x112 SSD7317Z/Src/rpc.o
+ .debug_str     0x00000000000cf70b      0x112 SSD7317Z/Src/rpc.o
                                       0xc92b0 (size before relaxing)
 
 .comment        0x0000000000000000       0x7b
@@ -5945,7 +5943,7 @@ OUTPUT(HelloWorld.elf elf32-littlearm)
  .comment       0x000000000000007b       0x7c SSD7317Z/Src/dwt_stm32_delay.o
  .comment       0x000000000000007b       0x7c SSD7317Z/Src/rpc.o
 
-.debug_frame    0x0000000000000000     0x4c24
+.debug_frame    0x0000000000000000     0x4c20
  .debug_frame   0x0000000000000000      0x1e0 Core/Src/main.o
  .debug_frame   0x00000000000001e0      0x184 Core/Src/stm32l4xx_hal_msp.o
  .debug_frame   0x0000000000000364      0x198 Core/Src/stm32l4xx_it.o
@@ -5964,32 +5962,32 @@ OUTPUT(HelloWorld.elf elf32-littlearm)
  .debug_frame   0x0000000000002adc      0x85c Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_spi.o
  .debug_frame   0x0000000000003338      0x96c Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_uart.o
  .debug_frame   0x0000000000003ca4      0x16c Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_uart_ex.o
- .debug_frame   0x0000000000003e10      0x630 SSD7317Z/Src/SSD7317.o
- .debug_frame   0x0000000000004440       0x30 SSD7317Z/Src/dwt_stm32_delay.o
- .debug_frame   0x0000000000004470       0xc4 SSD7317Z/Src/rpc.o
- .debug_frame   0x0000000000004534       0x20 c:/st/stm32cubeide_1.2.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.4.0.202007081208/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-errno.o)
- .debug_frame   0x0000000000004554       0x2c c:/st/stm32cubeide_1.2.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.4.0.202007081208/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-init.o)
- .debug_frame   0x0000000000004580       0x20 c:/st/stm32cubeide_1.2.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.4.0.202007081208/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-memset.o)
- .debug_frame   0x00000000000045a0       0x58 c:/st/stm32cubeide_1.2.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.4.0.202007081208/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-putchar.o)
- .debug_frame   0x00000000000045f8       0x3c c:/st/stm32cubeide_1.2.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.4.0.202007081208/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-puts.o)
- .debug_frame   0x0000000000004634       0x40 c:/st/stm32cubeide_1.2.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.4.0.202007081208/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-wbuf.o)
- .debug_frame   0x0000000000004674       0x2c c:/st/stm32cubeide_1.2.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.4.0.202007081208/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-wsetup.o)
- .debug_frame   0x00000000000046a0       0x68 c:/st/stm32cubeide_1.2.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.4.0.202007081208/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-fflush.o)
- .debug_frame   0x0000000000004708      0x11c c:/st/stm32cubeide_1.2.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.4.0.202007081208/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-findfp.o)
- .debug_frame   0x0000000000004824       0x54 c:/st/stm32cubeide_1.2.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.4.0.202007081208/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-fwalk.o)
- .debug_frame   0x0000000000004878       0x58 c:/st/stm32cubeide_1.2.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.4.0.202007081208/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-makebuf.o)
- .debug_frame   0x00000000000048d0       0x38 c:/st/stm32cubeide_1.2.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.4.0.202007081208/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-nano-freer.o)
- .debug_frame   0x0000000000004908       0x2c c:/st/stm32cubeide_1.2.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.4.0.202007081208/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-nano-mallocr.o)
- .debug_frame   0x0000000000004934       0x48 c:/st/stm32cubeide_1.2.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.4.0.202007081208/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-putc.o)
- .debug_frame   0x000000000000497c       0x2c c:/st/stm32cubeide_1.2.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.4.0.202007081208/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-sbrkr.o)
- .debug_frame   0x00000000000049a8       0x88 c:/st/stm32cubeide_1.2.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.4.0.202007081208/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-stdio.o)
- .debug_frame   0x0000000000004a30       0x2c c:/st/stm32cubeide_1.2.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.4.0.202007081208/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-writer.o)
- .debug_frame   0x0000000000004a5c       0x2c c:/st/stm32cubeide_1.2.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.4.0.202007081208/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-closer.o)
- .debug_frame   0x0000000000004a88       0x2c c:/st/stm32cubeide_1.2.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.4.0.202007081208/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-fstatr.o)
- .debug_frame   0x0000000000004ab4       0x2c c:/st/stm32cubeide_1.2.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.4.0.202007081208/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-isattyr.o)
- .debug_frame   0x0000000000004ae0       0x2c c:/st/stm32cubeide_1.2.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.4.0.202007081208/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-lseekr.o)
- .debug_frame   0x0000000000004b0c       0x30 c:/st/stm32cubeide_1.2.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.4.0.202007081208/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-mlock.o)
- .debug_frame   0x0000000000004b3c       0x2c c:/st/stm32cubeide_1.2.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.4.0.202007081208/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-readr.o)
- .debug_frame   0x0000000000004b68       0x5c c:/st/stm32cubeide_1.2.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.4.0.202007081208/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-reent.o)
- .debug_frame   0x0000000000004bc4       0x2c c:/st/stm32cubeide_1.2.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.4.0.202007081208/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/thumb/v7e-m/fpv4-sp/hard\libgcc.a(_aeabi_uldivmod.o)
- .debug_frame   0x0000000000004bf0       0x34 c:/st/stm32cubeide_1.2.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.4.0.202007081208/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/thumb/v7e-m/fpv4-sp/hard\libgcc.a(_udivmoddi4.o)
+ .debug_frame   0x0000000000003e10      0x62c SSD7317Z/Src/SSD7317.o
+ .debug_frame   0x000000000000443c       0x30 SSD7317Z/Src/dwt_stm32_delay.o
+ .debug_frame   0x000000000000446c       0xc4 SSD7317Z/Src/rpc.o
+ .debug_frame   0x0000000000004530       0x20 c:/st/stm32cubeide_1.2.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.4.0.202007081208/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-errno.o)
+ .debug_frame   0x0000000000004550       0x2c c:/st/stm32cubeide_1.2.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.4.0.202007081208/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-init.o)
+ .debug_frame   0x000000000000457c       0x20 c:/st/stm32cubeide_1.2.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.4.0.202007081208/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-memset.o)
+ .debug_frame   0x000000000000459c       0x58 c:/st/stm32cubeide_1.2.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.4.0.202007081208/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-putchar.o)
+ .debug_frame   0x00000000000045f4       0x3c c:/st/stm32cubeide_1.2.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.4.0.202007081208/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-puts.o)
+ .debug_frame   0x0000000000004630       0x40 c:/st/stm32cubeide_1.2.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.4.0.202007081208/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-wbuf.o)
+ .debug_frame   0x0000000000004670       0x2c c:/st/stm32cubeide_1.2.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.4.0.202007081208/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-wsetup.o)
+ .debug_frame   0x000000000000469c       0x68 c:/st/stm32cubeide_1.2.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.4.0.202007081208/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-fflush.o)
+ .debug_frame   0x0000000000004704      0x11c c:/st/stm32cubeide_1.2.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.4.0.202007081208/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-findfp.o)
+ .debug_frame   0x0000000000004820       0x54 c:/st/stm32cubeide_1.2.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.4.0.202007081208/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-fwalk.o)
+ .debug_frame   0x0000000000004874       0x58 c:/st/stm32cubeide_1.2.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.4.0.202007081208/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-makebuf.o)
+ .debug_frame   0x00000000000048cc       0x38 c:/st/stm32cubeide_1.2.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.4.0.202007081208/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-nano-freer.o)
+ .debug_frame   0x0000000000004904       0x2c c:/st/stm32cubeide_1.2.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.4.0.202007081208/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-nano-mallocr.o)
+ .debug_frame   0x0000000000004930       0x48 c:/st/stm32cubeide_1.2.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.4.0.202007081208/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-putc.o)
+ .debug_frame   0x0000000000004978       0x2c c:/st/stm32cubeide_1.2.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.4.0.202007081208/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-sbrkr.o)
+ .debug_frame   0x00000000000049a4       0x88 c:/st/stm32cubeide_1.2.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.4.0.202007081208/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-stdio.o)
+ .debug_frame   0x0000000000004a2c       0x2c c:/st/stm32cubeide_1.2.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.4.0.202007081208/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-writer.o)
+ .debug_frame   0x0000000000004a58       0x2c c:/st/stm32cubeide_1.2.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.4.0.202007081208/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-closer.o)
+ .debug_frame   0x0000000000004a84       0x2c c:/st/stm32cubeide_1.2.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.4.0.202007081208/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-fstatr.o)
+ .debug_frame   0x0000000000004ab0       0x2c c:/st/stm32cubeide_1.2.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.4.0.202007081208/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-isattyr.o)
+ .debug_frame   0x0000000000004adc       0x2c c:/st/stm32cubeide_1.2.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.4.0.202007081208/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-lseekr.o)
+ .debug_frame   0x0000000000004b08       0x30 c:/st/stm32cubeide_1.2.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.4.0.202007081208/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-mlock.o)
+ .debug_frame   0x0000000000004b38       0x2c c:/st/stm32cubeide_1.2.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.4.0.202007081208/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-readr.o)
+ .debug_frame   0x0000000000004b64       0x5c c:/st/stm32cubeide_1.2.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.4.0.202007081208/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/../../../../arm-none-eabi/lib/thumb/v7e-m/fpv4-sp/hard\libc_nano.a(lib_a-reent.o)
+ .debug_frame   0x0000000000004bc0       0x2c c:/st/stm32cubeide_1.2.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.4.0.202007081208/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/thumb/v7e-m/fpv4-sp/hard\libgcc.a(_aeabi_uldivmod.o)
+ .debug_frame   0x0000000000004bec       0x34 c:/st/stm32cubeide_1.2.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.4.0.202007081208/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/thumb/v7e-m/fpv4-sp/hard\libgcc.a(_udivmoddi4.o)
