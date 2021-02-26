@@ -357,10 +357,71 @@ By boosting the Logic Analyzer's sampling rate to 100MHz (SPI frequency is 16MHz
 <img src="./Images/FR_LogicAnalyzer_Closeup.png" width=100%>
 
 To wrap it up, the program works by copying the bit patterns of the string **Hello World** from FLASH to the frame buffer `(frame_buffer[])`, then a flag is set for flush pending to wait for an FR rising edge. On an FR rising edge, the HAL function `HAL_SPI_Transmit()` is applied to copy the dirty area of the frame buffer to GDDRAM of the OLED by SPI.
-
 <img src = "./Images/FR_SPI_Tx_Flowchart.png" width=70%>
 
 ## LCD Image Converter
+
+is a shareware to create bitmaps and fonts and convert them to "C" source format for embedded applications. It is available from SOURCEFORGE at [link](https://sourceforge.net/projects/lcd-image-converter/) and documentation [here](https://lcd-image-converter.riuson.com/en/about/). This section describes the procedures to prepare bitmaps and fonts in "C" arrays and use them in a new project from scratch. 
+
+### Create Fonts in "C" Array
+
+Download and install LCD Image Converter in any convenient location. Double click on **lcd-image-converter.exe** <img src="./Images/Number_circle_44x44_1.png" width=5%> to launch the application and click **New Font ** <img src="./Images/Number_circle_44x44_2.png" width=5%>button.
+
+<img src="./Images/LCD_Img_Converter_Step1.png" width=100%>
+
+Enter the font name you want to use. I would suggest a convention that indicates the font type and size, e.g. ArialBlack_36h.
+
+<img src="./Images/LCD_Img_Converter_Step2.png" width=30%>
+
+From **Font setup** dialog box, select the target Font<img src="./Images/Number_circle_44x44_1.png" width=5%>and Size<img src="./Images/Number_circle_44x44_2.png" width=5%>. I am using Arial Black in size 36 here. By default, the whole typeable character range (0x20 - 0x7E) <img src="./Images/Number_circle_44x44_3.png" width=5%>is selected. To expand or restrict the range, click **Characters** button.<img src="./Images/Number_circle_44x44_4.png" width=5%>
+
+<img src="./Images/LCD_Img_Converter_Step3.png" width=100%>
+
+From the **Filter** section, select **All**<img src="./Images/Number_circle_44x44_1.png" width=5%>. Matrix table on the right panel is refreshed with the full character range (0x00 - 0xFFFF). I wish to use only digit "0" - "9" and few special characters. From the text box, highlight and delete characters from "space" to "/"<img src="./Images/Number_circle_44x44_2.png" width=5%> and repeat for characters ":" - "~"<img src="./Images/Number_circle_44x44_3.png" width=5%>.
+
+<img src="./Images/LCD_Img_Converter_Step4.png" width=100%>
+
+Now, text box (next to Source Font) shows "0" - "9". Browse characters down the matrix table to select any character you need by double-click<img src="./Images/Number_circle_44x44_1.png" width=5%>. I am using Unicode characters 0x26f7, 0x2ee4, 0x30b5, 0x3179, and 0x3296 as demonstration. The text box is refreshed <img src="./Images/Number_circle_44x44_2.png" width=5%>with new characters.
+
+<img src = "./Images/LCD_Img_Converter_Step5.png" width=100%>
+
+Next, click **Parameters** button and select Proportional with Fore Color ffffffff and Black Color 0xff000000. There is no anti-aliasing required because our OLED is a monochrome display.
+
+<img src="./Images/LCD_Img_Converter_Step5_1.png" width=100%>
+
+Click **OK** to exit.
+
+Now, the main menu of LCD Image Converter will show all characters selected<img src="./Images/Number_circle_44x44_1.png" width=5%>on the right with zoom up on the left<img src="./Images/Number_circle_44x44_2.png" width=5%>.  From Options>. From **Options** menu, click **Conversion...**<img src="./Images/Number_circle_44x44_3.png" width=5%>.
+
+<img src="./Images/LCD_Img_Converter_Step6.png" width=100%>
+
+From the **Options** dialog box, select **Monochrome** in Preset. Under Prepare tab select **Monochrome**<img src="./Images/Number_circle_44x44_1.png" width=5%> , **Top to Bottom**<img src="./Images/Number_circle_44x44_2.png" width=5%> and **Forward **<img src="./Images/Number_circle_44x44_3.png" width=5%>line scan.
+
+<img src="./Images/LCD_Img_Converter_Step7.png" width=100%>
+
+**It is the tricky part. **Check Reordering tab and click on bit '0' button from the Source row to add "Left Shift" by 7 bits.
+
+<img src="./Images/LCD_Img_Converter_Step8.png" width=100%>
+
+A new bitwise operation is added with bit '0' on the LSB shifted to MSB position. Repeat the procedures by clicking on bit '1' and left shift by 5 (<<5), on bit '2' and left shift by 3 (<<3), on bit '3' and left shift by 1 (<<1), on bit '4' and right shift by 1 (>>1), on bit '5' and right shift by 3 (>>3), on bit '6' and right shift by 5 (>>5), on bit '7' and right shift by 7 (>>7). Click **OK** to exit.
+
+<img src="./Images/LCD_Img_Converter_Step9.png" width=100%>
+
+The reason why we need to laterally invert the bit positions because **pixels are mapped in LSB first**. This is coherent with how [GDDRAM is mapped](#graphic-display-data-ram-(gddram)) to pixels in OLED initialization.
+
+Parameters in remaining tabs are shown below for reference. An important option is to use **UTF-16** for Encoding under Font tab because in our list there are Unicode characters 0x267f, 0x2ee4,...
+
+<img src="./Images/LCD_Img_Converter_Step10.png" width=100%>
+
+Click **OK** to exit. From **File > Convert...**Save as type C/C++ headers (*.h) and use file name **ArialBlack_36h.h** to save. You may save the project to ArialBlack_36h.xml from **File>Save** for later use.
+
+<img src="./Images/LCD_Img_Converter_Step11.png" width=100%>
+
+### Create Bitmaps in "C" Array 
+
+
+
+### Using the Fonts and Bitmaps
 
 ## The Touch Screen and How It Works
 
