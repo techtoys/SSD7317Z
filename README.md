@@ -170,9 +170,8 @@ void spi_write_data(const uint8_t *data, uint16_t len){
 }
 ```
 
-### Graphic Display Data RAM (GDDRAM)
-
-In SSD7317Z there is a memory region known as the GDDRAM that mapped to each pixel in one-bit depth. The size of GDDRAM is 12*128 bytes with memory divided into 12 pages (PAGE0-PAGE11) with PAGE0 spans from COM95 to COM88, PAGE1 from COM87 to COM80, down to PAGE11 from COM7 to COM0. The memory map on UT2896KSWGG01 is shown below.
+### Graphic Display Data RAM
+In SSD7317Z there is a memory region known as the Graphic Display Data RAM (GDDRAM) that mapped to each pixel in one-bit depth. The size of GDDRAM is 12*128 bytes with memory divided into 12 pages (PAGE0-PAGE11) with PAGE0 spans from COM95 to COM88, PAGE1 from COM87 to COM80, down to PAGE11 from COM7 to COM0. The memory map on UT2896KSWGG01 is shown below.
 
 <img src = "./Images/GDDRAM_Layout.png" width = 80%>
 
@@ -365,7 +364,7 @@ is a shareware to create bitmaps and fonts and convert them to "C" source format
 
 ### Create Fonts in "C" Array
 
-Download and install LCD Image Converter in any convenient location. Double click on **lcd-image-converter.exe** <img src="./Images/Number_circle_44x44_1.png" width=5%> to launch the application and click **New Font ** <img src="./Images/Number_circle_44x44_2.png" width=5%>button.
+Download and install LCD Image Converter to any convenient location. Double click on **lcd-image-converter.exe** <img src="./Images/Number_circle_44x44_1.png" width=24> to launch the application and click **New Font ** <img src="./Images/Number_circle_44x44_2.png" width=24>button.
 
 <img src="./Images/LCD_Img_Converter_Step1.png" width=100%>
 
@@ -373,53 +372,57 @@ Enter the font name you want to use. I would suggest a convention that indicates
 
 <img src="./Images/LCD_Img_Converter_Step2.png" width=30%>
 
-From **Font setup** dialog box, select the target Font<img src="./Images/Number_circle_44x44_1.png" width=5%>and Size<img src="./Images/Number_circle_44x44_2.png" width=5%>. I am using Arial Black in size 36 here. By default, the whole typeable character range (0x20 - 0x7E) <img src="./Images/Number_circle_44x44_3.png" width=5%>is selected. To expand or restrict the range, click **Characters** button.<img src="./Images/Number_circle_44x44_4.png" width=5%>
+From **Font setup** dialog box, select the target Font<img src="./Images/Number_circle_44x44_1.png" width=24>and Size<img src="./Images/Number_circle_44x44_2.png" width=24>. I am using Arial Black in size 36 here. By default, the whole typeable character range (0x20 - 0x7E) <img src="./Images/Number_circle_44x44_3.png" width=24>is selected. To expand or restrict the range, click **Characters** button.<img src="./Images/Number_circle_44x44_4.png" width=24>
 
 <img src="./Images/LCD_Img_Converter_Step3.png" width=100%>
 
-From the **Filter** section, select **All**<img src="./Images/Number_circle_44x44_1.png" width=5%>. Matrix table on the right panel is refreshed with the full character range (0x00 - 0xFFFF). I wish to use only digit "0" - "9" and few special characters. From the text box, highlight and delete characters from "space" to "/"<img src="./Images/Number_circle_44x44_2.png" width=5%> and repeat for characters ":" - "~"<img src="./Images/Number_circle_44x44_3.png" width=5%>.
+From the **Filter** section, select **All**<img src="./Images/Number_circle_44x44_1.png" width=24>. Matrix table on the right panel is refreshed with the full character range (0x00 - 0xFFFF). I wish to use only digit "0" - "9" and few special characters. From the text box, highlight and delete characters from "space" to "/"<img src="./Images/Number_circle_44x44_2.png" width=24> and repeat for characters ":" - "~"<img src="./Images/Number_circle_44x44_3.png" width=24>.
 
 <img src="./Images/LCD_Img_Converter_Step4.png" width=100%>
 
-Now, text box (next to Source Font) shows "0" - "9". Browse characters down the matrix table to select any character you need by double-click<img src="./Images/Number_circle_44x44_1.png" width=5%>. I am using Unicode characters 0x26f7, 0x2ee4, 0x30b5, 0x3179, and 0x3296 as demonstration. The text box is refreshed <img src="./Images/Number_circle_44x44_2.png" width=5%>with new characters.
+Now, text box (next to Source Font button) will show "0123456789". Browse characters down the matrix table to select any character you need with double-clicks<img src="./Images/Number_circle_44x44_1.png" width=24>. I am using Unicode characters 0x26f7, 0x2ee4, 0x30b5, 0x3179, and 0x3296 as demonstration. The text box is refreshed <img src="./Images/Number_circle_44x44_2.png" width=24>with new characters.
 
 <img src = "./Images/LCD_Img_Converter_Step5.png" width=100%>
 
-Next, click **Parameters** button and select Proportional with Fore Color ffffffff and Black Color 0xff000000. There is no anti-aliasing required because our OLED is a monochrome display.
+Next, click **Parameters** button and select Proportional with Fore Color set 0xffffffff and Black Color set 0xff000000. There is no anti-aliasing required because our OLED is a monochrome display.
 
 <img src="./Images/LCD_Img_Converter_Step5_1.png" width=100%>
 
 Click **OK** to exit.
 
-Now, the main menu of LCD Image Converter will show all characters selected<img src="./Images/Number_circle_44x44_1.png" width=5%>on the right with zoom up on the left<img src="./Images/Number_circle_44x44_2.png" width=5%>.  From Options>. From **Options** menu, click **Conversion...**<img src="./Images/Number_circle_44x44_3.png" width=5%>.
+Now, the main menu of LCD Image Converter will show all characters selected<img src="./Images/Number_circle_44x44_1.png" width=24>on the right with zoom up on the left<img src="./Images/Number_circle_44x44_2.png" width=24>.  From Options>. From **Options** menu, click **Conversion...**<img src="./Images/Number_circle_44x44_3.png" width=24>.
 
 <img src="./Images/LCD_Img_Converter_Step6.png" width=100%>
 
-From the **Options** dialog box, select **Monochrome** in Preset. Under Prepare tab select **Monochrome**<img src="./Images/Number_circle_44x44_1.png" width=5%> , **Top to Bottom**<img src="./Images/Number_circle_44x44_2.png" width=5%> and **Forward **<img src="./Images/Number_circle_44x44_3.png" width=5%>line scan.
+From the **Options** dialog box, select **Monochrome** in Preset. Under Prepare tab select **Monochrome**<img src="./Images/Number_circle_44x44_1.png" width=24> , **Top to Bottom**<img src="./Images/Number_circle_44x44_2.png" width=24> and **Forward **<img src="./Images/Number_circle_44x44_3.png" width=24>line scan.
 
 <img src="./Images/LCD_Img_Converter_Step7.png" width=100%>
 
-**It is the tricky part. **Check Reordering tab and click on bit '0' button from the Source row to add "Left Shift" by 7 bits.
+**Here comes the tricky part: **check Reordering tab and click on bit '0' button from the Source row to add "Left Shift" by 7 bits.
 
 <img src="./Images/LCD_Img_Converter_Step8.png" width=100%>
 
-A new bitwise operation is added with bit '0' on the LSB shifted to MSB position. Repeat the procedures by clicking on bit '1' and left shift by 5 (<<5), on bit '2' and left shift by 3 (<<3), on bit '3' and left shift by 1 (<<1), on bit '4' and right shift by 1 (>>1), on bit '5' and right shift by 3 (>>3), on bit '6' and right shift by 5 (>>5), on bit '7' and right shift by 7 (>>7). Click **OK** to exit.
+A new bitwise operation is added with bit '0' on the LSB shifted to MSB position. Repeat the procedures by clicking on bit '1' and left shift by 5 (<<5), on bit '2' and left shift by 3 (<<3), on bit '3' and left shift by 1 (<<1), on bit '4' and right shift by 1 (>>1), on bit '5' and right shift by 3 (>>3), on bit '6' and right shift by 5 (>>5), on bit '7' and right shift by 7 (>>7). 
 
 <img src="./Images/LCD_Img_Converter_Step9.png" width=100%>
 
-The reason why we need to laterally invert the bit positions because **pixels are mapped in LSB first**. This is coherent with how [GDDRAM is mapped](#graphic-display-data-ram-(gddram)) to pixels in OLED initialization.
+The reason why we need to laterally invert the bit positions because **pixels are mapped in LSB first**. This is coherent with how [GDDRAM is mapped](#graphic-display-data-ram) to pixels in OLED initialization.
 
-Parameters in remaining tabs are shown below for reference. An important option is to use **UTF-16** for Encoding under Font tab because in our list there are Unicode characters 0x267f, 0x2ee4,...
+Click **OK** to exit.
+
+Parameters in remaining tabs are shown below for reference. An important option is to use **UTF-16** for Encoding under the Font tab because in our list there are Unicode characters 0x267f, 0x2ee4,...
 
 <img src="./Images/LCD_Img_Converter_Step10.png" width=100%>
 
-Click **OK** to exit. From **File > Convert...**Save as type C/C++ headers (*.h) and use file name **ArialBlack_36h.h** to save. You may save the project to ArialBlack_36h.xml from **File>Save** for later use.
+Click **OK** to exit. 
+
+From **File > Convert...**Save as type C/C++ headers (*.h) and use file name **ArialBlack_36h.h** to save. You may also save the project to ArialBlack_36h.xml from **File > Save** for later use.
 
 <img src="./Images/LCD_Img_Converter_Step11.png" width=100%>
 
 ### Create Bitmaps in "C" Array 
 
-
+The procedures to convert a bitmap to "C" Array is similar. 
 
 ### Using the Fonts and Bitmaps
 
