@@ -34,7 +34,7 @@
  * 		is mapped to a frame buffer of (96/8)*128 = 1536bytes.
  * 		DMA SPI transfer takes ~1.25us for each data write.
  * 		Therefore, a frame takes 1536*1.25us = 1,920us (i.e. 1.92ms).
- * 		FR pulse measured at 2.7ms, with a display period of 8.3ms.
+ * 		FR pulse measured at 2.4ms, with a display period of 9.8ms.
  * 		In conclusion, a full frame refresh synchronized with FR pulse is a possible
  * 		way to solve the tearing issue.
  */

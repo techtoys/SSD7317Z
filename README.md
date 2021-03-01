@@ -360,71 +360,99 @@ To wrap it up, the program works by copying the bit patterns of the string **Hel
 
 ## LCD Image Converter
 
-is a shareware to create bitmaps and fonts and convert them to "C" source format for embedded applications. It is available from SOURCEFORGE at [link](https://sourceforge.net/projects/lcd-image-converter/) and documentation [here](https://lcd-image-converter.riuson.com/en/about/). This section describes the procedures to prepare bitmaps and fonts in "C" arrays and use them in a new project from scratch. 
+is a shareware to create bitmaps and fonts and convert them to "C" source format for embedded applications. It is available from [SOURCEFORGE](https://sourceforge.net/projects/lcd-image-converter/). This section describes the procedures to prepare bitmaps and fonts in "C" arrays and use them in a new project from scratch. 
 
 ### Create Fonts in "C" Array
 
-Download and install LCD Image Converter to any convenient location. Double click on **lcd-image-converter.exe** <img src="./Images/Number_circle_44x44_1.png" width=24> to launch the application and click **New Font ** <img src="./Images/Number_circle_44x44_2.png" width=24>button.
+Download and install LCD Image Converter. Double click on **lcd-image-converter.exe** <img src="./Images/Number_circle_44x44_1.png" width=24> to launch the application and click **New Font** <img src="./Images/Number_circle_44x44_2.png" width=24>button.
 
 <img src="./Images/LCD_Img_Converter_Step1.png" width=100%>
 
-Enter the font name you want to use. I would suggest a convention that indicates the font type and size, e.g. ArialBlack_36h.
+Enter the font name you want to use. I would suggest a convention that can indicate the font type and size, e.g. ArialBlack_36h.
 
 <img src="./Images/LCD_Img_Converter_Step2.png" width=30%>
 
-From **Font setup** dialog box, select the target Font<img src="./Images/Number_circle_44x44_1.png" width=24>and Size<img src="./Images/Number_circle_44x44_2.png" width=24>. I am using Arial Black in size 36 here. By default, the whole typeable character range (0x20 - 0x7E) <img src="./Images/Number_circle_44x44_3.png" width=24>is selected. To expand or restrict the range, click **Characters** button.<img src="./Images/Number_circle_44x44_4.png" width=24>
+From **Font setup** dialog box, select the target Font<img src="./Images/Number_circle_44x44_1.png" width=24>and Size<img src="./Images/Number_circle_44x44_2.png" width=24>. I am using Arial Black in size 36 here. By default, the whole typeable character range (0x20 - 0x7E) <img src="./Images/Number_circle_44x44_3.png" width=24>is selected. To expand or restrict the range, click on the **Characters** button from the lower left corner.<img src="./Images/Number_circle_44x44_4.png" width=24>
 
 <img src="./Images/LCD_Img_Converter_Step3.png" width=100%>
 
-From the **Filter** section, select **All**<img src="./Images/Number_circle_44x44_1.png" width=24>. Matrix table on the right panel is refreshed with the full character range (0x00 - 0xFFFF). I wish to use only digit "0" - "9" and few special characters. From the text box, highlight and delete characters from "space" to "/"<img src="./Images/Number_circle_44x44_2.png" width=24> and repeat for characters ":" - "~"<img src="./Images/Number_circle_44x44_3.png" width=24>.
+The **Filter** section is now available, select **All**<img src="./Images/Number_circle_44x44_1.png" width=24>. Matrix table on the right panel is refreshed with the full character range (0x00 - 0xFFFF). In this example, I am going to use only digit "0" - "9" and few special characters. From the text box (next to the **Source Font** button), highlight and delete characters from "space" to "/"<img src="./Images/Number_circle_44x44_2.png" width=24> and characters ":" to "~"<img src="./Images/Number_circle_44x44_3.png" width=24> leaving only "0123456789".
 
 <img src="./Images/LCD_Img_Converter_Step4.png" width=100%>
 
-Now, text box (next to Source Font button) will show "0123456789". Browse characters down the matrix table to select any character you need with double-clicks<img src="./Images/Number_circle_44x44_1.png" width=24>. I am using Unicode characters 0x26f7, 0x2ee4, 0x30b5, 0x3179, and 0x3296 as demonstration. The text box is refreshed <img src="./Images/Number_circle_44x44_2.png" width=24>with new characters.
+To furnish this example, I want to add some Unicode characters to the list. Scroll down the table to select any character you need with double-clicks<img src="./Images/Number_circle_44x44_1.png" width=24>. I am using Unicode characters 0x26f7, 0x2ee4, 0x30b5, 0x3179, and 0x3296 as demonstration. See the text box is refreshed <img src="./Images/Number_circle_44x44_2.png" width=24>with new characters added.
 
 <img src = "./Images/LCD_Img_Converter_Step5.png" width=100%>
 
-Next, click **Parameters** button and select Proportional with Fore Color set 0xffffffff and Black Color set 0xff000000. There is no anti-aliasing required because our OLED is a monochrome display.
+Next, click on the **Parameters** button and select Proportional with Fore Color set 0xffffffff and Black Color set 0xff000000. There is no anti-aliasing required because our OLED is a monochrome display.
 
 <img src="./Images/LCD_Img_Converter_Step5_1.png" width=100%>
 
 Click **OK** to exit.
 
-Now, the main menu of LCD Image Converter will show all characters selected<img src="./Images/Number_circle_44x44_1.png" width=24>on the right with zoom up on the left<img src="./Images/Number_circle_44x44_2.png" width=24>.  From Options>. From **Options** menu, click **Conversion...**<img src="./Images/Number_circle_44x44_3.png" width=24>.
+Now, the main menu of LCD Image Converter will show all characters selected<img src="./Images/Number_circle_44x44_1.png" width=24>on the right with zoom up on the left<img src="./Images/Number_circle_44x44_2.png" width=24>.  From Options>. From  the **Options** menu, click on **Conversion...**<img src="./Images/Number_circle_44x44_3.png" width=24> to open the **Options** dialog menu.
 
 <img src="./Images/LCD_Img_Converter_Step6.png" width=100%>
 
-From the **Options** dialog box, select **Monochrome** in Preset. Under Prepare tab select **Monochrome**<img src="./Images/Number_circle_44x44_1.png" width=24> , **Top to Bottom**<img src="./Images/Number_circle_44x44_2.png" width=24> and **Forward **<img src="./Images/Number_circle_44x44_3.png" width=24>line scan.
+Select **Monochrome** in Preset drop-down menu. Under the **Prepare tab** select **Monochrome**<img src="./Images/Number_circle_44x44_1.png" width=24>, **Top to Bottom**<img src="./Images/Number_circle_44x44_2.png" width=24> as the main scan direction and **Forward**<img src="./Images/Number_circle_44x44_3.png" width=24>as the line scan direction.
 
 <img src="./Images/LCD_Img_Converter_Step7.png" width=100%>
 
-**Here comes the tricky part: **check Reordering tab and click on bit '0' button from the Source row to add "Left Shift" by 7 bits.
+**Here comes the tricky part:** we need to laterally invert the bit positions because **pixels are mapped in LSB first** in the [GDDRAM map](#graphic-display-data-ram).
+
+Stay in the **Options** dialog menu, select **Reordering tab** and click on bit '0' button from the Source row and add "Left Shift" by 7 bits. This action is to add a new bitwise operation to shift LSB bit (bit 0) to the MSB position at bit 7.
 
 <img src="./Images/LCD_Img_Converter_Step8.png" width=100%>
 
-A new bitwise operation is added with bit '0' on the LSB shifted to MSB position. Repeat the procedures by clicking on bit '1' and left shift by 5 (<<5), on bit '2' and left shift by 3 (<<3), on bit '3' and left shift by 1 (<<1), on bit '4' and right shift by 1 (>>1), on bit '5' and right shift by 3 (>>3), on bit '6' and right shift by 5 (>>5), on bit '7' and right shift by 7 (>>7). 
+Repeat the procedures by clicking on bit '1' and left shift by 5 (<<5), on bit '2' and left shift by 3 (<<3), on bit '3' and left shift by 1 (<<1), on bit '4' and right shift by 1 (>>1), on bit '5' and right shift by 3 (>>3), on bit '6' and right shift by 5 (>>5), and finally on bit '7' and right shift by 7 (>>7). 
 
 <img src="./Images/LCD_Img_Converter_Step9.png" width=100%>
 
-The reason why we need to laterally invert the bit positions because **pixels are mapped in LSB first**. This is coherent with how [GDDRAM is mapped](#graphic-display-data-ram) to pixels in OLED initialization.
+The result of the series of operations will laterally flip the byte `0b76543210` to `0b01234567`. 
 
 Click **OK** to exit.
 
-Parameters in remaining tabs are shown below for reference. An important option is to use **UTF-16** for Encoding under the Font tab because in our list there are Unicode characters 0x267f, 0x2ee4,...
+Screen captures of the other tabs under **Options** are shown below for reference. An important parameter is **UTF-16** for **Encoding** under **Font tab** because in our list there are Unicode characters.
 
 <img src="./Images/LCD_Img_Converter_Step10.png" width=100%>
 
 Click **OK** to exit. 
 
-From **File > Convert...**Save as type C/C++ headers (*.h) and use file name **ArialBlack_36h.h** to save. You may also save the project to ArialBlack_36h.xml from **File > Save** for later use.
+Finally, click on **File > Convert**, use the suggested file name **ArialBlack_36h.h** to save it as type C/C++ headers (*.h). You may also save the project to ArialBlack_36h.xml from **File > Save** for later use.
 
 <img src="./Images/LCD_Img_Converter_Step11.png" width=100%>
 
 ### Create Bitmaps in "C" Array 
 
-The procedures to convert a bitmap to "C" Array is similar. 
+The procedures to convert a bitmap to "C" Array is similar. On the starting page, open the bitmap file to convert from **File > Open**.
 
-### Using the Fonts and Bitmaps
+<img src="./Images/LCD_Img_Converter_Step12.png" width =100%>
+
+Inspect the conversion parameters from **Options > Conversion**. Make sure the same laterally inverted operation from the last font creation process is applied. Click on **Show Preview** button.
+
+<img src="./Images/LCD_Img_Converter_Step13.png" width =100%>
+
+The **Preview** page will show the "C" array starting with 0xff. Data pattern in this configuration will shows a black image on a white background since the OLED is initialized with 1 as WHITE and 0 as BLACK.
+
+<img src="./Images/LCD_Img_Converter_Step14.png" width =100%>
+
+We may change it by checking the **Inverse** checkbox from the **Prepare** tab. Click on **Show Preview** again to verify the final "C" array is now with a BLACK(0) background.
+
+<img src="./Images/LCD_Img_Converter_Step15.png" width =100%>
+
+Click **OK** twice to exit and save changes when you are asked to do so. 
+
+Finally, convert it to an "C" array by **File > Convert** and save it to the suggested filename **battery-status-full.h**.
+
+## Create a New Project
+
+In this section, we are going to create a new project to display the font and bitmap with "C" arrays from the last section. 
+
+Launch STM32CubeIDE. Right click on any empty area of **Project Explorer > New > STM32 Project from an Existing STM32CubeMX Configuration File (.ioc)**.
+
+<img src="./Images/NewProject_Step1.png" width =100%>
+
+
 
 ## The Touch Screen and How It Works
 
