@@ -763,7 +763,9 @@ void ssd7317_scroll_area(rect_t area, rect_t win, finger_t dir)
 {
 	if((dir.gesture!=SWIPE_DOWN) && (dir.gesture!=SWIPE_UP))
 	{
+#ifdef  USE_FULL_ASSERT
 		assert_failed((uint8_t *)__FILE__, __LINE__);
+#endif
 		return;
 	}
 	
@@ -779,7 +781,9 @@ void ssd7317_scroll_area(rect_t area, rect_t win, finger_t dir)
 	scroll.x2 = min((win.x1+w-1),OLED_HOR_RES-1);
 
 	if((scroll.y1>=scroll.y2) || (scroll.x1>=scroll.x2)){
+#ifdef USE_FULL_ASSERT
 		assert_failed((uint8_t *)__FILE__, __LINE__);
+#endif
 		return;
 	}
 
@@ -919,7 +923,9 @@ static void fb_spi_transfer(rect_t area)
 	/*avoid running outside array index, may use assert here*/
 	if(	area.y1>(OLED_VER_RES-1)|| area.y2>(OLED_VER_RES-1) || area.x2>(OLED_HOR_RES-1))
 	{
+#ifdef  USE_FULL_ASSERT
 		assert_failed((uint8_t *)__FILE__,__LINE__);
+#endif
 		return;
 	}
 
@@ -1378,7 +1384,9 @@ rect_t ssd7317_scroll_image(uint16_t left, uint16_t top, uint16_t margin, const 
 
 	if((dir.gesture!=SWIPE_DOWN) && (dir.gesture!=SWIPE_UP))
 	{
+#ifdef  USE_FULL_ASSERT
 		assert_failed((uint8_t *)__FILE__, __LINE__);
+#endif
 		return area;
 	}
 
@@ -1411,13 +1419,17 @@ void   ssd7317_scroll_page(rect_t subpage, uint8_t interval, uint8_t accelerate,
 {
 	if((dir.gesture!=SWIPE_DOWN) && (dir.gesture!=SWIPE_UP))
 	{
+#ifdef  USE_FULL_ASSERT
 		assert_failed((uint8_t *)__FILE__, __LINE__);
+#endif
 		return;
 	}
 
 	if((subpage.x1>subpage.x2) || (subpage.y1>subpage.y2))
 	{
+#ifdef  USE_FULL_ASSERT
 		assert_failed((uint8_t *)__FILE__, __LINE__);
+#endif
 		return;
 	}
 
@@ -1478,8 +1490,9 @@ rect_t ssd7317_put_char(uint16_t left, uint16_t top, const tFont* font, uint16_t
 	if((pChar[0].code>ascii_code) || (ascii_code>(pChar[0].code+font->length-1))){
 #ifdef USE_FULL_ASSERT
 			assert_failed((uint8_t *)__FILE__, __LINE__); //character out of range
-			return area;
 #endif
+			return area;
+
 	}
 	uint16_t _code = ascii_code-pChar[0].code; //need to offset the first array member
 
@@ -1527,8 +1540,9 @@ rect_t ssd7317_put_string(uint16_t left, uint16_t top, const tFont* font, const 
 	if(font==0 || str==0){
 #ifdef USE_FULL_ASSERT
 			assert_failed((uint8_t *)__FILE__, __LINE__);
-			return err;
 #endif
+			return err;
+
 	}
 
 	const tChar* pChar = font->chars;
@@ -1539,10 +1553,11 @@ rect_t ssd7317_put_string(uint16_t left, uint16_t top, const tFont* font, const 
 	while(*pStr != '\0')
 	{
 		if((pChar[0].code>*pStr) || (*pStr>(pChar[0].code+font->length-1))){
-	#ifdef USE_FULL_ASSERT
+#ifdef USE_FULL_ASSERT
 				assert_failed((uint8_t *)__FILE__, __LINE__); //character out of range
+#endif
 				return err;
-	#endif
+
 		}
 		pStr++;
 	}
