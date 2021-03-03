@@ -430,7 +430,7 @@ Finally, click on **File > Convert**, use the suggested file name **ArialBlack_3
 
 The procedures to convert a bitmap to "C" Array is similar. On the starting page, open the bitmap file to convert from **File > Open**.
 
-<img src="./Images/LCD_Img_Converter_Step12.png" width =100%>
+<img src="./Images/LCD_Img_Converter_Step12.png" width=867>
 
 Inspect the conversion parameters from **Options > Conversion**. Make sure the same laterally inverted operation from the last font creation process is applied. Click on **Show Preview** button.
 
@@ -520,8 +520,6 @@ Summary of the procedures are described here:
   <img src="./Images/NewProject_Step10.png" width=80%>
 
 After these three steps, the path for SSD7317Z should now be resolved. 
-
-
 
 ## The Touch Screen and How It Works
 
