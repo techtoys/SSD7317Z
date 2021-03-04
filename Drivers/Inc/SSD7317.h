@@ -40,6 +40,7 @@
 #include "sysfont.h"
 #include <stdbool.h>
 #include <stdio.h>
+#include <string.h>
 
 /*@note	Slave addresses of SSD7317 is programmable for higher flexibility:
  * 1. SA(0x53) and SA_BIOS(0x57) when touch init command 0x35 set to a value of 0x0A
@@ -191,7 +192,7 @@ rect_t ssd7317_put_image(uint16_t left, uint16_t top, const tImage* image, bool 
 rect_t ssd7317_scroll_image(uint16_t left, uint16_t top, uint16_t margin, const tImage* image, finger_t dir);
 void   ssd7317_scroll_page(rect_t subpage, uint8_t interval, uint8_t accelerate, finger_t dir);
 void   ssd7317_scroll_brake(void);
-rect_t ssd7317_put_char(uint16_t left, uint16_t top, const tFont* font, uint16_t ascii_code, bool negative);
+rect_t ssd7317_put_char(uint16_t left, uint16_t top, const tFont* font, uint16_t code, bool negative);
 void   ssd7317_get_charsize(const tFont* font, uint16_t ascii_code, uint16_t *w, uint16_t *h);
 rect_t ssd7317_put_string(uint16_t left, uint16_t top, const tFont* font, const char *str, bool negative);
 void   ssd7317_get_stringsize(const tFont* font, const char *str, uint16_t *w, uint16_t *h);

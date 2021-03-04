@@ -104,11 +104,11 @@ To run the project on hardware, connect the MicroUSB port of NUCLEO STM32L432KC 
 
 Click on **Run > Debug** or **F11**, or click on the ladybug icon followed by running the project with **Run > Resume** or **F8**.
 
-<img src="./Images/Running_the_project.png" width=60%>
+<img src="./Images/Running_the_project.png" width=500>
 
 In 1-2 seconds you will see the PMOLED show **Hello World** on it.
 
-<img src="./Images/hello_world_running.png" width=70%>
+<img src="./Images/hello_world_running.png" width=1024>
 
 ## How It Works
 
@@ -116,7 +116,7 @@ In 1-2 seconds you will see the PMOLED show **Hello World** on it.
 
 The wiring diagram between Nucleo L432KC and PMOLED for the display part is shown below.
 
-<img src="./Images/SPI_PMOLED_wiring3.png" width = 100%>
+<img src="./Images/SPI_PMOLED_wiring3.png" width = 900>
 
 We need four wires (4-wire SPI) to drive the PMOLED. They are 
 
@@ -140,7 +140,7 @@ The touch screen interface and its pinout are covered in the section [Touch Scre
 
 Figures below show the SPI timing tables and diagrams excerpt from the OLED's datasheet. Data transmission occurs when DCS# goes low and data is latched on the rising edge of the serial clock with most significant bit (MSB) first. The line D/C# controls whether the byte is a command (D/C#=0) or data (D/C#=1). 
 
-<img src="./Images/SPI_Timing.png" width=80%>
+<img src="./Images/SPI_Timing.png" width=700>
 
 In the source code, two functions: `spi_write_command()` and `spi_write_data()` for command write and data write are provided. OLED (display part) initialization is configured by `spi_write_command()` and pixels are written with `spi_write_data()`.
 
@@ -177,7 +177,7 @@ void spi_write_data(const uint8_t *data, uint16_t len){
 ### Graphic Display Data RAM
 In SSD7317Z there is a memory region known as the Graphic Display Data RAM (GDDRAM) that mapped to each pixel in one-bit depth. The size of GDDRAM is 12*128 bytes with memory divided into 12 pages (PAGE0-PAGE11) with PAGE0 spans from COM95 to COM88, PAGE1 from COM87 to COM80, down to PAGE11 from COM7 to COM0. The memory map on UT2896KSWGG01 is shown below.
 
-<img src = "./Images/GDDRAM_Layout.png" width = 80%>
+<img src = "./Images/GDDRAM_Layout.png" width = 700>
 
 The mapping orientation and data scanning direction are configurable by the initialization code that we will go through in the [Program Listing](#program-listing) section. There is a confidential document on **[Data Write Direction](./Docs/SSD7317_128x64_Truly_dataWriteDirection_ToTechtoy.pdf)** if you are interested to change the orientation. 
 
@@ -195,7 +195,7 @@ spi_write_data((const uint8_t*)&data, 1); //5) Write pixels
 
 Running the code above will switch 8 pixels at the top left corner to WHITE like this:
 
-<img src="./Images/GDDRAM_closeup_COM95_88.png" width=60%>
+<img src="./Images/GDDRAM_closeup_COM95_88.png" width=600>
 
 
 
@@ -217,21 +217,21 @@ To verify the code above, you may download a serial terminal program YAT (YET An
 
 Keep the **HelloWorld** program running in debug mode , launch YAT and make sure **Port Settings** (under Terminal Settings) is set to the **STLink Virtual COM Port** enumerated in your PC. In my case it is COM96 but it would be different in your environment. Set baud rate to **115200, 8-n-1** with Flow Control set to None. Terminal Type set to **Text** and Port Type set **Serial COM Port**.
 
-<img src ="./Images/YAT_TerminalSettings.png" width=80%>
+<img src ="./Images/YAT_TerminalSettings.png" width=700>
 
 Click **Text Settings...** button to proceed. Set Encoding to some common standard available in your PC. In my case, ASCII(ISO646-US) works fine.
 
 From **EOL (End-Of-Line)**, check **Separate EOL sequences for Tx and Rx** and set \<CR>\<LF> as the EOL sequence. Click **OK**  twice to go back to the main menu. 
 
-<img src="./Images/YAT_TextSettings.png" width=80%>
+<img src="./Images/YAT_TextSettings.png" width=900>
 
-Click **Open/Start Terminal** button <img src="./Images/YAT_ClickConnectBtn.png" width=30%>, check **Str** to display ASCII string in Monitor window. In **Send Text** dialog box, type in `\h (7E 21 00 00 22 00 00)` and click **Send Text (F3)**. 
+Click **Open/Start Terminal** button <img src="./Images/YAT_ClickConnectBtn.png" width=250>, check **Str** to display ASCII string in Monitor window. In **Send Text** dialog box, type in `\h (7E 21 00 00 22 00 00)` and click **Send Text (F3)**. 
 
-<img src="./Images/YAT_SetAddress_SEG127_PAGE0.png">
+<img src="./Images/YAT_SetAddress_SEG127_PAGE0.png" width=900>
 
 After **Send Text** you will see the original command echo in the Monitor Window. Toggle between **Str** and **16** to view the difference in String and HEX code.
 
-<img src="./Images/YAT_Echo.png" width=80%> 
+<img src="./Images/YAT_Echo.png" width=900> 
 
 **Annotation:**
 
@@ -241,31 +241,31 @@ After **Send Text** you will see the original command echo in the Monitor Window
 
 `21 00 00 22 00 00` is the body of the command to send. In this case we are sending six bytes in one SPI transfer to set to the start of Segment (SEG=127) and COM address set 0.
 
-<img src="./Images/YAT_Annotate.png" width=100%>
+<img src="./Images/YAT_Annotate.png" width=900>
 
 Now, type in `\h (7E 64 FF)`  with command header changed to `64` for data and click **Send Text**. You will see 8 pixels at the top left corner with the serial command converted to `spi_write_data(0xff, 1)`.
 
-<img src = "./Images/YAT_8Pixels_SEG127COM0.png" width=80%>
+<img src = "./Images/YAT_8Pixels_SEG127COM0.png" width=500>
 
 Closeup on OLED:
 
-<img src="./Images/YAT_Photo_8Pixels_FF.png" width=70%>
+<img src="./Images/YAT_Photo_8Pixels_FF.png" width=1024>
 
 Type in `\h(7E 64 86)`, click **Send Text**.
 
-<img src="./Images/YAT_Photo_8Pixels_86.png" width=70%>
+<img src="./Images/YAT_Photo_8Pixels_86.png" width=1024>
 
 Type in `\h(7E 63 21 00 00 22 00 01)` **Send Text** to bound to two PAGEs in horizontal follow by`\h(7E 64 FF 86)` **Send Text**. Sixteen pixels are displayed with 0xFF as the first 8 pixels, 0x86 as 01100001 with 0=BLACK, 1=WHITE.
 
-<img src="./Images/YAT_Photo_16Pixels_FF86.png" width=70%>
+<img src="./Images/YAT_Photo_16Pixels_FF86.png" width=1024>
 
 Type in `\h(7E 63 21 01 01 22 00 01)` **Send Text** to set it to the second segment (SEG=126) and bound the area to two PAGEs , follow by`\h(7E 64 FF 86)` **Send Text** to write the same 16 pixels to the second row.
 
-<img src="./Images/YAT_Photo_16Pixels_FF86_SEG126.png" width=70%>
+<img src="./Images/YAT_Photo_16Pixels_FF86_SEG126.png" width=1024>
 
 > **NOTE:** The top left corner is initialized to (COM95,SEG127) with data write direction set COM95 as the least significant bit (LSB), i.e. byte orientation in LSB first. Because the SPI sending direction was set to MSB first, all data sent is laterally inverted: data write in 0x86 is displayed as a bit pattern like 01100001 with 1=WHITE, 0=BLACK.
 
-<img src="./Images/YAT_DataWriteDir_Explained.png" width = 100%>
+<img src="./Images/YAT_DataWriteDir_Explained.png" width = 1024>
 
 ### Program Listing
 
@@ -322,7 +322,7 @@ static const uint8_t image_data_Tahoma_12h_0x48[14] = {
 };
 ```
 From a broad perspective, we just need to transfer the byte pattern of **H** `{0x00 0x00 0x00 0x41 ...0x00}` from the MCU's FLASH to OLED's GDDRAM by calling `spi_write_data()` and repeat for the remaining characters to get **Hello World** displayed.
- <img src="./Images/How_px_mapped2_FLASH.png" width=100%>
+ <img src="./Images/How_px_mapped2_FLASH.png" width=900>
 There are at least two problems with this approach:
 
 1. Reading from the FLASH is always slower than reading from SRAM of an MCU. A longer data reading time leads to slower pixel rendering
@@ -330,7 +330,7 @@ There are at least two problems with this approach:
 
 To solve these problems, a frame buffer is declared from MCU's SRAM as a map to the OLED's GDDRAM. Pixels are not written directly to the screen; instead, any graphical content to be updated is written to the frame buffer first and the modified contents in `frame_buffer[]` are flushed from SRAM to GDDRAM by SPI transfer on an FR rising edge to synchronize the blanking period of the OLED. With this approach, the speed of data transfer is faster because it is now data copy from SRAM to OLED's GDDRAM. DMA can be applied to further shorten SPI transfer latency. Synchronization to an FR rising edge also avoids display [tearing](https://en.wikipedia.org/wiki/Screen_tearing). 
 
-<img src="./Images/How_px_mapped2_SRAM.png" width=100%>
+<img src="./Images/How_px_mapped2_SRAM.png" width=900>
 
 For a small display of 96*128 pixels in black and white, the frame buffer occupies an extra 1.5KB out of 64KB SRAM in our target MCU. A more advanced approach is to port the library to some modern graphical frameworks. Examples are [TouchGFX](https://www.st.com/content/st_com/en/stm32-graphic-user-interface.html) and [LVGL](https://lvgl.io/) and both of them need a frame buffer too.
 
@@ -353,14 +353,14 @@ On an FR-rising edge if there is pending data to flush `(fb_flush_pending_get()=
 
 The waveform to draw on the screen for the string **Hello World** was captured by a Logic Analyzer shown below.
 
-<img src="./Images/FR_LogicAnalyzer.png" width=100%>
+<img src="./Images/FR_LogicAnalyzer.png" width=800>
 
 By boosting the Logic Analyzer's sampling rate to 100MHz (SPI frequency is 16MHz), we can close up on the SPI data that got written starting from segment address set `0x21`.
 
-<img src="./Images/FR_LogicAnalyzer_Closeup.png" width=100%>
+<img src="./Images/FR_LogicAnalyzer_Closeup.png" width=800>
 
 To wrap it up, the program works by copying the bit patterns of the string **Hello World** from FLASH to the frame buffer `(frame_buffer[])`, then a flag is set for flush pending to wait for an FR rising edge. On an FR rising edge, the HAL function `HAL_SPI_Transmit()` is applied to copy the dirty area of the frame buffer to GDDRAM of the OLED by SPI.
-<img src = "./Images/FR_SPI_Tx_Flowchart.png" width=70%>
+<img src = "./Images/FR_SPI_Tx_Flowchart.png" width=640>
 
 ## LCD Image Converter
 
@@ -454,19 +454,19 @@ In this section, we are going to create a new project to display the font and bi
 
 Launch STM32CubeIDE. Right click on any empty area on **Project Explorer > New > STM32 Project from an Existing STM32CubeMX Configuration File (.ioc)**.
 
-<img src="./Images/NewProject_Step1.png" width =100%>
+<img src="./Images/NewProject_Step1.png" width = 900>
 
 Browse to **HelloWorld.ioc** from the last project, click **Open**.
 
-<img src="./Images/NewProject_Step2.png" width =100%>
+<img src="./Images/NewProject_Step2.png" width=800>
 
 On the STM32 project setup menu, enter a new project name and click **Finish**.
 
-<img src="./Images/NewProject_Step3.png" width=60%>
+<img src="./Images/NewProject_Step3.png" width=500>
 
 After project creation, STM32CubeIDE will show you the **Pinout view** with screen capture below.
 
-<img src="./Images/NewProject_Step4.png" width=80%>
+<img src="./Images/NewProject_Step4.png" width=700>
 
 Pinout summary are described in the table below.
 
@@ -485,11 +485,11 @@ One good thing with importing an existing configuration file (*.ioc) is that, **
 
 Now, copy the files **ArialBlack_36h.h** and **battery-status-full.h** that we have generated from last section to the project. Under Windows environment, expand **Core > Inc**, select the files and drag-and-drop to the **Inc** directory in **Project Explorer**. You will be asked for the options to **Copy files** or **Link to files**. My personal preference is to copy files because I want to keep project specific files in each project. 
 
-<img src="./Images/NewProject_Step5.png" width=80%>
+<img src="./Images/NewProject_Step5.png" width=700>
 
 Now, expand the **Src** folder, open **main.c** and add the following codes to the project.
 
-<img src="./Images/NewProject_Step6.png" width=80%>
+<img src="./Images/NewProject_Step6.png" width=680>
 
 > **NOTE:** Append custom code inside *USER CODE BEGIN Includes* and *USER CODE END Includes* markers. All custom code that do not go inside *USER CODE BEGIN xxx* and *USER CODE END xxx* markers will be removed on the next Code Generation if there is any change in Device Configuration Tool.
 
@@ -501,7 +501,7 @@ Summary of the procedures are described here:
 * Expand **Resource > Linked Resources > Path Variables Tab**, click **New** button
 * Enter **SSD7317Z** as the name on the menu, click on **Folder** button > browse to \SSD7317Z\Drivers folder > click **Select Folder** button.
 
-<img src="./Images/NewProject_Step7.png" width=80%>
+<img src="./Images/NewProject_Step7.png" width=900>
 
 * Expand **C/C++ Build > Build Variables**, click **Add** button
 
@@ -509,17 +509,71 @@ Summary of the procedures are described here:
 
 * Repeat the same procedures for **Release** configuration. Click **Apply and Close** to exit.
 
-  <img src="./Images/NewProject_Step8.png" width=80%>
+  <img src="./Images/NewProject_Step8.png" width=900>
 
 * Expand **C/C++ General > Paths and Symbols > Includes Tab**, set **${SSD7317Z}/Inc** as a new include directory. Do it for Debug and Release configurations.
 
-<img src="./Images/NewProject_Step9.png" width=80%>
+<img src="./Images/NewProject_Step9.png" width=900>
 
-* Finally, select **Source Location** tab, click **Add Folder** button to set **SSD7317Z** as the new source location for Debug and Release configurations.
+* Finally, select **Source Location** tab, click **Add Folder** button to set **SSD7317Z** as the new source location for Debug and Release configurations. Click **Apply and Close**. 
 
-  <img src="./Images/NewProject_Step10.png" width=80%>
+  <img src="./Images/NewProject_Step10.png" width=800>
 
-After these three steps, the path for SSD7317Z should now be resolved. 
+The path for SSD7317Z should be resolved now. Add the following code to main.c. Lines inside *USER CODE BEGIN x* and *USER CODE END x* are code to add. 
+
+From the main menu, **Run > Debug**. Click **Resume (F8)** to run the program with listing below:
+
+```{.c .numberLines .lineAnchors}
+int main(void){
+    HAL_Init();
+  	//MX_GPIO_Init(); 
+  	//MX_DMA_Init();
+  	//MX_USART2_UART_Init();
+  	//MX_I2C1_Init();
+  	//MX_SPI1_Init();
+    //MX_TIM2_Init();
+    SystemClock_Config();
+    /* USER CODE BEGIN 2 */
+    ssd7317_init();
+
+  	ssd7317_put_image(72,0,&batterystatusfull,0); 
+  	ssd7317_put_char(0, 80, &ArialBlack_36h, 0x2ee4, 0); 
+  	ssd7317_put_char(40,80, &ArialBlack_36h, 0x3296, 1); 
+    /* USER CODE END 2 */
+    
+    /* USER CODE BEGIN WHILE */
+  	uint16_t counter = 0;
+  	char str[5];
+    while(1){
+        /* USER CODE END WHILE */
+        /* USER CODE BEGIN 3 */
+      snprintf(str, 5, "%d", counter);
+	  if(counter++ > 9999)
+	  {
+		  counter = 0;
+	  }
+	  HAL_Delay(50);
+	  ssd7317_put_string(0,26,&ArialBlack_36h,str,0);
+    }
+    /* USER CODE END 3 */
+}
+```
+
+### How It Works
+
+Line 3 - Line 8	Comment all MX_ codes that are automatically generated by STM32CubeIDE. They have been integrated in `ssd7317_init()` for GPIO, I2C, and SPI initialization
+
+Line 11 	`ssd7317_init()` initializes SSD7317 driver. Place it under SystemClock_Config().
+
+Line 13	`ssd7317_put_image(72,0,&batterystatusfull,0)` displays the battery icon at (72,0)
+
+Line 14	`ssd7317_put_char(0, 80, &ArialBlack_36h, 0x2ee4, 0)` displays the unicode 0x2ee4 at (0,80)
+
+Line 15	`ssd7317_put_char(40,80, &ArialBlack_36h, 0x3296, 1)` displays the unicode 0x3296 inverted at (40,80)
+
+Line 24	`snprintf(str, 5, "%d", counter)` converts the integer `counter` to an array `str[5]` that is compatible with the string argument for `ssd7317_put_string(...,const char *str,...)`
+
+Line 30	`ssd7317_put_string(0,26,&ArialBlack_36h,str,0)` displays the counter value as a string at (0,26)
 
 ## The Touch Screen and How It Works
 

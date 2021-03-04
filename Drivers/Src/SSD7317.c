@@ -921,7 +921,8 @@ static void fb_clear(rect_t area, color_t color)
 static void fb_spi_transfer(rect_t area)
 {
 	/*avoid running outside array index, may use assert here*/
-	if(	area.y1>(OLED_VER_RES-1)|| area.y2>(OLED_VER_RES-1) || area.x2>(OLED_HOR_RES-1))
+
+	if(	area.y1>(OLED_VER_RES-1)|| area.y2>(OLED_VER_RES-1))
 	{
 #ifdef  USE_FULL_ASSERT
 		assert_failed((uint8_t *)__FILE__,__LINE__);
@@ -1481,27 +1482,44 @@ void   ssd7317_scroll_brake(void)
  * @brief
  * \b Description:<br>
  */
-rect_t ssd7317_put_char(uint16_t left, uint16_t top, const tFont* font, uint16_t ascii_code, bool negative)
+rect_t ssd7317_put_char(uint16_t left, uint16_t top, const tFont* font, uint16_t code, bool negative)
 {
 	const tChar* pChar = font->chars;
 
 	rect_t area = {0,0,0,0};
 
-	if((pChar[0].code>ascii_code) || (ascii_code>(pChar[0].code+font->length-1))){
+	bool in_range = false; //assume char code not in range first
+	int len = font->length;//scan the whole array length of tFont in do-while loop below
+	int i = 0;
+
+	do{
+		if(code == pChar[i].code){
+			in_range = true;
+			break;
+		}
+		i++;
+	}while(len--);
+
+	if(!in_range){
 #ifdef USE_FULL_ASSERT
 			assert_failed((uint8_t *)__FILE__, __LINE__); //character out of range
 #endif
 			return area;
-
 	}
-	uint16_t _code = ascii_code-pChar[0].code; //need to offset the first array member
 
-	const uint8_t* pData = pChar[_code].image->data;
+	if(left+pChar[i].image->width > OLED_HOR_RES){
+#ifdef USE_FULL_ASSERT
+			assert_failed((uint8_t *)__FILE__, __LINE__); //character out of range
+#endif
+			return area;
+	}
+
+	const uint8_t* pData = pChar[i].image->data;
 
 	area.x1 = left;
-	area.y1 = top;
-	area.x2 = (left+pChar[_code].image->width-1);
-	area.y2 = (top+pChar[_code].image->height-1);
+	area.y1 = min(top, OLED_VER_RES-1);
+	area.x2 = (left+pChar[i].image->width-1);
+	area.y2 = min((top+pChar[i].image->height-1), OLED_VER_RES-1);
 
 	ssd7317_fill_area(area, pData, negative);
 
@@ -1542,48 +1560,60 @@ rect_t ssd7317_put_string(uint16_t left, uint16_t top, const tFont* font, const 
 			assert_failed((uint8_t *)__FILE__, __LINE__);
 #endif
 			return err;
+	}
 
+	if((left>OLED_HOR_RES-1) || (top>OLED_VER_RES-1)){
+#ifdef USE_FULL_ASSERT
+			assert_failed((uint8_t *)__FILE__, __LINE__);
+#endif
+			return err;
 	}
 
 	const tChar* pChar = font->chars;
-
-	/* make sure all characters in range*/
 	const char *pStr = str;
+	uint16_t array_idx[strlen(str)];
+	uint16_t idx = 0;
 
-	while(*pStr != '\0')
-	{
-		if((pChar[0].code>*pStr) || (*pStr>(pChar[0].code+font->length-1))){
+	/* first, make sure all characters in str can be found in tFont*/
+	while(*pStr!='\0'){
+
+		int len = font->length;
+		int i = 0;
+		do{
+			if(*pStr==pChar[i].code){
+				array_idx[idx++]=i; //store the array index of tFont in array_idx
+				break; //found the matching character
+			}
+			i++;
+		}while(len--);
+
+		if(len < 0){
+		/* there is a character not found in tFont */
 #ifdef USE_FULL_ASSERT
-				assert_failed((uint8_t *)__FILE__, __LINE__); //character out of range
+				assert_failed((uint8_t *)__FILE__, __LINE__);
 #endif
-				return err;
-
+			return err;
 		}
 		pStr++;
 	}
 
 	/* Now, data assert all pass. We can get each char from the string and put it in frame buffer */
-	rect_t area= {left,top,left,top + (font->chars->image->height-1)};
+	rect_t area= {left,top,left,min(top + (font->chars->image->height-1),OLED_VER_RES-1)};
 
 	uint16_t _x = left;
 
-	while(*str != '\0')
-	{
-		uint16_t _code = *str - pChar[0].code; //need to offset the first array member
-		const uint8_t* pData = pChar[_code].image->data;
-
-		_x += (pChar[_code].image->width);
+	for(idx = 0; idx < strlen(str); idx++){
+		const uint8_t* pData = pChar[array_idx[idx]].image->data;
+		_x += (pChar[array_idx[idx]].image->width);
+		if(_x > OLED_HOR_RES) break;
 		area.x2 = _x-1;
 		fb_fill_area(area,pData,negative);
-		area.x1 = _x+1; //increment for new area.x1
-
-		str++;
+		area.x1 = _x; //increment for new area.x1
 	}
+	area.x1 = left;
 
 	fb_flush_suspend();	//wait until previous SPI flushes finished
 	fb_flush_pending_set(area); //set flag to indicate frame buffer flush pending and wait for a FR pulse
-
-	area.x1 = left;
 
 	return area;
 }
