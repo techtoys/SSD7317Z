@@ -1,0 +1,7 @@
+/Core/
+/Drivers/
+/SSD7317Z/
+/makefile
+/objects.list
+/objects.mk
+/sources.mk
