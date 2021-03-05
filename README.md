@@ -527,7 +527,7 @@ Summary of the procedures are described here:
 
   <img src="./Images/NewProject_Step10.png" width=800>
 
-The path for SSD7317Z should be resolved now. Add the following codes to `int main(void)`. Lines inside *USER CODE BEGIN x* and *USER CODE END x* markers are codes to add. 
+The path for SSD7317Z should be resolved now. Add the following codes to `int main(void)` inside *USER CODE BEGIN x* and *USER CODE END x* markers.
 
 ```c
 int main(void){
