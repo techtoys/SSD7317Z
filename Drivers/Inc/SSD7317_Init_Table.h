@@ -2,10 +2,10 @@
 * Filename              :   SSD7317.h
 * Description			: 	Initialization table for the touch screen
 * 							of Solomon Systech's SSD7317 (TDDI).
-* 							1-key and gesture for single tap, long tap,
+* 							4 in-cell keys and gesture for single tap, long tap,
 * 							slide LR & RL
 * Author                :   John Leung
-* Origin Date           :   26/02/2020
+* Origin Date           :   08/03/2021
 * Version               :   1.0.0
 * Compiler              :   GNU
 * Target                :   STM32L432KCUx on NUCLEO-L432KC

@@ -3,8 +3,9 @@
 * Description		: Initialization table for the touch screen
 * 			of Solomon Systech's SSD7317 (TDDI).
 * 			WSI_96x128 module
+* 			4 in-cell keys and gesture for single tap, long tap, slide LR & RL
 * Author                :   John Leung
-* Origin Date           :   18/01/2021
+* Origin Date           :   08/03/2021
 * Version               :   1.0.0
 * Compiler              :   GNU
 * Target                :   STM32L432KCUx on NUCLEO-L432KC
