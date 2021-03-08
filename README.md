@@ -621,8 +621,10 @@ static const uint8_t SSD7317_INIT_TBL[]=
 {
     0xfd,	//enter command lock/unlock
     0xae,	//display off (sleep mode)
-    /* ...parameters for display part */
-    0x31,	//initialization sequence for touch module
+    
+    /* ...parameters for display part omitted for simplicity */
+    
+    	0x31,	//initialization sequence for touch module
 	0xd0,
 	0x34,
 	0x0f,
