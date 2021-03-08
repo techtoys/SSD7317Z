@@ -605,7 +605,7 @@ SSD7317Z supports up to 4 *in-cell* touch keys and 4 *out-cell* touch keys and t
 
 ### Hardware Interface for Touch Screen
 
-Interfacing touch screen of SSD7317Z is not much difference than traditional *out-cell* touch. We still have to use I2C and a GPIO to read/write commands and detect touch events by polling or interrupt (refer to gray wiring of the interface diagram). 
+Interfacing touch screen of SSD7317Z is not much different than traditional *out-cell* touch. We still have to use I2C and a GPIO to read/write commands and detect touch events by polling or interrupt (refer to gray wiring of the interface diagram). 
 
 <img src="./Images/SPI_PMOLED_wiring3.png" width = 900>
 
