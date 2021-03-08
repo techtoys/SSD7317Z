@@ -532,19 +532,19 @@ The path for SSD7317Z should be resolved now. Add the following codes to `int ma
 ```c
 int main(void){
     HAL_Init();
-  	//MX_GPIO_Init();
-  	//MX_DMA_Init();
-  	//MX_USART2_UART_Init();
-  	//MX_I2C1_Init();
-  	//MX_SPI1_Init();
-    //MX_TIM2_Init();
+  //MX_GPIO_Init();
+  //MX_DMA_Init();
+  //MX_USART2_UART_Init();
+  //MX_I2C1_Init();
+  //MX_SPI1_Init();
+  //MX_TIM2_Init();
     SystemClock_Config();
     /* USER CODE BEGIN 2 */
     ssd7317_init();	//1
 
-  	ssd7317_put_image(72,0,&batterystatusfull,0); //2
-  	ssd7317_put_char(0, 80, &ArialBlack_36h, 0x2ee4, 0); //3
-  	ssd7317_put_char(40,80, &ArialBlack_36h, 0x3296, 1); //4
+    ssd7317_put_image(72,0,&batterystatusfull,0); //2
+    ssd7317_put_char(0, 80, &ArialBlack_36h, 0x2ee4, 0); //3
+    ssd7317_put_char(40,80, &ArialBlack_36h, 0x3296, 1); //4
     /* USER CODE END 2 */
     
     /* USER CODE BEGIN WHILE */
@@ -553,7 +553,7 @@ int main(void){
     while(1){
         /* USER CODE END WHILE */
         /* USER CODE BEGIN 3 */
-      snprintf(str, 5, "%d", counter); //5
+      	snprintf(str, 5, "%d", counter); //5
 	  if(counter++ > 9999)
 	  {
 		  counter = 0;
