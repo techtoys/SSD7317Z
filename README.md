@@ -783,17 +783,17 @@ finger_t ssd7317_get_gesture(void){ //4
 
 **Line 1**	`HAL_GPIO_EXTI_Callback()` is the interrupt callback function sharing FR rising edge detection and IRQ falling edge detection. On a valid touch event, the touch screen will assert a falling pulse on IRQ to trigger the callback function
 
-**Line 2**	Condition `GPIO_Pin==TCH_IRQ_Pin` is satisfied. We are testing the conditional statements with `GPIO_Pin==OLED_FR_Pin` because there is only one interrupt vector for GPIO interrupt in STM32L432 MCU
+**Line 2**	Condition `GPIO_Pin==TCH_IRQ_Pin` is satisfied. We are sharing the conditional statement with `GPIO_Pin==OLED_FR_Pin` because there is only one vector for GPIO interrupt in STM32L432 MCU
 
 **Line 3**	`touch_event_set()` to set a global flag `touch_event_flag`
 
-**Line 4**	`ssd7317_get_gesture()` is the API to run in an infinite loop or semaphore if RTOS is implemented.  This function returns the `finger_t` structure that encapsulates key number and gesture
+**Line 4**	`ssd7317_get_gesture()` is the API to run in an infinite loop or semaphore if RTOS is implemented.  This function returns a `finger_t` structure that encapsulates gesture action (ACT), details (DETAIL), and key numbers
 
-**Line 5**	Test for a valid touch event with `touch_event_get()`. If there is no touch event, the function `ssd7317_get_gesture()` exits right away. If there is a valid touch event (`touch_event_flag` set true in `HAL_GPIO_EXTI_Callback()`), register at 0x0AF0 (S&L) is read by I2C in Line 6
+**Line 5**	Test for a valid touch event with `touch_event_get()`. If this flag is not set, the function `ssd7317_get_gesture()` exits right away. If there is a valid touch event (`touch_event_flag set true` in  `HAL_GPIO_EXTI_Callback()`), register at 0x0AF0 (S&L) is read by I2C in Line 6
 
 **Line 6**	I2C read the register **S&L** at 0x0AF0
 
-**Line 7**	Test for the byte count received. If it is not zero,  gesture data is available
+**Line 7**	Test for the byte count received. If it is non-zero,  gesture data is available
 
 **Line 8**	This is the real meat we need by reading the register address at 0x0AF1 for gesture data with description illustrated below. Data array `gesture_upload[6]` contains gesture ACT, details, tap down/up key, and the direction ID with contents described below.
 
