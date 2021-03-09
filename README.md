@@ -763,7 +763,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) //1
 
 /* API to run in an infinite loop or semaphore if RTOS is implemented */
 finger_t ssd7317_get_gesture(void){ //4
-	finger_t finger = {0, 0, IDLE};
+	finger_t finger = {0, 0, ACT_ERROR, DETAIL_ERROR};
 
 	if(touch_event_get()){ //5
 		uint16_t status;
