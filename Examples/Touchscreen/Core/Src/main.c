@@ -6,7 +6,7 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
+  * <h2><center>&copy; Copyright (c) 2021 STMicroelectronics.
   * All rights reserved.</center></h2>
   *
   * This software component is licensed by ST under BSD 3-Clause license,
@@ -24,12 +24,12 @@
 /* USER CODE BEGIN Includes */
 #include "SSD7317.h"
 #include "rpc.h"
+#include "tone.h"
+#include "ArialBlack_36h.h"
+#include "battery-status-full.h"
 #ifdef USE_FULL_ASSERT
 #include <stdio.h>
 #endif
-#include "stdbool.h"
-#include "Tahoma_12h.h"
-
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -70,8 +70,7 @@ static void MX_I2C1_Init(void);
 static void MX_SPI1_Init(void);
 static void MX_TIM2_Init(void);
 /* USER CODE BEGIN PFP */
-
-
+void app_touch_task(void);
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -95,6 +94,65 @@ int __io_putchar(int ch)
 }
 #endif
 
+/**
+ * @brief	Touch screen demo for this application
+ */
+void app_touch_task(void)
+{
+	static bool sleep = false;
+	static bool por = true;
+	static uint16_t counter = 0;
+	static char str[5];
+
+	if(por){
+		snprintf(str, 5, "%d", counter);
+		por = false;
+		ssd7317_put_string(0,26,&ArialBlack_36h,str,0);
+		ssd7317_put_image(72,0,&batterystatusfull,0);
+		ssd7317_put_char((OLED_HOR_RES-32)/2, 80, &ArialBlack_36h, 0x30b5, 0);
+	}
+
+	finger_t finger = ssd7317_get_gesture();
+
+	switch(finger.act){
+	case LONG_TAP_ANYKEY:
+		ssd7317_display_clear(BLACK);
+		tone_pwm_set(500);
+		tone_pwm_on();
+		HAL_Delay(700);
+		tone_pwm_off();
+		sleep = true;
+		break;
+	case SINGLE_TAP_ANYKEY:
+		if(sleep==true){
+			sleep=false;
+			ssd7317_put_string(0,26,&ArialBlack_36h,str,0);
+			ssd7317_put_image(72,0,&batterystatusfull,0);
+			ssd7317_put_char((OLED_HOR_RES-32)/2, 80, &ArialBlack_36h, 0x30b5, 0);
+		}else{
+			if(finger.detail==SINGLE_TAP_KEY3 || finger.detail==SINGLE_TAP_KEY4){
+				tone_pwm_set(1000);
+				ssd7317_put_char((OLED_HOR_RES-32)/2, 80, &ArialBlack_36h, 0x30b5, 1);
+				tone_pwm_on();
+				HAL_Delay(50);
+				ssd7317_put_char((OLED_HOR_RES-32)/2, 80, &ArialBlack_36h, 0x30b5, 0);
+				tone_pwm_off();
+			}
+		}
+		break;
+	case SWIPE:
+		if(!sleep){
+			if(finger.detail==SWIPE_DOWN){
+				if(counter>0) counter--;
+			}else{
+				(counter<9999)?(counter++):(counter=0);
+			}
+			snprintf(str, 5, "%d", counter);
+			ssd7317_put_string(0,26,&ArialBlack_36h,str,0);
+		}
+		break;
+	}
+}
 /* USER CODE END 0 */
 
 /**
@@ -133,10 +191,7 @@ int main(void)
   /* USER CODE BEGIN 2 */
   ssd7317_init();
   rpc_uart_init();
-
-  uint16_t w, h;
-  ssd7317_get_stringsize(&Tahoma_12h, "Hello World", &w, &h);
-  ssd7317_put_string((OLED_HOR_RES-w)/2,(OLED_VER_RES-h)/2,&Tahoma_12h,"Hello World",0);
+  tone_pwm_init();
 
   /* USER CODE END 2 */
 
@@ -147,11 +202,9 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-	//Remote Procedure Call for spi_write_command() and spi_write_data()
-	rpc_main_task();
+	  app_touch_task();
+	  rpc_main_task();
   }
-
-
   /* USER CODE END 3 */
 }
 
@@ -342,7 +395,7 @@ static void MX_TIM2_Init(void)
     Error_Handler();
   }
   sConfigOC.OCMode = TIM_OCMODE_PWM2;
-  sConfigOC.Pulse = 0;
+  sConfigOC.Pulse = 50;
   sConfigOC.OCPolarity = TIM_OCPOLARITY_HIGH;
   sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
   if (HAL_TIM_PWM_ConfigChannel(&htim2, &sConfigOC, TIM_CHANNEL_2) != HAL_OK)
@@ -386,6 +439,7 @@ static void MX_USART2_UART_Init(void)
     Error_Handler();
   }
   /* USER CODE BEGIN USART2_Init 2 */
+
   /* USER CODE END USART2_Init 2 */
 
 }
@@ -406,6 +460,7 @@ static void MX_DMA_Init(void)
   /* DMA1_Channel6_IRQn interrupt configuration */
   HAL_NVIC_SetPriority(DMA1_Channel6_IRQn, 0, 0);
   HAL_NVIC_EnableIRQ(DMA1_Channel6_IRQn);
+
 }
 
 /**
@@ -489,7 +544,8 @@ void Error_Handler(void)
 void assert_failed(uint8_t *file, uint32_t line)
 {
   /* USER CODE BEGIN 6 */
-  //   printf("Wrong parameters value: file %s on line %d\r\n", file, line);
+  /* User can add his own implementation to report the file name and line number,
+     tex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
   /* USER CODE END 6 */
 }
 #endif /* USE_FULL_ASSERT */

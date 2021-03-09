@@ -1,29 +1,24 @@
 /****************************************************************************
-* Filename              :   rpc.h
-* Description			: 	Header file for Remote Procedure Call as a
-* debug module in SSD7317 TDDI display driver.
+* Filename              :   tone.h
+* Description			: 	Header file for PWM generator to drive a buzzer
+* on Solomon Systech TDDI-7317 OLED EVK
 * Author                :   John Leung
-* Origin Date           :   Feb 10, 2021
+* Origin Date           :   March 9, 2021
 * Version               :   1.0.0
 * Compiler              :   GNU
 * Target                :   STM32L432KCUx on NUCLEO-L432KC
 * Notes                 :   IDE is STM32CubeIDE
 *
-* To use this module you need:
-* 1) assign USART2 as the communication channel from STM32CubeIDE
-* 2) enable DMA1 channel 6 and turn on USART2 global interrupt
-* 3) add the following code in USART2_IRQHandler():
-* ```
-* if(RESET!=__HAL_UART_GET_FLAG(&huart2, UART_FLAG_IDLE))
-  {
-	  __HAL_UART_CLEAR_IDLEFLAG(&huart2);
-	  rpc_idle_callback();
-  }
-* ```
-* 4) include this file in stm32l4xx_it.c
-* 5) include rpc.c in the Project
-* 6) call rpc_uart_init() in main(void)
-* 7) call rpc_main_task() in while(1) loop of main(void)
+* To use this module you need to:
+* 1) set PA1 as TIM2_CH2
+* 2) enable TIM2 > Internal Clock(Internal Clock) > Channel2(PWM Generation CH2) in Touchscreen.ioc
+* 3) set Prescaler a value of (320-1) in Touchscreen.ioc
+* 4) set Counter Period a value of (100-1) in Touchscreen.ioc
+* 5) include this file in main.c
+* 6) include tone.c in the Project
+* 7) call tone_pwm_init() in main(void)
+* 8) call tone_pwm_set(uint16_t freq) to set frequency, and
+* call tone_pwm_on()/tone_pwm_off() to turn buzzer on/off
 *****************************************************************************
 *
 * THIS SOFTWARE IS PROVIDED BY TECHTOYS CO. "AS IS" AND ANY EXPRESSED
@@ -39,28 +34,17 @@
 * THE POSSIBILITY OF SUCH DAMAGE.
 *
 *****************************************************************************/
-#ifndef INC_RPC_H_
-#define INC_RPC_H_
+
+#ifndef INC_TONE_H_
+#define INC_TONE_H_
 
 #include <stdint.h>
-#include "SSD7317.h"
-
-/* huart2 declared in main.c */
-extern UART_HandleTypeDef huart2;
-/* hdma_usart2_rx declared in main.c */
-extern DMA_HandleTypeDef hdma_usart2_rx;
-
-/* Ring buffer for Remote Procedure Call */
-#define RPC_BUF_SIZE 255
-typedef struct {
-	uint16_t ctr;
-	uint8_t  buf[RPC_BUF_SIZE];
-}uart_rx_buf;
 
 
+void tone_pwm_init(void);
+void tone_pwm_set(uint16_t freq);
+void tone_pwm_on(void);
+void tone_pwm_off(void);
 
-void rpc_uart_init(void);
-void rpc_idle_callback(void);
-void rpc_main_task(void);
 
-#endif /* INC_RPC_H_ */
+#endif /* INC_TONE_H_ */

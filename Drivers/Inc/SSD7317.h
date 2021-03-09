@@ -111,6 +111,7 @@ typedef uint8_t color_t;
 /**
  * @note	Touch gesture data read from 0x0AF1
  */
+/*
 typedef enum{
 	SINGLE_TAP_ANYKEY = 0,
 	SINGLE_TAP_KEY1 = 1,
@@ -131,6 +132,38 @@ typedef enum{
 	TOUCH_ERROR,
 	IDLE
 }gesture_t;
+*/
+
+typedef enum{
+	SINGLE_TAP_ANYKEY = 1,
+	LONG_TAP_ANYKEY = 2,
+	DOUBLE_TAP_ANYKEY = 3,
+	SWIPE = 4,
+	LARGE_OBJ = 0x40,
+	ACT_ERROR = 0xFF,
+}gesture_act_t;
+
+typedef enum{
+	SINGLE_TAP_KEY1 = 1,
+	SINGLE_TAP_KEY2 = 2,
+	SINGLE_TAP_KEY3 = 3,
+	SINGLE_TAP_KEY4 = 4,
+	LONG_TAP_KEY1 = SINGLE_TAP_KEY1,
+	LONG_TAP_KEY2 = SINGLE_TAP_KEY2,
+	LONG_TAP_KEY3 = SINGLE_TAP_KEY3,
+	LONG_TAP_KEY4 = SINGLE_TAP_KEY4,
+	DOUBLE_TAP_KEY1 = SINGLE_TAP_KEY1,
+	DOUBLE_TAP_KEY2= SINGLE_TAP_KEY2,
+	DOUBLE_TAP_KEY3 = SINGLE_TAP_KEY3,
+	DOUBLE_TAP_KEY4 = SINGLE_TAP_KEY4,
+	SWIPE_LR = 1,
+	SWIPE_DOWN = SWIPE_LR,
+	SWIPE_RL = 2,
+	SWIPE_UP = SWIPE_RL,
+	LARGE_OBJ_DETECT = 1,
+	LARGE_OBJ_RELEASE = 0,
+	DETAIL_ERROR = 0
+}gesture_detail_t;
 
 typedef enum{
 	LEFT_TOP,
@@ -147,7 +180,8 @@ typedef enum{
 typedef struct FINGER{
 	uint8_t tap_down_key;
 	uint8_t tap_up_key;
-	gesture_t gesture;
+	gesture_act_t act;
+	gesture_detail_t detail;
 }finger_t;
 
 typedef struct RECTANGLE{

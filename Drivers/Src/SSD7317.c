@@ -130,7 +130,7 @@ static const uint8_t SSD7317_INIT_TBL[]=
 		0x36,
 		0x0f,
 		0x35,
-#ifdef USE_TOUCH_SA_SET_A
+#ifdef USE_TOUCH_SA_SET_A //option A with #define USE_TOUCH_SA_SET_A in SSD7317.h
 		0x0a,
 #else
 		0x0b,
@@ -761,7 +761,7 @@ static void fb_fill_area(rect_t area, const color_t* color, bool negative)
  */
 void ssd7317_scroll_area(rect_t area, rect_t win, finger_t dir)
 {
-	if((dir.gesture!=SWIPE_DOWN) && (dir.gesture!=SWIPE_UP))
+	if((dir.detail!=SWIPE_DOWN) && (dir.detail!=SWIPE_UP))
 	{
 #ifdef  USE_FULL_ASSERT
 		assert_failed((uint8_t *)__FILE__, __LINE__);
@@ -790,7 +790,7 @@ void ssd7317_scroll_area(rect_t area, rect_t win, finger_t dir)
 	uint8_t cmd[8];
 
 	cmd[0] = 0x21;	//Set column address
-	if(dir.gesture==SWIPE_DOWN){
+	if(dir.detail==SWIPE_DOWN){
 		cmd[1]=cmd[2]=scroll.y1;
 	}else{
 		cmd[1]=cmd[2]=scroll.y2;
@@ -804,7 +804,7 @@ void ssd7317_scroll_area(rect_t area, rect_t win, finger_t dir)
 	uint16_t len = BUFIDX(scroll.x2,0)-BUFIDX(scroll.x1,0)+1;
 
 	for(uint16_t col=0; col<(scroll.y2-scroll.y1+1); col++){
-		if(dir.gesture==SWIPE_DOWN){
+		if(dir.detail==SWIPE_DOWN){
 			cmd[0] = 0x2c;
 		}else{
 			cmd[0] = 0x2d;
@@ -828,7 +828,7 @@ void ssd7317_scroll_area(rect_t area, rect_t win, finger_t dir)
 				}
 			#else
 				//non-DMA SPI transfer, it is a blocking function
-				if(dir.gesture==SWIPE_DOWN){
+				if(dir.detail==SWIPE_DOWN){
 					HAL_SPI_Transmit(&hspi1, (uint8_t *)&frame_buffer[BUFIDX(area.x1,(area.y2-col))], len, 10);
 				}else{
 					HAL_SPI_Transmit(&hspi1, (uint8_t *)&frame_buffer[BUFIDX(area.x1,(area.y1+col))], len, 10);
@@ -1252,7 +1252,7 @@ inline static bool touch_event_get(void)
  * @return finger_t structure with gesture and key number
  */
 finger_t ssd7317_get_gesture(void){
-	finger_t finger = {0, 0, IDLE};
+	finger_t finger = {0, 0, ACT_ERROR, DETAIL_ERROR};
 
 	if(touch_event_get()){
 		uint16_t status;
@@ -1279,55 +1279,51 @@ finger_t ssd7317_get_gesture(void){
 
 		switch(gesture_upload[1]){
 		case 0x01:
-			finger.gesture = SINGLE_TAP_ANYKEY;
+			finger.act = SINGLE_TAP_ANYKEY;
+			if(gesture_upload[2]==1)
+				finger.detail = SINGLE_TAP_KEY1;
+			else if (gesture_upload[2]==2)
+				finger.detail = SINGLE_TAP_KEY2;
+			else if (gesture_upload[2]==3)
+				finger.detail = SINGLE_TAP_KEY3;
+			else
+				finger.detail = SINGLE_TAP_KEY4;
 			break;
 		case 0x02:
-			finger.gesture = LONG_TAP_ANYKEY;
+			finger.act = LONG_TAP_ANYKEY;
+			if(gesture_upload[2]==1)
+				finger.detail = LONG_TAP_KEY1;
+			else if (gesture_upload[2]==2)
+				finger.detail = LONG_TAP_KEY2;
+			else if (gesture_upload[2]==3)
+				finger.detail = LONG_TAP_KEY3;
+			else
+				finger.detail = LONG_TAP_KEY4;
+			break;
 			break;
 		case 0x04:
+			finger.act = SWIPE;
 			if(gesture_upload[2]==1){
-				finger.gesture = SWIPE_LR;
+				finger.detail = SWIPE_LR;
 			}else if(gesture_upload[2]==2){
-				finger.gesture = SWIPE_RL;
-			}else{
-				finger.gesture = TOUCH_ERROR;
+				finger.detail = SWIPE_RL;
 			}
-
-			if(finger.gesture!=TOUCH_ERROR){
-				finger.tap_down_key = (gesture_upload[3]>>4)&0x07;
-				finger.tap_up_key = gesture_upload[3]&0x07;
-
-				if(finger.tap_up_key==1){
-					finger.tap_up_key = SINGLE_TAP_KEY1;
-				}else if (finger.tap_up_key==2){
-					finger.tap_up_key = SINGLE_TAP_KEY2;
-				}else if (finger.tap_up_key==3){
-					finger.tap_up_key = SINGLE_TAP_KEY3;
-				}else if (finger.tap_up_key==4){
-					finger.tap_up_key = SINGLE_TAP_KEY4;
-				}
-
-				if(finger.tap_down_key==1){
-					finger.tap_down_key = SINGLE_TAP_KEY1;
-				}else if (finger.tap_down_key==2){
-					finger.tap_down_key = SINGLE_TAP_KEY2;
-				}else if (finger.tap_down_key==3){
-					finger.tap_down_key = SINGLE_TAP_KEY3;
-				}else if (finger.tap_down_key==4){
-					finger.tap_down_key = SINGLE_TAP_KEY4;
-				}
-			}
+			finger.tap_down_key = (gesture_upload[3]>>4)&0x07;
+			finger.tap_up_key = gesture_upload[3]&0x07;
 			break;
 		case 0x40:
+			finger.act = LARGE_OBJ;
 			if(gesture_upload[2]==1)
-				finger.gesture = LARGE_OBJ_DETECT;
+				finger.detail = LARGE_OBJ_DETECT;
 			else
-				finger.gesture = LARGE_OBJ_RELEASE;
+				finger.detail = LARGE_OBJ_RELEASE;
+			break;
 		case 0xFF:
-			finger.gesture = TOUCH_ERROR;
+			finger.act = ACT_ERROR;
+			finger.detail = DETAIL_ERROR;
 			break;
 		}
-	}		//closing bracket for Touch_EvtFlag_Get()
+	}
 	return finger;
 }
 
@@ -1383,7 +1379,7 @@ rect_t ssd7317_scroll_image(uint16_t left, uint16_t top, uint16_t margin, const 
 {
 	rect_t area={left,top,(left+image->width-1),(top+image->height-1)};
 
-	if((dir.gesture!=SWIPE_DOWN) && (dir.gesture!=SWIPE_UP))
+	if((dir.detail!=SWIPE_DOWN) && (dir.detail!=SWIPE_UP))
 	{
 #ifdef  USE_FULL_ASSERT
 		assert_failed((uint8_t *)__FILE__, __LINE__);
@@ -1394,7 +1390,7 @@ rect_t ssd7317_scroll_image(uint16_t left, uint16_t top, uint16_t margin, const 
 	rect_t win;
 	win.x1 = area.x1;
 	win.x2 = area.x2;
-	if(dir.gesture==SWIPE_DOWN){
+	if(dir.detail==SWIPE_DOWN){
 		win.y1 = margin;
 		win.y2 = area.y2;
 	}else{
@@ -1418,7 +1414,7 @@ rect_t ssd7317_scroll_image(uint16_t left, uint16_t top, uint16_t margin, const 
  */
 void   ssd7317_scroll_page(rect_t subpage, uint8_t interval, uint8_t accelerate, finger_t dir)
 {
-	if((dir.gesture!=SWIPE_DOWN) && (dir.gesture!=SWIPE_UP))
+	if((dir.detail!=SWIPE_DOWN) && (dir.detail!=SWIPE_UP))
 	{
 #ifdef  USE_FULL_ASSERT
 		assert_failed((uint8_t *)__FILE__, __LINE__);
@@ -1436,7 +1432,7 @@ void   ssd7317_scroll_page(rect_t subpage, uint8_t interval, uint8_t accelerate,
 
 	uint8_t cmd[9]={0};
 
-	if(dir.gesture==SWIPE_UP){
+	if(dir.detail==SWIPE_UP){
 		(dir.tap_down_key==dir.tap_up_key)?(cmd[0] = 0x2a):(cmd[0] = 0x27);
 	}else{
 	 //dir.gesture==SWIPE_DOWN
