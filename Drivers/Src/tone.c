@@ -131,7 +131,7 @@ void tone_pwm_set(uint16_t freq)
  */
 void tone_pwm_on(void)
 {
-	HAL_TIM_PWM_Stop(&htim2, TIM_CHANNEL_2);
+	HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_2);
 }
 
 /**

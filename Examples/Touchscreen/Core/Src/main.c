@@ -124,7 +124,7 @@ void app_touch_task(void)
 		sleep = true;
 		break;
 	case SINGLE_TAP_ANYKEY:
-		if(sleep==true){
+		if(sleep){
 			sleep=false;
 			ssd7317_put_string(0,26,&ArialBlack_36h,str,0);
 			ssd7317_put_image(72,0,&batterystatusfull,0);
@@ -187,11 +187,12 @@ int main(void)
   //MX_USART2_UART_Init();
   //MX_I2C1_Init();
   //MX_SPI1_Init();
-  //MX_TIM2_Init();
+  MX_TIM2_Init();
   /* USER CODE BEGIN 2 */
+  tone_pwm_init();
   ssd7317_init();
   rpc_uart_init();
-  tone_pwm_init();
+
 
   /* USER CODE END 2 */
 
