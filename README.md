@@ -790,7 +790,7 @@ finger_t ssd7317_get_gesture(void){
 
 **Explanation**:
 
-**Line 1**	`HAL_GPIO_EXTI_Callback()` is the interrupt callback function sharing FR rising edge detection and IRQ falling edge detection. On a valid touch event, the touch screen will assert a falling pulse on IRQ to trigger the callback function.  We are sharing the conditional statement with `GPIO_Pin==OLED_FR_Pin` because there is only one vector for GPIO interrupt in STM32L432 MCU.
+**Line 1**	`HAL_GPIO_EXTI_Callback()` is the interrupt callback function sharing the FR signal for frame synchronization and IRQ for a touch event. We need to share the conditional statement `if(GPIO_Pin==OLED_FR_Pin) else ...` because there is only one vector for GPIO interrupt in STM32L432 MCU.
 
 **Line 2**	Condition `GPIO_Pin==TCH_IRQ_Pin` is satisfied on a valid touch event
 
@@ -798,11 +798,11 @@ finger_t ssd7317_get_gesture(void){
 
 **Line 4**	`ssd7317_get_gesture()` is the API to run in an infinite loop or semaphore if RTOS is implemented.  This function returns a `finger_t` structure that encapsulates gesture action (ACT), details (DETAIL), and key numbers
 
-**Line 5**	Test for a valid touch event with `touch_event_get()`. If this flag is not set, the function `ssd7317_get_gesture()` returns right away. If there is a valid touch event (`touch_event_set()` in  `HAL_GPIO_EXTI_Callback()`), register at 0x0AF0 (**S&L**) is I2C read in Line 6
+**Line 5**	Test for a touch event with `touch_event_get()`. If this flag is not set, the function `ssd7317_get_gesture()` returns right away. If there is a valid touch event (`touch_event_set()` in  `HAL_GPIO_EXTI_Callback()`), register at 0x0AF0 (**S&L**) is I2C read in Line 6
 
 **Line 6**	I2C read the register **S&L** at 0x0AF0
 
-**Line 7**	Test for the byte count received. If it is non-zero,  gesture data is available
+**Line 7**	Testing the byte count received. If it is non-zero,  gesture data is available
 
 **Line 8**	This is the real meat by reading the register address at 0x0AF1 for gesture data to `gesture_upload[6]` with its contents described below:
 
@@ -813,6 +813,26 @@ finger_t ssd7317_get_gesture(void){
 <img src="./Images/Touchscreen_gesture_data.png" width=975>
 
 ### Running Touch Screen Example
+
+Import the project **Touchscreen** to your IDE workspace by following the same procedures to import [**HelloWorld**](#download-and-build-the-hello-world-project) previously. Running the project will show you a GUI similar to the photo below with:
+
+* touch screen actions for swipe up and down to increase and decrease the number
+
+* up arrow for swipe up and down arrow for swipe down at upper left corner
+
+* button action on the ski icon to inverse its color
+
+* long press on any area of the screen to put OLED to sleep
+
+* single click on any area of the screen to wake it up with its screen content restored
+
+* beeping the buzzer for touch action
+
+* monitoring **Gesture Upload Data** at register address 0x0AF1 through serial terminal
+
+  <img src="./Images/Touchscreen_running_example.png" width=800>
+
+### How It Works
 
 
 
