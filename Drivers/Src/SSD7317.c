@@ -1017,10 +1017,10 @@ static bool fb_flush_pending_get(void)
 /**
  * @brief
  * \b	Description:<br>
- * 	I2C Write with all command and addresses in 16-bit width.<br>
- * 	Byte order: lower byte send first e.g. e.g.reg[7:0] follow by reg[15:8].<br>
+ * 	I2C Write with commands and addresses in 16-bit width.<br>
+ * 	Byte order: lower byte send first e.g. reg[7:0] follow by reg[15:8].<br>
  * @param slave is the 7-bit slave address
- * @param reg is the register address sending with LSB first i.e. 0xf0 sending first with reg=0x0af0
+ * @param reg is the register address sending with LSB first i.e. 0xf0 sent first with reg=0x0af0
  * @param *data points to the data buffer to send
  * @param len is the byte count to send
  */
