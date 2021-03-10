@@ -247,25 +247,25 @@ Now, type in `\h (7E 64 FF)`  with command header changed to `64` for data and c
 
 <img src = "./Images/YAT_8Pixels_SEG127COM0.png" width=500>
 
-Closeup on OLED:
+Close-up on OLED:
 
 <img src="./Images/YAT_Photo_8Pixels_FF.png" width=1024>
 
 Type in `\h(7E 64 86)`, click **Send Text**.
 
-<img src="./Images/YAT_Photo_8Pixels_86.png" width=1024>
+<img src="./Images/YAT_Photo_8Pixels_86.png" width=300>
 
 Type in `\h(7E 63 21 00 00 22 00 01)` **Send Text** to bound to two PAGEs in horizontal follow by`\h(7E 64 FF 86)` **Send Text**. Sixteen pixels are displayed with 0xFF as the first 8 pixels, 0x86 as 01100001 with 0=BLACK, 1=WHITE.
 
-<img src="./Images/YAT_Photo_16Pixels_FF86.png" width=1024>
+<img src="./Images/YAT_Photo_16Pixels_FF86.png" width=300>
 
 Type in `\h(7E 63 21 01 01 22 00 01)` **Send Text** to set it to the second segment (SEG=126) and bound the area to two PAGEs , follow by`\h(7E 64 FF 86)` **Send Text** to write the same 16 pixels to the second row.
 
-<img src="./Images/YAT_Photo_16Pixels_FF86_SEG126.png" width=1024>
+<img src="./Images/YAT_Photo_16Pixels_FF86_SEG126.png" width=300>
 
 > **NOTE:** The top left corner is initialized to (COM95,SEG127) with data write direction set COM95 as the least significant bit (LSB), i.e. byte orientation in LSB first. Because the SPI sending direction was set to MSB first, all data sent is laterally inverted: data write in 0x86 is displayed as a bit pattern like 01100001 with 1=WHITE, 0=BLACK.
 
-<img src="./Images/YAT_DataWriteDir_Explained.png" width = 1024>
+<img src="./Images/YAT_DataWriteDir_Explained.png" width = 800>
 
 ### Program Listing
 
