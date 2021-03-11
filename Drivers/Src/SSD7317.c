@@ -319,22 +319,24 @@ void ssd7317_init(void){
 /**
  *@brief
  *\b	Description:<br>
- *	Enable 12V VCC and then switch OLED On with command 0xAF.
+ *	Switch OLED On with command 0xAF.
  */
 void ssd7317_display_on(void){
 	const uint8_t cmd[1]={0xaf};
 
 	/*Software delay 1ms for VCC ramp up*/
-	HAL_Delay(1);
+	//HAL_Delay(1);
 
 	/*Send display ON command*/
 	spi_write_command((const uint8_t*)cmd, 1);
+	/*Software delay 100ms to stabilize*/
+	HAL_Delay(100);
 }
 
 /**
  *@brief
  *\b	Description:<br>
- *	Switch OLED off with command 0xAE followed by disable 12V VCC.
+ *	Switch OLED off with command 0xAE.
  *	GDDRAM content is preserved.
  */
 void ssd7317_display_off(void){
@@ -1325,6 +1327,17 @@ finger_t ssd7317_get_gesture(void){
 		}
 	}
 	return finger;
+}
+
+/**
+ * @brief
+ *  \b Description:<br>
+ *  		Function to turn off touch screen and reset DCDCENO low (pending)
+ */
+void ssd7317_touch_off(void)
+{
+	uint8_t data[2] = {0x01, 0x00};
+	i2c_write(TOUCH_SA, 0x0037, (const uint8_t *)&data, 2);
 }
 
 /**
