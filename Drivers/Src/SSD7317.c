@@ -344,9 +344,6 @@ void ssd7317_display_off(void){
 
 	/*Send display OFF command*/
 	spi_write_command((const uint8_t*)cmd, 1);
-
-	/*Software delay 100ms for VCC discharge*/
-	HAL_Delay(100);
 }
 
 /**
@@ -1288,8 +1285,10 @@ finger_t ssd7317_get_gesture(void){
 				finger.detail = SINGLE_TAP_KEY2;
 			else if (gesture_upload[2]==3)
 				finger.detail = SINGLE_TAP_KEY3;
-			else
+			else if (gesture_upload[2]==4)
 				finger.detail = SINGLE_TAP_KEY4;
+			else
+				finger.detail = SINGLE_TAP_ANYKEY_DETAIL;
 			break;
 		case 0x02:
 			finger.act = LONG_TAP_ANYKEY;
@@ -1299,9 +1298,23 @@ finger_t ssd7317_get_gesture(void){
 				finger.detail = LONG_TAP_KEY2;
 			else if (gesture_upload[2]==3)
 				finger.detail = LONG_TAP_KEY3;
-			else
+			else if (gesture_upload[2]==4)
 				finger.detail = LONG_TAP_KEY4;
+			else
+				finger.detail = LONG_TAP_ANYKEY_DETAIL;
 			break;
+		case 0x03:
+			finger.act = DOUBLE_TAP_ANYKEY;
+			if(gesture_upload[2]==1)
+				finger.detail = DOUBLE_TAP_KEY1;
+			else if (gesture_upload[2]==2)
+				finger.detail = DOUBLE_TAP_KEY2;
+			else if (gesture_upload[2]==3)
+				finger.detail = DOUBLE_TAP_KEY3;
+			else if (gesture_upload[2]==4)
+				finger.detail = DOUBLE_TAP_KEY4;
+			else
+				finger.detail = DOUBLE_TAP_ANYKEY_DETAIL;
 			break;
 		case 0x04:
 			finger.act = SWIPE;
@@ -1332,12 +1345,19 @@ finger_t ssd7317_get_gesture(void){
 /**
  * @brief
  *  \b Description:<br>
- *  		Function to turn off touch screen and reset DCDCENO low (pending)
+ *  		Function to enter Low Power Mode (LPM) with VCC discharged and display goes to sleep.
+ *  		Send ssd7317_display_on() to wake up after this function.
  */
-void ssd7317_touch_off(void)
+void ssd7317_enter_lpm(void)
 {
 	uint8_t data[2] = {0x01, 0x00};
 	i2c_write(TOUCH_SA, 0x0037, (const uint8_t *)&data, 2);
+	HAL_Delay(150);	//VCC discharge time
+
+	data[0]=0xae;	//send display off (0xae) SPI command
+
+	/*Send display OFF command*/
+	spi_write_command((const uint8_t*)data, 1);
 }
 
 /**

@@ -1,4 +1,5 @@
-# SSD7317Z
+SSD7317Z
+
 is a controller IC designed by [Solomon Systech Ltd.](https://www.solomon-systech.com/) with touch screen and display controller circuits fabricated on the same die. Photo below shows a conventional *out-cell* screen with separated touch screen and LCD module on the left versus the *in-cell* screen with a single Touch and Display Driver Integration (TDDI) IC driver on the right.
 
 <img src="./Images/compare_outcell_incell.png" width=80%>
@@ -876,26 +877,30 @@ Describing `app_touch_task()` with listing below:
 
 After POR, the API to get touch gesture `ssd7317_get_gesture()` is executed:
 
-<img src="./Images/Touchscreen_hiw_2.png" width=800>
-<img src="./Images/Touchscreen_hiw_3.png" width=800>
+<img src="./Images/Touchscreen_hiw_1_1.png" width=800>
+
+<img src="./Images/Touchscreen_hiw_1_2.png" width=800>
+
 
 | Marker                                                  | Descriptions                                                 |
 | ------------------------------------------------------- | ------------------------------------------------------------ |
-| <img src="./Images/Number_circle_44x44_1.png" width=30> | Polling `ssd7317_get_gesture()` returns a structure `finger_t` that describes the Tap Down/Up keys, Gesture ACT, and Gesture Detail according to Gesture Upload Data at 0x0AF1. |
-| <img src="./Images/Number_circle_44x44_2.png" width=30> | It is the case for `LONG_TAP_ANYKEY` to respond to a touch-and-hold action on the touch screen. Display is cleared with a long beep and the OLED is put to sleep. |
-| <img src="./Images/Number_circle_44x44_3.png" width=30> | The touch screen is initialized to respond to 4 *in-cell* keys. In sleep mode, it will wake up and redraw the original screen content with any of the keys clicked. |
-| <img src="./Images/Number_circle_44x44_4.png" width=30> | If a finger lands on key area 3 or 4, the ski icon (character 0x267f) is refreshed with its background inverted (the last argument toggle between 1 & 0) with a beep. |
-| <img src="./Images/Number_circle_44x44_5.png" width=30> | With a swipe-down gesture, the counter is decremented `(counter--)` with an arrow icon displayed `ssd7317_put_char(ARROW_DOWN_X, ARROW_DOWN_Y, &ArialBlack_arrows, 0x21e9, 0)` at the upper left corner. Similarly with a swipe-up gesture, the counter is incremented and a down arrow displayed. |
-| <img src="./Images/Number_circle_44x44_6.png" width=30> | Clearing the background `ssd7317_fill_color(label_bg, BLACK)` in a 4-digit width to prepare for drawing new counter value. |
-| <img src="./Images/Number_circle_44x44_7.png" width=30> | Drawing the `counter` value as a string with `ssd7317_put_string()`. |
+| <img src="./Images/Number_circle_44x44_1.png" width=30> | Polling `ssd7317_get_gesture()` returns a structure `finger_t` that describes the Tap Down/Up keys, Gesture ACT, and Gesture Detail according to **Gesture Upload Data** register at 0x0AF1. |
+| <img src="./Images/Number_circle_44x44_2.png" width=30> | It is the case for `LONG_TAP_ANYKEY` to respond to a touch-and-hold action on the touch screen. The OLED enters into a **Low Power Mode** with `ssd7317_enter_lpm()` to switch DCDCENO output low to discharge VCC (12V) and send over the display sleep command (0xAE). **All graphical contents on GDDRAM are preserved in Low Power Mode.** |
+| <img src="./Images/Number_circle_44x44_3.png" width=30> | With a double click on any area of the screen, the OLED wakes up from the SPI command 0xAF in `ssd7317_display_on()` with the **original graphical contents restored.** |
+| <img src="./Images/Number_circle_44x44_4.png" width=30> | There are 4 keys on the touch screen with an arrow (upper-left) and a battery icon (upper right) on Key 1 region and the counter (e.g. 71) on Key 2 region. They are non-responsive labels on the GUI so a blunt beep is generated as an alert on tapping.<br/><img src="./Images/Touchscreen_hiw_1_3.png" width=300> |
+| <img src="./Images/Number_circle_44x44_5.png" width=30> | If a finger lands on key 3 or 4 regions that the ski icon (character 0x267f) spans, the icon is refreshed with its background inverted (by toggling the last argument of `ssd7317_put_char(args, bool negative)`) together with a sharp beep. |
+| <img src="./Images/Number_circle_44x44_6.png" width=30> | With a swipe-down gesture, the counter is decremented `(counter--)` with a DOWN arrow displayed `ssd7317_put_char(ARROW_DOWN_X, ARROW_DOWN_Y, &ArialBlack_arrows, 0x21e9, 0)` at the upper-left corner. Similarly with a swipe-up gesture, the counter is incremented and an UP arrow displayed. The integer `counter` is converted to a string by `snprintf()` for printout. |
+| <img src="./Images/Number_circle_44x44_7.png" width=30> | This code paints the background BLACK by `ssd7317_fill_color(label_bg, BLACK)`. |
+| <img src="./Images/Number_circle_44x44_8.png" width=30> | This code draws the `counter` as a string by `ssd7317_put_string()`. |
 
 ### Demo on YouTube
 
 https://youtu.be/SL3LxhRAtbs
 
+## Infinite Contents Scrolling
 
-
-## Scrolling by Hardware
+Pending
 
 ## Porting the Driver to Your MCU
 
+Pending

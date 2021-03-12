@@ -123,28 +123,28 @@ void app_touch_task(void)
 
 	switch(finger.act){
 	case LONG_TAP_ANYKEY:
-		ssd7317_display_clear(BLACK);
-		tone_pwm_set(500);
-		tone_pwm_on();
-		HAL_Delay(700);
-		tone_pwm_off();
+		ssd7317_enter_lpm();
+		tone_pwm_set(500); tone_pwm_on();
+		HAL_Delay(700); tone_pwm_off();
 		sleep = true;
 		break;
-	case SINGLE_TAP_ANYKEY:
+	case DOUBLE_TAP_ANYKEY:
 		if(sleep){
+			ssd7317_display_on();
 			sleep=false;
-			ssd7317_put_string(LABEL_X, LABEL_Y, &ArialBlack_36h,str,0);
-			ssd7317_put_image(72,0,&batterystatusfull,0);
+		}
+		break;
+	case SINGLE_TAP_ANYKEY:
+		if(finger.detail==SINGLE_TAP_KEY1 || finger.detail==SINGLE_TAP_KEY2){
+			tone_pwm_set(200); tone_pwm_on();
+			HAL_Delay(50); tone_pwm_off();
+		}
+		else if(finger.detail==SINGLE_TAP_KEY3 || finger.detail==SINGLE_TAP_KEY4){
+			tone_pwm_set(1000);
+			ssd7317_put_char(ICON_X, ICON_Y, &ArialBlack_36h, 0x26f7, 1);
+			tone_pwm_on(); HAL_Delay(50);
 			ssd7317_put_char(ICON_X, ICON_Y, &ArialBlack_36h, 0x26f7, 0);
-		}else{
-			if(finger.detail==SINGLE_TAP_KEY3 || finger.detail==SINGLE_TAP_KEY4){
-				tone_pwm_set(1000);
-				ssd7317_put_char(ICON_X, ICON_Y, &ArialBlack_36h, 0x26f7, 1);
-				tone_pwm_on();
-				HAL_Delay(50);
-				ssd7317_put_char(ICON_X, ICON_Y, &ArialBlack_36h, 0x26f7, 0);
-				tone_pwm_off();
-			}
+			tone_pwm_off();
 		}
 		break;
 	case SWIPE:
@@ -164,9 +164,6 @@ void app_touch_task(void)
 			ssd7317_put_string(LABEL_X, LABEL_Y, &ArialBlack_36h,str,0); //print new value
 			tone_pwm_off();
 		}
-		break;
-	case DOUBLE_TAP_ANYKEY:
-		/* Double tap is not supported with current TOUCH_SA_BIOS firmware */
 		break;
 	case LARGE_OBJ:
 		/* Your code to support large object detection here */
