@@ -752,13 +752,14 @@ static void fb_fill_area(rect_t area, const color_t* color, bool negative)
 /**
  * @brief
  * \b		Description:<br>
- * 		Function to copy framebuffer's content to GDDRAM with the scrolling command (2Ch/2Dh).
- * 		This function is valid for COM-page H mode only.
+ * 		Function to copy framebuffer's content to GDDRAM with the content scrolling command (2Ch/2Dh).
+ * 		This function is valid for COM-page H mode only.<br/>
+ * 		There is a delay(blocking) time of 20ms in this function!
  * @param	area (in pixels) in frame buffer to copy from.
  * @param	win is the window (in pixels) on screen for scrolling.
  * @param	dir is the swipe direction, either SWIPE_UP(SWIPE_RL) or SWIPE_DOWN(SWIPE_LR).
  */
-void ssd7317_scroll_area(rect_t area, rect_t win, finger_t dir)
+void ssd7317_cntnt_scroll_area(rect_t area, rect_t win, finger_t dir)
 {
 	if((dir.detail!=SWIPE_DOWN) && (dir.detail!=SWIPE_UP))
 	{
@@ -1399,8 +1400,8 @@ rect_t ssd7317_put_image(uint16_t left, uint16_t top, const tImage* image, bool 
 
 /**
  * @brief
- * \b		Description:<br>
- * 		Function to scroll an image
+ * \b		Description:<br/S>
+ * 		Function to scroll an image with content scroll command 2Ch/2Dh.<br/>
  * 		This function is valid for COM-page H mode only.
  * @param 	left is the x coordinate of the image's top left at its final position.
  * @param 	top is the y coordinate of the image's top left at its final position.
@@ -1408,7 +1409,7 @@ rect_t ssd7317_put_image(uint16_t left, uint16_t top, const tImage* image, bool 
  * @param 	*image is a pointer to tImage structure.
  * @param	dir is the swipe direction, either SWIPE_UP(SWIPE_RL) or SWIPE_DOWN(SWIPE_LR).
  */
-rect_t ssd7317_scroll_image(uint16_t left, uint16_t top, uint16_t margin, const tImage* image, finger_t dir)
+rect_t ssd7317_cntnt_scroll_image(uint16_t left, uint16_t top, uint16_t margin, const tImage* image, finger_t dir)
 {
 	rect_t area={left,top,(left+image->width-1),(top+image->height-1)};
 
@@ -1444,8 +1445,15 @@ rect_t ssd7317_scroll_image(uint16_t left, uint16_t top, uint16_t margin, const 
 /**
  * @brief
  * \b Description:<br>
+ * 		Function to continuously scrolling the screen content with a page range<br/>
+ * 		This function is valid for COM-page H mode only and the hardware-specific commands 26h/27h/29h/2Ah.
+ * @param subpage defines the start page and end page address to scroll
+ * @param interval sets time interval between each scroll step in terms of frame frequency from 0-7<br/>
+ * 			0(6 frames), 1(32 frames), 2(64 frames), 3(128frames), 4(3 frames), 5(4 frames), 6(5 frames), 7(2 frames)
+ * @param accelerate is the scrolling offset from 1 row to 95 rows
+ * @param dir is the SWIPE direction (SWIPE_UP or SWIPE_DOWN)
  */
-void   ssd7317_scroll_page(rect_t subpage, uint8_t interval, uint8_t accelerate, finger_t dir)
+void   ssd7317_cons_scroll_page(rect_t subpage, uint8_t interval, uint8_t accelerate, finger_t dir)
 {
 	if((dir.detail!=SWIPE_DOWN) && (dir.detail!=SWIPE_UP))
 	{
@@ -1498,9 +1506,9 @@ void   ssd7317_scroll_page(rect_t subpage, uint8_t interval, uint8_t accelerate,
 /**
  * @brief
  * \b Description:<br>
- * This function applies brake to continuous page scroll(commands 0x26,27,29,2A) by sending 0x2E command
+ * This function applies brake to continuous page scroll command `ssd7317_cont_scroll_page()` with 0x2E
  */
-void   ssd7317_scroll_brake(void)
+void   ssd7317_cons_scroll_brake(void)
 {
 	const uint8_t cmd[1]={0x2e};
 
