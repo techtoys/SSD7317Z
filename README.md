@@ -503,17 +503,25 @@ Summary of the procedures are described here:
 
 * Under **Debug** configuration, enter **SSD7317Z** as the Variable name, set type as **Directory**, and browse to \SSD7317Z\Drivers folder
 
-* Repeat the same procedures for **Release** configuration. Click **Apply and Close** to exit.
+* Repeat the same procedures for **Release** configuration. Click **Apply and Close** to make new paths effective.
 
   <img src="./Images/NewProject_Step8.png" width=900>
 
-* Expand **C/C++ General > Paths and Symbols > Includes Tab**, set **${SSD7317Z}/Inc** as a new include directory. Do it for Debug and Release configurations.
+* Re-open the **Properties** dialog box, expand **C/C++ General > Paths and Symbols > Includes** tab, set **${SSD7317Z}/Inc** as a new include directory. Do it for Debug and Release configurations.
 
 <img src="./Images/NewProject_Step9.png" width=900>
 
-* Finally, select **Source Location** tab, click **Add Folder > select SSD7317Z**  to set **SSD7317Z** as the new source location for Debug and Release configurations. Click **Apply and Close**. 
+* Finally, select the **Source Location** tab and click **Link Folder...** button.
 
   <img src="./Images/NewProject_Step10.png" width=800>
+  
+  In the **New Folder** dialog box, check **Link to folder in the file system** <img src="./Images/Number_circle_44x44_1.png" width=24> checkbox, click **Variables...** button<img src="./Images/Number_circle_44x44_2.png" width=24> to open the Path Variable selection dialog box, click **SSD7317Z** <img src="./Images/Number_circle_44x44_3.png" width=24> to highlight it from the list and click **OK** <img src="./Images/Number_circle_44x44_4.png" width=24>twice to return to the **Source Location** tab.
+  
+  <img src="./Images/NewProject_Step10_1.png" width=800>
+  
+  A new source folder **./LCD_Image_Converter/SSD7317Z** is now available. Click **Apply and Close**.
+  
+  <img src="./Images/NewProject_Step10_2.png" width=800>
 
 The path for SSD7317Z should be resolved now. Add the following codes to `int main(void)` inside *USER CODE BEGIN x* and *USER CODE END x* markers.
 
