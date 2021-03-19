@@ -131,6 +131,7 @@ int main(void)
   //MX_SPI1_Init();
   //MX_TIM2_Init();
   /* USER CODE BEGIN 2 */
+
   ssd7317_init();
   rpc_uart_init();
 

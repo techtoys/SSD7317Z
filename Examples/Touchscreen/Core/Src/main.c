@@ -151,6 +151,7 @@ void app_touch_task(void)
 		if(!sleep){
 			tone_pwm_set(500);
 			tone_pwm_on();
+
 			if(finger.detail==SWIPE_DOWN){
 				ssd7317_put_char(ARROW_DOWN_X, ARROW_DOWN_Y, &ArialBlack_arrows, 0x21e9, 0);
 				if(counter>0) counter--;
