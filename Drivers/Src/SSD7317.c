@@ -1,8 +1,8 @@
  /****************************************************************************
 * Filename              : SSD7317.c
 * Description		: Device driver for an PMOLED with
-* 			Touch and Display Driver Integrated (TDDI)
-* 			driver IC on the same die (SSD7317)
+* 			  Touch and Display Driver Integrated (TDDI)
+* 			  driver IC on the same die (SSD7317)
 * Author                :   John Leung
 * Origin Date           :   13/02/2020
 * Version               :   1.0.0
@@ -65,9 +65,9 @@ static const uint8_t SSD7317_INIT_TBL[]=
 
 		0xd5,	//Set Front Clock Divider /Oscillator Frequency
 		0xc0,	//Parameter after 0xd5 :
-				//A[3:0] sets divide ratio of the display clock, reset value is 0000b, i.e. divide ratio=1.
-				//A[7:4] sets the oscillator frequency, reset value is 1011b in range 0000b~1111b
-				//value 0xc0 set a frame frequency 100Hz (max value 0xf0 set a frame frequency 160Hz)
+			//A[3:0] sets divide ratio of the display clock, reset value is 0000b, i.e. divide ratio=1.
+			//A[7:4] sets the oscillator frequency, reset value is 1011b in range 0000b~1111b
+			//value 0xc0 set a frame frequency 100Hz (max value 0xf0 set a frame frequency 160Hz)
 
 		0x20,	//Set Memory Addressing Mode
 		0x01,	//COM-page mode
@@ -205,30 +205,30 @@ static bool touch_event_get(void);
 /**
  * @brief
  * \b	Description:<br>
- * 		External interrupt detection callback for two cases:<br>
- * 		(1) A touch event is detected with a high-to-low edge transition on PA12 (IRQ interface).<br>
- * 		(2) Frame synchronization signal (FR) goes from low-to-high on PB0.<br>
+ * 	External interrupt detection callback for two cases:<br>
+ * 	(1) A touch event is detected with a high-to-low edge transition on PA12 (IRQ interface).<br>
+ * 	(2) Frame synchronization signal (FR) goes from low-to-high on PB0.<br>
  *
  * @param  GPIO_Pin Specifies the port pin connected to corresponding EXTI line.
  *
  * \b Note:<br>
- * 			This function overrides its "weak" counterpart declared in stm32l4xx_hal_gpio.c.
- *			for two scenario:<br>
- * 			(1) Touch event - stm32l4xx_it.c::EXTI15_10_IRQHandler() >
+ * 	This function overrides its "weak" counterpart declared in stm32l4xx_hal_gpio.c.
+ *	for two scenario:<br>
+ * 	(1) Touch event - stm32l4xx_it.c::EXTI15_10_IRQHandler() >
  * 			stm32l4xx_hal_gpio.c::HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_12) >
- * 			stm32l4xx_hal_gpio.c::HAL_GPIO_EXTI_Callback(GPIO_PIN_12).<br>
- *			(2) FR high pulse - stm32l4xx_it.c::EXTI0_IRQHandler() >
+ * 			stm32l4xx_hal_gpio.c::HAL_GPIO_EXTI_Callback(GPIO_PIN_12).<br/>
+ *	(2) FR high pulse - stm32l4xx_it.c::EXTI0_IRQHandler() >
  *			stm32l4xx_hal_gpio.c::HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_0) >
- *			stm32l4xx_hal_gpio.c::HAL_GPIO_EXTI_Callback(GPIO_PIN_0)
+ *			stm32l4xx_hal_gpio.c::HAL_GPIO_EXTI_Callback(GPIO_PIN_0).<br/>
  *
  * \b Pre-requisite:<br>
- * 			(1) External Interrupt Mode with falling edge trigger detection enabled
- * 			for TCH_GPIO_IRQ_Pin (PA12:IRQ interface for SSD7317).<br>
- * 			(2) NVIC for EXTI line[15:10] interrupts enabled.<br>
- * 			Both (1) and (2) are configured in STM32CubeMX application on SSD7317Driver.ioc.<br>
- * 			(3) External Interrupt Mode with rising edge trigger detection enabled
- * 			for OLED_GPIO_FR_Pin (PB0).<br>
- * 			(4) NVIC for EXTI line[0] interrupts enabled.<br>
+ * 	(1) External Interrupt Mode with falling edge trigger detection enabled
+ * 	for TCH_GPIO_IRQ_Pin (PA12:IRQ interface for SSD7317).<br>
+ * 	(2) NVIC for EXTI line[15:10] interrupts enabled.<br>
+ * 	Both (1) and (2) are configured in STM32CubeMX application on SSD7317Driver.ioc.<br>
+ * 	(3) External Interrupt Mode with rising edge trigger detection enabled
+ * 	for OLED_GPIO_FR_Pin (PB0).<br>
+ * 	(4) NVIC for EXTI line[0] interrupts enabled.<br>
  */
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
@@ -254,9 +254,9 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 /**
  * @brief
  * \b 	Description:<br>
- * 		Override the weak function HAL_SPI_TxCpltCallback() in stm32l4xx_hal_spi.c
- * 		for SPI transfer by DMA. The Flush_Pending_Flag is reset after SRAM copy to GDDRAM
- * 		is complete by DMA transfer.
+ * 	Override the weak function HAL_SPI_TxCpltCallback() in stm32l4xx_hal_spi.c
+ * 	for SPI transfer by DMA. The Flush_Pending_Flag is reset after SRAM copy to GDDRAM
+ * 	is complete by DMA transfer.
  */
 #ifdef USE_SPI_DMA
 void HAL_SPI_TxCpltCallback(SPI_HandleTypeDef *hspi)
@@ -274,13 +274,12 @@ void HAL_SPI_TxCpltCallback(SPI_HandleTypeDef *hspi)
  *
  * \b Example:
  * @code
- * 			int main(void)
- * 			{
- * 				HAL_Init(); //system reset
- * 				SystemClock_Config(); //Configure the system clock
- *
- * 				ssd7317_init();	//OLED display On after this function
- * 			}
+ * 		int main(void)
+ * 		{
+ * 			HAL_Init(); //system reset
+ * 			SystemClock_Config(); //Configure the system clock
+ * 			ssd7317_init();	//OLED display On after this function
+ * 		}
  * @endcode
  */
 void ssd7317_init(void){
@@ -357,13 +356,13 @@ void ssd7317_display_off(void){
  *
  * \b Example:
  * @code
- * 			int main(void)
- * 			{
- * 				HAL_Init(); //system reset
- * 				SystemClock_Config(); //Configure the system clock
- * 				ssd7317_init();	//OLED display On after this function
- * 				ssd7317_display_clear(BLACK);
- * 			}
+ * 	int main(void)
+ * 	{
+ * 		HAL_Init(); //system reset
+ * 		SystemClock_Config(); //Configure the system clock
+ * 		ssd7317_init();	//OLED display On after this function
+ * 		ssd7317_display_clear(BLACK);
+ * 	}
  * @endcode
  */
 void ssd7317_display_clear(color_t color){
@@ -386,13 +385,13 @@ void ssd7317_display_clear(color_t color){
  *
  * \b Example:
  * @code
- * 			int main(void)
- * 			{
- * 				HAL_Init(); //system reset
- * 				SystemClock_Config(); //Configure the system clock
- * 				ssd7317_init();	//OLED display On with BLACK after this function
- * 				ssd7317_set_pixel(64/2, 128/2, WHITE);
- * 			}
+ * 	int main(void)
+ * 	{
+ * 	HAL_Init(); //system reset
+ * 	SystemClock_Config(); //Configure the system clock
+ * 	ssd7317_init();	//OLED display On with BLACK after this function
+ * 	ssd7317_set_pixel(64/2, 128/2, WHITE);
+ * 	}
  * @endcode
  */
 void ssd7317_set_pixel(int16_t x, int16_t y, color_t color)
@@ -402,17 +401,17 @@ void ssd7317_set_pixel(int16_t x, int16_t y, color_t color)
 
 	fb_set_pixel(x,y,color);
 
-	fb_flush_suspend();		//wait until previous SPI flushes finished
+	fb_flush_suspend();	    //wait until previous SPI flushes finished
 
 	rect_t point = {x,y,x,y};
-	fb_flush_pending_set(point); //set flag to indicate frame buffer flush pending and wait for a FR pulse
+	fb_flush_pending_set(point);//set flag to indicate frame buffer flush pending and wait for a FR pulse
 }
 
 
 /**
  * @brief
- * \b		Description:<br>
- * 		Function to fill a region in the frame buffer with a pattern and update the GDDRAM on FR signal.<br>
+ * \b	Description:<br>
+ * 	Function to fill a region in the frame buffer with a pattern and update the GDDRAM on FR signal.<br>
  * @param area is the area to fill with (x1,y1) the top left and (x2,y2) the lower right corner (inclusive)
  * @param color is a pointer to the pattern in non-volatile media i.e. MCU's Flash
  * @param negative is a boolean parameter to display the image negative if it is 'true'
@@ -429,10 +428,10 @@ void ssd7317_fill_area(rect_t area, const color_t* color, bool negative)
 
 /**
  * @brief
- * \b		Description:<br>
- * 		Function to fill a region in the frame buffer with a single color and update the GDDRAM on FR signal.<br>
- * @param 	area is the area to fill with (x1,y1) the top left and (x2,y2) the lower right corner (inclusive)
- * @param 	color is BLACK or WHITE
+ * \b	Description:<br>
+ * 	Function to fill a region in the frame buffer with a single color and update the GDDRAM on FR signal.<br>
+ * @param area is the area to fill with (x1,y1) the top left and (x2,y2) the lower right corner (inclusive)
+ * @param color is BLACK or WHITE
  */
 void ssd7317_fill_color(rect_t area, color_t color)
 {
@@ -447,9 +446,9 @@ void ssd7317_fill_color(rect_t area, color_t color)
 
 /**
  * @brief
- * \b		Description:<br>
- * 		Function to set display contrast with default level 0x4f<br>
- * @param 	level is the contrast level from 01 ~ FFh, a higher value sets higher contrast
+ * \b	Description:<br>
+ * 	Function to set display contrast with default level 0x4f<br>
+ * @param level is the contrast level from 01 ~ FFh, a higher value sets higher contrast
  */
 void ssd7317_set_contrast(uint8_t level)
 {
@@ -611,7 +610,7 @@ static void MX_SPI1_Init(void)
   *		Initialize I2C interface for touch.
   * 		Direct copy from STM32CubeIDE Code Generation utility.
   * @param 	None
-  * @return None
+  * @return 	None
   */
 static void MX_I2C1_Init(void)
 {
@@ -646,7 +645,7 @@ static void MX_I2C1_Init(void)
   * @brief 	SPI command write (non-DMA).
   * @param 	*command points to the command array to send.
   * @param	len is the data length in byte.
-  * @return None
+  * @return 	None
   */
 void spi_write_command(const uint8_t *command, uint16_t len){
 
@@ -858,7 +857,7 @@ static void fb_clear(rect_t area, color_t color)
   * @brief
   * \b	Description:<br>
   * 	Fill GDDRAM of OLED with frame buffer content by SPI transfers<br>
-  * @param	area is the content in frame buffer to copy to GDDRAM
+  * @param area is the content in frame buffer to copy to GDDRAM
   */
 static void fb_spi_transfer(rect_t area)
 {
@@ -1026,9 +1025,9 @@ static void i2c_read(uint8_t slave, uint16_t reg, uint8_t *buffer, uint16_t len)
  * @brief
  * \b	Description:<br>
  * 	Do CRC checksum according to section 3.3.4 on datasheet<br>
- * @param 	byte_cnt is the size of PM_content, TM_content, & DM_content arrays defined in SSD7317_Init_table.c.
- * @param 	trig_cmd is the command to trigger a CRC read: PM trigger(0x03), DM trigger (0x05), TM trigger (0x09)
- * @return 	CRC value calculated by SSD7317
+ * @param byte_cnt is the size of PM_content, TM_content, & DM_content arrays defined in SSD7317_Init_table.c.
+ * @param trig_cmd is the command to trigger a CRC read: PM trigger(0x03), DM trigger (0x05), TM trigger (0x09)
+ * @return CRC value calculated by SSD7317
  */
 static uint16_t touch_crc_checksum(uint16_t byte_cnt, uint8_t trig_cmd)
 {
@@ -1352,19 +1351,19 @@ rect_t ssd7317_put_image(uint16_t left, uint16_t top, const tImage* image, bool 
  *
  * \b Example:
  * @code
- *			#include "icon_swimming.h" //this file contains the data
+ *		#include "icon_swimming.h" //this file contains the data
  *
- * 			int main(void)
- * 			{
- * 				HAL_Init(); //system reset
- * 				SystemClock_Config(); //Configure the system clock
- * 				ssd7317_init();	//OLED display On after this function
- * 				sys_put_image_direct(0, 12, &icon_swimming, 0);
+ * 		int main(void)
+ * 		{
+ * 		HAL_Init(); //system reset
+ * 		SystemClock_Config(); //Configure the system clock
+ * 		ssd7317_init();	//OLED display On after this function
+ * 		sys_put_image_direct(0, 12, &icon_swimming, 0);
  *
- * 				while(1){
- * 					;//your task here...
- * 				}
- * 			}
+ * 		while(1){
+ * 			;//your task here...
+ * 		}
+ * 		}
  * @endcode
  */
 rect_t ssd7317_put_image_direct(uint16_t left, uint16_t top, const tImage* image, bool negative)
@@ -1487,14 +1486,14 @@ void   ssd7317_cntnt_scroll_image_r(uint8_t l_margin, int16_t start_col, int16_t
 /**
  * @brief
  * \b Description:<br>
- * 		Function to continuously scrolling the screen content with a page range<br/>
- * 		This function is valid for COM-page H mode only and the hardware-specific commands 26h/27h/29h/2Ah.
+ * Function to continuously scrolling the screen content with a page range<br/>
+ * This function is valid for COM-page H mode only and the hardware-specific commands 26h/27h/29h/2Ah.
  * @param subpage defines the start page and end page address to scroll
  * @param interval sets time interval between each scroll step in terms of frame frequency from 0-7<br/>
- * 			0(6 frames), 1(32 frames), 2(64 frames), 3(128frames), 4(3 frames), 5(4 frames), 6(5 frames), 7(2 frames)
+ * 0(6 frames), 1(32 frames), 2(64 frames), 3(128frames), 4(3 frames), 5(4 frames), 6(5 frames), 7(2 frames)
  * @param accelerate is the scrolling offset from 1 row to 95 rows
  * @param dir is the SWIPE direction (SWIPE_UP or SWIPE_DOWN)
- * @note	This function comes from part of the Advanced Graphic Acceleration Command set released by Solomon Systech.<br/>
+ * @note This function comes from part of the Advanced Graphic Acceleration Command set released by Solomon Systech.<br/>
  * There are eight consecutive bytes to setup the scrolling parameters including start page, end page, start segment, end segment,
  * the command itself and some dummy bytes. There is no frame buffer operation with this function.
  */
