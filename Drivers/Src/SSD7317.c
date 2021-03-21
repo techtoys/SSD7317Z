@@ -163,8 +163,8 @@ static disp_orientation_t scr_orientation;
 /*******************************************************************************
 * Static Function Prototypes
 *******************************************************************************/
-static inline uint16_t min(uint16_t a, uint16_t b);
-static inline uint16_t max(uint16_t a, uint16_t b);
+static inline int16_t min(int16_t a, int16_t b);
+static inline int16_t max(int16_t a, int16_t b);
 
 static void MX_GPIO_Init(void);
 #ifdef USE_SPI_DMA
@@ -488,7 +488,7 @@ void ssd7317_orientation_set(disp_orientation_t rotation)
 /**
  * @brief Function to return minimum value
  */
-static inline uint16_t min(uint16_t a, uint16_t b){
+static inline int16_t min(int16_t a, int16_t b){
 	if(a>b)
 		return b;
 	return a;
@@ -496,7 +496,7 @@ static inline uint16_t min(uint16_t a, uint16_t b){
 /**
  * @brief Function to return maximum value
  */
-static inline uint16_t max(uint16_t a, uint16_t b){
+static inline int16_t max(int16_t a, int16_t b){
 	if(a<b)
 		return b;
 	return a;
@@ -811,10 +811,10 @@ static void fb_cntnt_scroll(rect_t area, rect_t win, finger_t dir)
 		if(col<(area.y2-area.y1+1)){
 			#ifdef USE_SPI_DMA
 				//DMA send = non blocking function
-				if(dir==SLIDE_DOWN){
-					HAL_StatusTypeDef err = HAL_SPI_Transmit_DMA(&hspi1, (uint8_t *)&frame_buffer[BUFIDX(area.x1,(area.y2-col))], len, 10);
+				if(dir.detail==SWIPE_DOWN){
+					HAL_SPI_Transmit_DMA(&hspi1, (uint8_t *)&frame_buffer[BUFIDX(area.x1,(area.y2-col))], len, 10);
 				}else{
-					HAL_StatusTypeDef err = HAL_SPI_Transmit_DMA(&hspi1, (uint8_t *)&frame_buffer[BUFIDX(area.x1,(area.y1+col))], len, 10);
+					HAL_SPI_Transmit_DMA(&hspi1, (uint8_t *)&frame_buffer[BUFIDX(area.x1,(area.y1+col))], len, 10);
 				}
 			#else
 				//non-DMA SPI transfer, it is a blocking function
@@ -1342,12 +1342,13 @@ rect_t ssd7317_put_image(uint16_t left, uint16_t top, const tImage* image, bool 
  * @brief
  *  \b Description:<br>
  *  		Function to draw an image of tImage type on OLED without frame buffer operation.<br/>
- *  		Pixels from Flash is copied directly to GDDRAM of the OLED.
- * @param 	left is the x coordinate of the image's top left
- * @param 	top is the y coordinate of the image's top left
+ *  		Pixels from FLASH is copied directly to GDDRAM of the OLED.
+ * @param 	left is the x coordinate of the image's top left in pixel.
+ * @param 	top is the y coordinate of the image's top left in pixel. This value can be negative.
  * @param 	*image is a pointer to tImage structure
- * @param 	negative is a boolean flag to invert the image if this parameter is 1 or 'true'
- * @return 	box bounding the image drawn
+ * @return 	None
+ * @note	No image clipping is allowed. The full image width and height should be contained within the physical viewable
+ * area of the OLED.
  *
  * \b Example:
  * @code
@@ -1358,21 +1359,40 @@ rect_t ssd7317_put_image(uint16_t left, uint16_t top, const tImage* image, bool 
  * 		HAL_Init(); //system reset
  * 		SystemClock_Config(); //Configure the system clock
  * 		ssd7317_init();	//OLED display On after this function
- * 		sys_put_image_direct(0, 12, &icon_swimming, 0);
+ * 		ssd7317_put_image_direct(0, 10, &icon_swimming); //display the icon at (0,10)
  *
  * 		while(1){
- * 			;//your task here...
+ * 			; //your task here...
  * 		}
  * 		}
  * @endcode
  */
-rect_t ssd7317_put_image_direct(uint16_t left, uint16_t top, const tImage* image, bool negative)
+void ssd7317_put_image_direct(uint16_t left, int16_t top, const tImage* image)
 {
-	rect_t area={left,top,(left+image->width-1),(top+image->height-1)};
+	if (left+image->width > OLED_HOR_RES){
+#ifdef  USE_FULL_ASSERT
+		//image out of bound
+		assert_failed((uint8_t *)__FILE__, __LINE__);
+#endif
+		return;
+	}
 
-	//pending
+	uint8_t cmd[6];
 
-	return area;
+	cmd[0] = 0x21; //set column address
+	cmd[1] = top;
+	cmd[2] = min(top+image->height-1, OLED_VER_RES-1);
+	cmd[3] = 0x22; //set page address
+	cmd[4] = left>>3;
+	cmd[5] = min((left>>3)+((image->width+7)>>3)-1, (OLED_HOR_RES>>3)-1);
+
+	spi_write_command((const uint8_t*)cmd, 6); //SPI write command for the rectangle that bounds the image
+
+	HAL_GPIO_WritePin(OLED_DC_GPIO_Port, OLED_DC_Pin, GPIO_PIN_SET);//DC pin set high for data
+
+	const uint8_t *px = image->data;
+	uint16_t byte_len = (image->height)*(image->width>>3);
+	HAL_SPI_Transmit(&hspi1, (uint8_t *)&px[0], byte_len, 10);
 }
 
 /**
@@ -1421,17 +1441,19 @@ rect_t ssd7317_cntnt_scroll_image(uint16_t left, uint16_t top, uint16_t margin, 
 /**
  * @brief
  * \b		Description:<br/>
- * 		Function to scroll an image with content scroll command 2Ch/2Dh.<br/>
+ * 		Function to scroll an image from FLASH with content scroll command 2Ch/2Dh.<br/>
  * 		This function is valid for COM-page H mode only.
- * @param	l_margin is the top left position of the image to scroll in PAGE(8-pixel width).<br/>
- * @note	Possible values are 0-11 for a screen resolution of 96*128.
- * @param	start_col is the start column(segment).
- * @param	end_col is the end column(segment).
+ * @param	l_margin is the top left position of the image to scroll in pixel.<br/>
+ * @param	start_col is the start column(segment), it is also the top segment address in native orientation of the OLED.
+ * @param	end_col is the end column(segment), it is also the bottom segment address.
  * @param 	*image is a pointer to tImage structure.
  * @param	dir is the swipe direction, either SWIPE_UP(SWIPE_RL) or SWIPE_DOWN(SWIPE_LR).
- * @note	Function pending...
+ * @note	end_col should be larger than start_col; else, the function will swap it for you.
+ * Scroll direction is controlled by dir.detail==SWIPE_DOWN / SWIPE_UP, not by end_col and start_col pair.
+ * No frame buffer operation is involved yet.
+ * A negative l_margin is not supported yet.
  */
-void   ssd7317_cntnt_scroll_image_r(uint8_t l_margin, int16_t start_col, int16_t end_col, const tImage* image, finger_t dir)
+void   ssd7317_cntnt_scroll_image_r(int16_t l_margin, int16_t start_col, int16_t end_col, const tImage* image, finger_t dir)
 {
 	if((dir.detail!=SWIPE_DOWN) && (dir.detail!=SWIPE_UP))
 	{
@@ -1441,45 +1463,80 @@ void   ssd7317_cntnt_scroll_image_r(uint8_t l_margin, int16_t start_col, int16_t
 		return;
 	}
 
-	if(l_margin > ((OLED_HOR_RES>>3)-1)){
+	if(l_margin > (OLED_HOR_RES-1)){
 #ifdef  USE_FULL_ASSERT
 		assert_failed((uint8_t *)__FILE__, __LINE__);
 #endif
 		return;
+	}else{
+		l_margin = l_margin>>3;
 	}
+
 	uint8_t cmd[8]; //command sequence to send to OLED to scroll an image
 
-	//get abs(end_col-start_col) w/o stdlib.h
-	uint16_t scroll_h = ((end_col-start_col)<0)?(-(end_col-start_col)):(end_col-start_col);
-	const uint8_t *px = image->data;
+	int16_t _start_col = start_col;
+	int16_t _end_col = end_col;
 
+	if(start_col > end_col){
+		_start_col = end_col;
+		_end_col = start_col;
+	}
+
+	_end_col = min(_end_col, OLED_VER_RES-1); //bound the end column to the OLED's bottom
+
+	if(_start_col < 0){
+		_start_col = - min(-_start_col,image->height); //bound the start column to the image height higher than OLED's top
+	}
+
+	const uint8_t *px = image->data;
 	uint16_t byte_w = min((OLED_HOR_RES>>3)-l_margin, (image->width)>>3);
 
-	for(uint16_t col=0; col<(scroll_h+1); col++)
-	{
-		/*Scroll the area first */
-		(dir.detail==SWIPE_DOWN)?(cmd[0]=0x2c):(cmd[0]=0x2d); //content scrolling command
-		cmd[1]=0; 			//dummy byte
-		cmd[2]=l_margin;	//start page address
-		cmd[3]=0x01; 		//no wrap around of RAM content
-		cmd[4]=l_margin+(uint8_t)byte_w-1;
-		cmd[5]=0;			//another dummy byte
-		cmd[6]=min(start_col, OLED_VER_RES-1);	//start column address in pixels
-		cmd[7]=min(end_col, OLED_VER_RES-1);	//end column address in pixels
-		spi_write_command((const uint8_t*)cmd, 8); //scroll it
+	uint8_t pad[byte_w]; //pad is useful when scrolling height is larger than the image height
+	memset((uint8_t *)&pad, BLACK, byte_w);
 
+	for(uint16_t col=0; col<(_end_col-_start_col+1); col++)
+	{
+		/* Area setup for the line to write */
+		cmd[0]=0x21;
+		if(dir.detail==SWIPE_DOWN){
+			cmd[1]=max(_start_col, 0); //only a line is written in scrolling therefore cmd[1]=cmd[2]
+			cmd[2]=max(_start_col, 0); //on SWIPE_DOWN, the top line is written
+		}else{
+			cmd[1]=_end_col; //on SWIPE_UP, the bottom line is written
+			cmd[2]=_end_col;
+		}
+
+		cmd[3]=0x22;
+		cmd[4]=l_margin;
+		cmd[5]=l_margin+(uint8_t)byte_w-1;
+		spi_write_command((const uint8_t*)cmd, 6); //define the line to write data from the bottom
+
+		HAL_GPIO_WritePin(OLED_DC_GPIO_Port, OLED_DC_Pin, GPIO_PIN_SET);//DC pin set high for data
 		if(col<image->height)
 		{
 			/* Write pixels from FLASH to GDDRAM */
-			cmd[0]=0x21;
-			cmd[1]=min(end_col, OLED_VER_RES-1);
-			cmd[2]=min(end_col, OLED_VER_RES-1);
-			cmd[3]=0x22;
-			cmd[4]=l_margin;
-			cmd[5]=l_margin+(uint8_t)byte_w-1;
-			spi_write_command((const uint8_t*)cmd, 6); //define the line to write data from the bottom
-			HAL_SPI_Transmit(&hspi1, (uint8_t *)&px[BUFIDX(0,col)], byte_w, 10);
+			if(dir.detail==SWIPE_DOWN){
+				HAL_SPI_Transmit(&hspi1, (uint8_t *)&px[(image->height-1-col)*(image->width>>3)], byte_w, 10);
+			}else{
+				HAL_SPI_Transmit(&hspi1, (uint8_t *)&px[col*(image->width>>3)], byte_w, 10);
+			}
+		}else{
+			/* Padding the area larger than image height */
+			HAL_SPI_Transmit(&hspi1, (uint8_t *)&pad, byte_w, 10);
 		}
+
+		/* Scroll the area */
+		(dir.detail==SWIPE_DOWN)?(cmd[0]=0x2c):(cmd[0]=0x2d); //content scrolling command
+		cmd[1]=0; 			//dummy byte
+		cmd[2]=l_margin;	//left page margin
+		cmd[3]=0x01; 		//no wrap around of RAM content
+		cmd[4]=l_margin+(uint8_t)byte_w-1;
+		cmd[5]=0;			//another dummy byte
+		cmd[6]=max(_start_col, 0);	//start column address in pixels
+		cmd[7]=min(_end_col, OLED_VER_RES-1);	//end column address in pixels
+		spi_write_command((const uint8_t*)cmd, 8); //scroll it
+
+		HAL_Delay(15); //Data sheet tells us a delay of 20ms is required. Actual experiments show 15ms is also good.
 	}
 }
 
