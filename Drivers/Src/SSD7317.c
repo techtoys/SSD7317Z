@@ -1344,11 +1344,14 @@ rect_t ssd7317_put_image(uint16_t left, uint16_t top, const tImage* image, bool 
  *  		Function to draw an image of tImage type on OLED without frame buffer operation.<br/>
  *  		Pixels from FLASH is copied directly to GDDRAM of the OLED.
  * @param 	left is the x coordinate of the image's top left in pixel.
- * @param 	top is the y coordinate of the image's top left in pixel. This value can be negative.
+ * @param 	top is the y coordinate of the image's top left in pixel.
+ * @note	This value can be negative particularly designed for swipe up/down event with an icon scrolling off-screen.
  * @param 	*image is a pointer to tImage structure
  * @return 	None
- * @note	No image clipping is allowed. The full image width and height should be contained within the physical viewable
- * area of the OLED.
+ * @note	Need to apply a trick if we want to scroll an icon without messing up the screen -
+ * pad at least one blank line (BLACK) each at the top and bottom of the icon to reset the dirty area
+ * when the icon moves across.
+ *
  *
  * \b Example:
  * @code
@@ -1359,10 +1362,20 @@ rect_t ssd7317_put_image(uint16_t left, uint16_t top, const tImage* image, bool 
  * 		HAL_Init(); //system reset
  * 		SystemClock_Config(); //Configure the system clock
  * 		ssd7317_init();	//OLED display On after this function
- * 		ssd7317_put_image_direct(0, 10, &icon_swimming); //display the icon at (0,10)
  *
  * 		while(1){
- * 			; //your task here...
+ *
+ * 		int y; //a negative value is allowed to show an icon scrolling off-screen
+ *
+ * 		for(y=-64; y<193; y++){
+ * 		ssd7317_put_image_direct((96-64)/2,y,&icon_swimming);
+ * 		HAL_Delay(2);
+ * 		}
+ *
+ * 		for(y=192; y>-65; y--){
+ * 		ssd7317_put_image_direct((96-64)/2,y,&icon_swimming);
+ * 		HAL_Delay(2);
+ * 		}
  * 		}
  * 		}
  * @endcode
@@ -1375,6 +1388,20 @@ void ssd7317_put_image_direct(uint16_t left, int16_t top, const tImage* image)
 		assert_failed((uint8_t *)__FILE__, __LINE__);
 #endif
 		return;
+	}
+
+	uint16_t top_margin = 0;
+	uint16_t bottom_margin = 0;
+
+	if(top < 0){
+		//bound the top to the image height above OLED's y=0
+		top_margin = min(-top, image->height);
+		top = 0;
+	}
+
+	if((top+image->height) > OLED_VER_RES){
+		//bound the bottom to the image height below OLED's y=OLED_VER_RES
+		bottom_margin = min(top+image->height-OLED_VER_RES, image->height);
 	}
 
 	uint8_t cmd[6];
@@ -1391,8 +1418,8 @@ void ssd7317_put_image_direct(uint16_t left, int16_t top, const tImage* image)
 	HAL_GPIO_WritePin(OLED_DC_GPIO_Port, OLED_DC_Pin, GPIO_PIN_SET);//DC pin set high for data
 
 	const uint8_t *px = image->data;
-	uint16_t byte_len = (image->height)*(image->width>>3);
-	HAL_SPI_Transmit(&hspi1, (uint8_t *)&px[0], byte_len, 10);
+	uint16_t byte_len = (image->height - top_margin - bottom_margin)*(image->width>>3);
+	HAL_SPI_Transmit(&hspi1, (uint8_t *)&px[((image->width)>>3)*top_margin], byte_len, 10);
 }
 
 /**
@@ -1450,8 +1477,8 @@ rect_t ssd7317_cntnt_scroll_image(uint16_t left, uint16_t top, uint16_t margin, 
  * @param	dir is the swipe direction, either SWIPE_UP(SWIPE_RL) or SWIPE_DOWN(SWIPE_LR).
  * @note	end_col should be larger than start_col; else, the function will swap it for you.
  * Scroll direction is controlled by dir.detail==SWIPE_DOWN / SWIPE_UP, not by end_col and start_col pair.
- * No frame buffer operation is involved yet.
- * A negative l_margin is not supported yet.
+ * No frame buffer operation is involved.
+ * A negative l_margin is not supported.
  */
 void   ssd7317_cntnt_scroll_image_r(int16_t l_margin, int16_t start_col, int16_t end_col, const tImage* image, finger_t dir)
 {

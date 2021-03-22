@@ -29,7 +29,6 @@
 #endif
 #include "stdbool.h"
 #include "Tahoma_12h.h"
-
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
