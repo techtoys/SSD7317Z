@@ -181,9 +181,6 @@ static void fb_set_pixel(int16_t x, int16_t y, color_t color);
 static void fb_fill_area(rect_t area, const color_t* color, bool negative);
 static void fb_clear(rect_t area, color_t color);
 
-static void fb_seg_cpy(uint16_t dest_y_top, uint16_t dest_y_bottom, uint16_t src_y_top, uint16_t src_y_bottom);
-static void fb_cntnt_scroll(rect_t area, rect_t win, finger_t dir);
-
 static void fb_spi_transfer(rect_t area);
 
 static void fb_flush_pending_set(rect_t area);
@@ -731,99 +728,6 @@ static void fb_fill_area(rect_t area, const color_t* color, bool negative)
 				(pixel&0x01)?(_color=WHITE):(_color=BLACK);
 			}
 				fb_set_pixel(area.x1+x, area.y1+y, _color);
-		}
-	}
-}
-
-/**
- * @brief
- * \b		Description:<br>
- * 		Local function to scroll framebuffer's contents to GDDRAM with the scrolling command (2Ch/2Dh).
- * 		This function is valid for COM-page H mode only.<br/>
- * 		There is a delay(blocking) time of 15ms in this function!
- * @param	fb_area (in pixels) in frame buffer to copy from.
- * @param	win is the window (in pixels) on screen for scrolling.
- * @param	dir is the swipe direction, either SWIPE_UP(SWIPE_RL) or SWIPE_DOWN(SWIPE_LR).
- * @note	This function comes from part of the Advanced Graphic Acceleration Command set released by Solomon Systech.<br/>
- * There are seven consecutive bytes to setup the scrolling parameters including start page, end page, start segment, end segment,
- * the command itself(2Ch/2Dh) and some dummy bytes. Contents are copied from the frame buffer `fb_area` to OLED window `win` in
- * a scrolling manner with this function.
- */
-static void fb_cntnt_scroll(rect_t area, rect_t win, finger_t dir)
-{
-	if((dir.detail!=SWIPE_DOWN) && (dir.detail!=SWIPE_UP))
-	{
-#ifdef  USE_FULL_ASSERT
-		assert_failed((uint8_t *)__FILE__, __LINE__);
-#endif
-		return;
-	}
-	
-	//scrolling window in pixels
-	rect_t scroll;
-
-	//bound the fb_area to physical screen size and take the minimum of content width(framebuffer width) v.s. (OLED_HOR_RES-1)
-	scroll.y1 = win.y1;
-	scroll.y2 = min(win.y2, OLED_VER_RES-1);
-	scroll.x1 = win.x1;
-	//take the min of window width v.s. framebuffer width
-	uint16_t w = min((win.x2-win.x1+1),(area.x2-area.x1+1));
-	scroll.x2 = min((win.x1+w-1),OLED_HOR_RES-1);
-
-	if((scroll.y1>=scroll.y2) || (scroll.x1>=scroll.x2)){
-#ifdef USE_FULL_ASSERT
-		assert_failed((uint8_t *)__FILE__, __LINE__);
-#endif
-		return;
-	}
-
-	uint8_t cmd[8];
-
-	cmd[0] = 0x21;	//Set column address
-	if(dir.detail==SWIPE_DOWN){
-		cmd[1]=cmd[2]=scroll.y1;
-	}else{
-		cmd[1]=cmd[2]=scroll.y2;
-	}
-	cmd[3] = 0x22;	//Set page address
-	cmd[4] = BUFIDX(scroll.x1,0);
-	cmd[5] = BUFIDX(scroll.x2,0);
-	spi_write_command((const uint8_t *)&cmd, 6);
-
-	//length of pages across the COM direction to copy from framebuffer to screen
-	uint16_t len = BUFIDX(scroll.x2,0)-BUFIDX(scroll.x1,0)+1;
-
-	for(uint16_t col=0; col<(scroll.y2-scroll.y1+1); col++){
-		if(dir.detail==SWIPE_DOWN){
-			cmd[0] = 0x2c;
-		}else{
-			cmd[0] = 0x2d;
-		}
-		cmd[1]=0x00; cmd[2]=BUFIDX(scroll.x1,0); cmd[3]=0x01; cmd[4]=BUFIDX(scroll.x2,0); cmd[5]=0x00; cmd[6]=scroll.y1; cmd[7]=scroll.y2;
-
-		//Send command to scroll by 1 column (segment)
-		spi_write_command((const uint8_t*)cmd, 8);
-		//delay for a 2/frame_freq = 2/100Hz = 20ms
-		HAL_Delay(15); //15ms is still good from tests
-		//DC pin set high for data send in next SPI transfer
-		HAL_GPIO_WritePin(OLED_DC_GPIO_Port, OLED_DC_Pin, GPIO_PIN_SET);
-
-		if(col<(area.y2-area.y1+1)){
-			#ifdef USE_SPI_DMA
-				//DMA send = non blocking function
-				if(dir.detail==SWIPE_DOWN){
-					HAL_SPI_Transmit_DMA(&hspi1, (uint8_t *)&frame_buffer[BUFIDX(area.x1,(area.y2-col))], len, 10);
-				}else{
-					HAL_SPI_Transmit_DMA(&hspi1, (uint8_t *)&frame_buffer[BUFIDX(area.x1,(area.y1+col))], len, 10);
-				}
-			#else
-				//non-DMA SPI transfer, it is a blocking function
-				if(dir.detail==SWIPE_DOWN){
-					HAL_SPI_Transmit(&hspi1, (uint8_t *)&frame_buffer[BUFIDX(area.x1,(area.y2-col))], len, 10);
-				}else{
-					HAL_SPI_Transmit(&hspi1, (uint8_t *)&frame_buffer[BUFIDX(area.x1,(area.y1+col))], len, 10);
-				}
-			#endif
 		}
 	}
 }
@@ -1425,52 +1329,9 @@ void ssd7317_put_image_direct(uint16_t left, int16_t top, const tImage* image)
 /**
  * @brief
  * \b		Description:<br/>
- * 		Function to scroll an image with content scroll command 2Ch/2Dh.<br/>
- * 		This function is valid for COM-page H mode only.
- * @param 	left is the x coordinate of the image's top left at its final position.
- * @param 	top is the y coordinate of the image's top left at its final position.
- * @param	margin is the top/bottom gap to restrain from scrolling
- * @param 	*image is a pointer to tImage structure.
- * @param	dir is the swipe direction, either SWIPE_UP(SWIPE_RL) or SWIPE_DOWN(SWIPE_LR).
- */
-rect_t ssd7317_cntnt_scroll_image(uint16_t left, uint16_t top, uint16_t margin, const tImage* image, finger_t dir)
-{
-	rect_t area={left,top,(left+image->width-1),(top+image->height-1)};
-
-	if((dir.detail!=SWIPE_DOWN) && (dir.detail!=SWIPE_UP))
-	{
-#ifdef  USE_FULL_ASSERT
-		assert_failed((uint8_t *)__FILE__, __LINE__);
-#endif
-		return area;
-	}
-
-	rect_t win;
-	win.x1 = area.x1;
-	win.x2 = area.x2;
-	if(dir.detail==SWIPE_DOWN){
-		win.y1 = margin;
-		win.y2 = area.y2;
-	}else{
-		//SWIPE_UP
-		win.y1 = area.y1;
-		win.y2 = OLED_VER_RES-1-min(margin, (OLED_VER_RES-1));
-	}
-
-	//put image to frame buffer first
-	fb_fill_area(area,image->data,0);
-
-	fb_cntnt_scroll(area, win, dir);
-
-	return area;
-}
-
-/**
- * @brief
- * \b		Description:<br/>
  * 		Function to scroll an image from FLASH with content scroll command 2Ch/2Dh.<br/>
  * 		This function is valid for COM-page H mode only.
- * @param	l_margin is the top left position of the image to scroll in pixel.<br/>
+ * @param	left is the top left position of the image to scroll in pixel.<br/>
  * @param	start_col is the start column(segment), it is also the top segment address in native orientation of the OLED.
  * @param	end_col is the end column(segment), it is also the bottom segment address.
  * @param 	*image is a pointer to tImage structure.
@@ -1478,9 +1339,8 @@ rect_t ssd7317_cntnt_scroll_image(uint16_t left, uint16_t top, uint16_t margin, 
  * @note	end_col should be larger than start_col; else, the function will swap it for you.
  * Scroll direction is controlled by dir.detail==SWIPE_DOWN / SWIPE_UP, not by end_col and start_col pair.
  * No frame buffer operation is involved.
- * A negative l_margin is not supported.
  */
-void   ssd7317_cntnt_scroll_image_r(int16_t l_margin, int16_t start_col, int16_t end_col, const tImage* image, finger_t dir)
+void   ssd7317_cntnt_scroll_image_r(uint16_t left, int16_t start_col, int16_t end_col, const tImage* image, finger_t dir)
 {
 	if((dir.detail!=SWIPE_DOWN) && (dir.detail!=SWIPE_UP))
 	{
@@ -1490,13 +1350,13 @@ void   ssd7317_cntnt_scroll_image_r(int16_t l_margin, int16_t start_col, int16_t
 		return;
 	}
 
-	if(l_margin > (OLED_HOR_RES-1)){
+	if(left > (OLED_HOR_RES-1)){
 #ifdef  USE_FULL_ASSERT
 		assert_failed((uint8_t *)__FILE__, __LINE__);
 #endif
 		return;
 	}else{
-		l_margin = l_margin>>3;
+		left = left>>3;
 	}
 
 	uint8_t cmd[8]; //command sequence to send to OLED to scroll an image
@@ -1516,7 +1376,7 @@ void   ssd7317_cntnt_scroll_image_r(int16_t l_margin, int16_t start_col, int16_t
 	}
 
 	const uint8_t *px = image->data;
-	uint16_t byte_w = min((OLED_HOR_RES>>3)-l_margin, (image->width)>>3);
+	uint16_t byte_w = min((OLED_HOR_RES>>3)-left, (image->width)>>3);
 
 	uint8_t pad[byte_w]; //pad is useful when scrolling height is larger than the image height
 	memset((uint8_t *)&pad, BLACK, byte_w);
@@ -1534,8 +1394,8 @@ void   ssd7317_cntnt_scroll_image_r(int16_t l_margin, int16_t start_col, int16_t
 		}
 
 		cmd[3]=0x22;
-		cmd[4]=l_margin;
-		cmd[5]=l_margin+(uint8_t)byte_w-1;
+		cmd[4]=left;
+		cmd[5]=left+(uint8_t)byte_w-1;
 		spi_write_command((const uint8_t*)cmd, 6); //define the line to write data from the bottom
 
 		HAL_GPIO_WritePin(OLED_DC_GPIO_Port, OLED_DC_Pin, GPIO_PIN_SET);//DC pin set high for data
@@ -1555,9 +1415,9 @@ void   ssd7317_cntnt_scroll_image_r(int16_t l_margin, int16_t start_col, int16_t
 		/* Scroll the area */
 		(dir.detail==SWIPE_DOWN)?(cmd[0]=0x2c):(cmd[0]=0x2d); //content scrolling command
 		cmd[1]=0; 			//dummy byte
-		cmd[2]=l_margin;	//left page margin
+		cmd[2]=left;	//left page margin
 		cmd[3]=0x01; 		//no wrap around of RAM content
-		cmd[4]=l_margin+(uint8_t)byte_w-1;
+		cmd[4]=left+(uint8_t)byte_w-1;
 		cmd[5]=0;			//another dummy byte
 		cmd[6]=max(_start_col, 0);	//start column address in pixels
 		cmd[7]=min(_end_col, OLED_VER_RES-1);	//end column address in pixels
@@ -1806,65 +1666,3 @@ void   ssd7317_get_stringsize(const tFont* font, const char *str, uint16_t *w, u
 	*w = _x;
 	*h = _h;
 }
-
-/**
- * @brief
- * \b Description:<br/>
- * Copy contents of frame buffer from source to destination in segments.<br/>
- * That means contents of the full width of the OLED screen (0-OLED_HOR_RES-1) are copied.
- * @param dest_y_top & dest_y_bottom define the destination's top and bottom segments (inclusive)
- * @param src_y_top & src_y_bottom define the source's top and bottom segments (inclusive)
- * @note Function test pending...
- */
-static void fb_seg_cpy(uint16_t dest_y_top, uint16_t dest_y_bottom, uint16_t src_y_top, uint16_t src_y_bottom)
-{
-	uint16_t min_seg_h = min((src_y_bottom-src_y_top+1), (dest_y_bottom-dest_y_top+1)); //take the minimum segment height
-
-	uint16_t len = (OLED_HOR_RES>>3)*min_seg_h;
-
-	color_t *pdest = &frame_buffer[BUFIDX(0, dest_y_top)];
-	color_t *psrc  = &frame_buffer[BUFIDX(0, src_y_top)];
-
-	while(len--){
-		*pdest++ = *psrc++;
-	}
-
-	rect_t area = {0,dest_y_top,0,dest_y_top+min_seg_h-1};
-	//fb_flush_suspend();	//wait until previous SPI flushes finished
-	fb_flush_pending_set(area); //set flag to indicate frame buffer flush pending and wait for a FR pulse
-}
-
-/**
- * @brief	Pending...
- */
-rect_t ssd7317_fb_scroll_image(uint16_t start, uint16_t end, const tImage* image, finger_t dir)
-{
-	rect_t area={0,0,(image->width-1),(image->height-1)};
-
-	if((dir.detail!=SWIPE_DOWN) && (dir.detail!=SWIPE_UP))
-	{
-#ifdef  USE_FULL_ASSERT
-		assert_failed((uint8_t *)__FILE__, __LINE__);
-#endif
-		return area;
-	}
-
-	//put image to frame buffer first
-	fb_fill_area(area,image->data,0); //copy to scrap pad or something
-	uint16_t i;
-	if(start>end){
-		for(i=start; i>end+1; i--){
-				HAL_Delay(1);
-				fb_seg_cpy(i,i+image->height-1,0,image->height-1);
-		}
-	}else{
-		for(i=start; i<end+1; i++){
-				HAL_Delay(1);
-				fb_seg_cpy(i,i+image->height-1,0,image->height-1);
-		}
-	}
-
-
-	return area;
-}
-
