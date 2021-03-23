@@ -1340,7 +1340,7 @@ void ssd7317_put_image_direct(uint16_t left, int16_t top, const tImage* image)
  * Scroll direction is controlled by dir.detail==SWIPE_DOWN / SWIPE_UP, not by end_col and start_col pair.
  * No frame buffer operation is involved.
  */
-void   ssd7317_cntnt_scroll_image_r(uint16_t left, int16_t start_col, int16_t end_col, const tImage* image, finger_t dir)
+void   ssd7317_cntnt_scroll_image(uint16_t left, int16_t start_col, int16_t end_col, const tImage* image, finger_t dir)
 {
 	if((dir.detail!=SWIPE_DOWN) && (dir.detail!=SWIPE_UP))
 	{
@@ -1666,3 +1666,4 @@ void   ssd7317_get_stringsize(const tFont* font, const char *str, uint16_t *w, u
 	*w = _x;
 	*h = _h;
 }
+

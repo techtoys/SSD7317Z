@@ -199,9 +199,9 @@ Running the code above will switch 8 pixels at the top left corner to WHITE like
 4. Line 4 `spi_write_command((const uint8_t *)cmd, 3)` sends over `0x22 0x00 0x00` to set the COM address to the first PAGE.
 5. In Line 5, `spi_write_data((const uint8_t*)&data, 1)` is applied to send 0xFF over with D/C# driven high. Result: eight pixels across the horizontal direction are set to WHITE.
 
-**Sending commands to OLED with Remote Procedure Call (RPC)**
+### Send command by Remote Procedure Call (RPC)
 
-To verify the code above, you may download a serial terminal program YAT (YET Another Terminal) from [SOURCEFORGE](https://sourceforge.net/projects/y-a-terminal/) and get it installed. There is a Remote Procedure Call function running in the main loop to convert all serial commands to their equivalent SPI commands. 
+There is a Remote Procedure Call function (`rpc_main_task()`) running in the main loop to convert all serial commands to their equivalent SPI commands. You may download a serial terminal program YAT (YET Another Terminal) from [SOURCEFORGE](https://sourceforge.net/projects/y-a-terminal/) and get it installed. 
 
 Keep the **HelloWorld** program running in debug mode , launch YAT and make sure **Port Settings** (under Terminal Settings) is set to the **STLink Virtual COM Port** enumerated in your PC. In my case it is COM96 but it would be different in your environment. Set baud rate to **115200, 8-n-1** with Flow Control set to None. Terminal Type set to **Text** and Port Type set **Serial COM Port**.
 
@@ -309,12 +309,13 @@ static const uint8_t image_data_Tahoma_12h_0x48[14] = {
     0x00
 };
 ```
-From a broad perspective, we just need to transfer the byte pattern of **H** `{0x00 0x00 0x00 0x41 ...0x00}` from the MCU's FLASH to OLED's GDDRAM by calling `spi_write_data()` and repeat for the remaining characters to get **Hello World** displayed.
+From a broad perspective, we just need to transfer the byte pattern of **H** `{0x00 0x00 0x00 0x41 ...0x00}` from the MCU's FLASH to OLED's GDDRAM by calling `spi_write_data()` and repeat the function for the remaining characters to get **Hello World** displayed.
  <img src="./Images/How_px_mapped2_FLASH.png" width=900>
-There are at least two problems with this approach:
+We have a custom-made function for that (in **SSD7317.c**):
 
-1. Reading from the FLASH is always slower than reading from SRAM of an MCU. A longer data reading time leads to slower pixel rendering
-2. Graphical contents of the GUI is not saved
+`void ssd7317_put_image_direct(uint16_t left, int16_t top, const tImage* image)`.
+
+It is a simple approach to draw characters and images but there an issue with this approach - there is no buffer for the graphical contents. To display **Hello World** in the example above, the MCU will repeat the same character rendering procedure for eleven iterations across the screen and you will see pixels raster across the screen.
 
 To solve these problems, a frame buffer is declared from MCU's SRAM as a map to the OLED's GDDRAM. Pixels are not written directly to the screen; instead, any graphical content to be updated is written to the frame buffer first and the modified contents in `frame_buffer[]` are flushed from SRAM to GDDRAM by SPI transfer on an FR rising edge to synchronize the blanking period of the OLED. With this approach, the speed of data transfer is faster because it is now data copy from SRAM to OLED's GDDRAM. DMA can be applied to further shorten SPI transfer latency. Synchronization to an FR rising edge also avoids display [tearing](https://en.wikipedia.org/wiki/Screen_tearing). 
 
@@ -905,7 +906,7 @@ After POR, the API to get touch gesture `ssd7317_get_gesture()` is executed:
 
 https://youtu.be/SL3LxhRAtbs
 
-## Infinite Contents Scrolling
+## Infinite Content Scrolling
 
 Pending
 

@@ -25,9 +25,15 @@ typedef struct {
 	} tChar;
 
 typedef struct {
-    int length;
+    int length; //number of characters
     const tChar *chars;
 	} tFont;
+
+typedef struct {
+	uint8_t index; //current image index
+	const char *name; //name of the image
+	const tImage *image;
+	} tIcon;
 
 #ifdef __cplusplus
 }
