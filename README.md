@@ -1,4 +1,4 @@
-SSD7317Z
+## SSD7317Z
 
 is a controller IC designed by [Solomon Systech Ltd.](https://www.solomon-systech.com/) with touch screen and display controller circuits fabricated on the same die. Photo below shows a conventional *out-cell* screen with separated touch screen and LCD module on the left versus the *in-cell* screen with a single Touch and Display Driver Integration (TDDI) IC driver on the right.
 
@@ -901,7 +901,6 @@ After POR, the API to get touch gesture `ssd7317_get_gesture()` is executed:
 | <img src="./Images/Number_circle_44x44_6.png" width=30> | With a swipe-down gesture, the counter is decremented `(counter--)` with a DOWN arrow displayed `ssd7317_put_char(ARROW_DOWN_X, ARROW_DOWN_Y, &ArialBlack_arrows, 0x21e9, 0)` at the upper-left corner. Similarly with a swipe-up gesture, the counter is incremented and an UP arrow displayed. The integer `counter` is converted to a string by `snprintf()` for printout. |
 | <img src="./Images/Number_circle_44x44_7.png" width=30> | This code paints the background BLACK by `ssd7317_fill_color(label_bg, BLACK)`. |
 | <img src="./Images/Number_circle_44x44_8.png" width=30> | This code draws the `counter` as a string by `ssd7317_put_string()`. |
-
 ### Demo on YouTube
 [![Watch th video](https://img.youtube.com/vi/SL3LxhRAtbs/hqdefault.jpg)](https://youtu.be/SL3LxhRAtbs)
 
