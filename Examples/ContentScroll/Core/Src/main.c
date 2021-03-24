@@ -105,17 +105,17 @@ const tIcon icons[ICON_MAX] = {
 };
 
 #define LABEL_X 0
-#define LABEL_Y 20
+#define LABEL_Y 10
 
 void app_touch_task(void)
 {
 	static bool sleep = false;
 	static bool por = true;
+	static bool cons_scroll = false;
 	static uint8_t icon_index = 0;
 	static char str[5];
 	uint16_t label_w, label_h;
 	ssd7317_get_stringsize(&ArialBlack_36h, "0000", &label_w, &label_h);
-	//rect_t label_bg = {LABEL_X, LABEL_Y, LABEL_X+label_w-1,LABEL_Y+label_h-1};
 
 	if(por){
 		snprintf(str, 3, "%d", icon_index);
@@ -138,22 +138,49 @@ void app_touch_task(void)
 			sleep=false;
 		}
 		break;
+	case SINGLE_TAP_ANYKEY:
+		if(cons_scroll){
+			ssd7317_cons_scroll_brake();
+			cons_scroll=false;
+			tone_pwm_off();
+		}else{
+			tone_pwm_set(1000);
+			tone_pwm_on();
+			ssd7317_put_image(16,64, icons[icon_index].image, 1);
+			tone_pwm_set(500);
+			HAL_Delay(50);
+			ssd7317_put_image(16,64, icons[icon_index].image, 0);
+			tone_pwm_off();
+		}
+		break;
 	case SWIPE:
 		if(!sleep){
-		tone_pwm_set(500);
-		tone_pwm_on();
-		if(finger.detail==SWIPE_DOWN){
-			icon_index++;
-			icon_index%=ICON_MAX;
-		}else{
-			icon_index--;
-			if(icon_index>ICON_MAX-1) icon_index=ICON_MAX-1;
+			if(finger.tap_down_key!=finger.tap_up_key){
+				tone_pwm_set(500);
+				tone_pwm_on();
+				if(finger.detail==SWIPE_DOWN){
+					icon_index++;
+					icon_index%=ICON_MAX;
+				}else{
+					icon_index--;
+					if(icon_index>ICON_MAX-1) icon_index=ICON_MAX-1;
+				}
+				snprintf(str, 3, "%d", icon_index);
+				ssd7317_put_string(LABEL_X,LABEL_Y,&ArialBlack_36h,str,0);
+				ssd7317_cntnt_scroll_image(16,64,127,icons[icon_index].image,finger);
+				tone_pwm_off();
+			}else{
+				rect_t full_page={0,0,OLED_HOR_RES-1,OLED_VER_RES-1};
+				ssd7317_cons_scroll_page(full_page,7,5,finger);
+				cons_scroll = true;
+				tone_pwm_set(200);
+				tone_pwm_on();
+			}
 		}
-		snprintf(str, 3, "%d", icon_index);
-		ssd7317_put_string(LABEL_X,LABEL_Y,&ArialBlack_36h,str,0);
-		ssd7317_cntnt_scroll_image(16,64,127,icons[icon_index].image,finger);
-		tone_pwm_off();
-		}
+		break;
+	case LARGE_OBJ:
+	case ACT_ERROR:
+		/* Your action to handle large object or act error*/
 		break;
 	}
 }

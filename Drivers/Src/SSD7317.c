@@ -710,13 +710,27 @@ static void fb_set_pixel(int16_t x, int16_t y, color_t color)
  */
 static void fb_fill_area(rect_t area, const color_t* color, bool negative)
 {
-	uint16_t width_in_byte = ((area.x2-area.x1+1) +7)>>3;
+	uint8_t  byte_w = ((area.x2-area.x1+1) +7)>>3;
 	uint8_t  pixel, bit_position;
 	color_t _color;
 
+	for(uint16_t y=area.y1; y<min(area.y2+1,OLED_VER_RES); y++){
+		for(uint16_t x=area.x1; x<min(area.x2+1,OLED_HOR_RES); x++){
+			pixel = color[((y-area.y1)*byte_w)+BUFIDX((x-area.x1),0)];
+			bit_position = (x-area.x1)%8;
+			pixel = pixel>>bit_position; //right shift to the lowest bit for comparison
+			if(negative){
+				(pixel&0x01)?(_color=BLACK):(_color=WHITE);
+			}else{
+				(pixel&0x01)?(_color=WHITE):(_color=BLACK);
+			}
+			fb_set_pixel(x,y,_color);
+		}
+	}
+/*
 	for(uint16_t y=0; y<(area.y2-area.y1+1); y++){
 		for(uint16_t x=0; x<(area.x2-area.x1+1); x++){
-			pixel = color[(y*width_in_byte) + BUFIDX(x,0)];
+			pixel = color[(y*byte_w) + BUFIDX(x,0)];
 			//pixel = BIT_REVERSE(pixel); //if there is no software setup to flip the bit, uncomment this line
 			bit_position = x%8;
 			pixel = pixel>>bit_position; //right shift to the lowest bit for comparison
@@ -730,6 +744,7 @@ static void fb_fill_area(rect_t area, const color_t* color, bool negative)
 				fb_set_pixel(area.x1+x, area.y1+y, _color);
 		}
 	}
+*/
 }
 
 /**
@@ -1331,7 +1346,7 @@ void ssd7317_put_image_direct(uint16_t left, int16_t top, const tImage* image)
  * \b		Description:<br/>
  * 		Function to scroll an image from FLASH with content scroll command 2Ch/2Dh.<br/>
  * 		This function is valid for COM-page H mode only.
- * @param	left is the top left position of the image to scroll in pixel.<br/>
+ * @param	left is the top left position of the image to scroll in pixel, only valid in a multiple of 8.<br/>
  * @param	start_col is the start column(segment), it is also the top segment address in native orientation of the OLED.
  * @param	end_col is the end column(segment), it is also the bottom segment address.
  * @param 	*image is a pointer to tImage structure.
@@ -1350,13 +1365,15 @@ void   ssd7317_cntnt_scroll_image(uint16_t left, int16_t start_col, int16_t end_
 		return;
 	}
 
+	uint8_t page_start = 0;
+
 	if(left > (OLED_HOR_RES-1)){
 #ifdef  USE_FULL_ASSERT
 		assert_failed((uint8_t *)__FILE__, __LINE__);
 #endif
 		return;
 	}else{
-		left = left>>3;
+		page_start = (uint8_t)(left>>3); //left in pixel, we need to find the page address for SSD7317
 	}
 
 	uint8_t cmd[8]; //command sequence to send to OLED to scroll an image
@@ -1369,14 +1386,14 @@ void   ssd7317_cntnt_scroll_image(uint16_t left, int16_t start_col, int16_t end_
 		_end_col = start_col;
 	}
 
-	_end_col = min(_end_col, OLED_VER_RES-1); //bound the end column to the OLED's bottom
+	_end_col = min(_end_col, OLED_VER_RES-1);
 
 	if(_start_col < 0){
 		_start_col = - min(-_start_col,image->height); //bound the start column to the image height higher than OLED's top
 	}
 
 	const uint8_t *px = image->data;
-	uint16_t byte_w = min((OLED_HOR_RES>>3)-left, (image->width)>>3);
+	uint16_t byte_w = min((OLED_HOR_RES>>3)-page_start, (image->width)>>3);
 
 	uint8_t pad[byte_w]; //pad is useful when scrolling height is larger than the image height
 	memset((uint8_t *)&pad, BLACK, byte_w);
@@ -1394,8 +1411,8 @@ void   ssd7317_cntnt_scroll_image(uint16_t left, int16_t start_col, int16_t end_
 		}
 
 		cmd[3]=0x22;
-		cmd[4]=left;
-		cmd[5]=left+(uint8_t)byte_w-1;
+		cmd[4]=page_start;
+		cmd[5]=page_start+(uint8_t)byte_w-1;
 		spi_write_command((const uint8_t*)cmd, 6); //define the line to write data from the bottom
 
 		HAL_GPIO_WritePin(OLED_DC_GPIO_Port, OLED_DC_Pin, GPIO_PIN_SET);//DC pin set high for data
@@ -1415,16 +1432,18 @@ void   ssd7317_cntnt_scroll_image(uint16_t left, int16_t start_col, int16_t end_
 		/* Scroll the area */
 		(dir.detail==SWIPE_DOWN)?(cmd[0]=0x2c):(cmd[0]=0x2d); //content scrolling command
 		cmd[1]=0; 			//dummy byte
-		cmd[2]=left;	//left page margin
+		cmd[2]=page_start;	//left page margin
 		cmd[3]=0x01; 		//no wrap around of RAM content
-		cmd[4]=left+(uint8_t)byte_w-1;
+		cmd[4]=page_start+(uint8_t)byte_w-1;
 		cmd[5]=0;			//another dummy byte
-		cmd[6]=max(_start_col, 0);	//start column address in pixels
-		cmd[7]=min(_end_col, OLED_VER_RES-1);	//end column address in pixels
+		cmd[6]=max(_start_col, 0);
+		cmd[7]=_end_col;
 		spi_write_command((const uint8_t*)cmd, 8); //scroll it
 
 		HAL_Delay(15); //Data sheet tells us a delay of 20ms is required. Actual experiments show 15ms is also good.
 	}
+
+	ssd7317_put_image(page_start<<3, start_col, image, 0); //Update the frame buffer after scrolling
 }
 
 /**
