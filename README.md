@@ -906,7 +906,61 @@ After POR, the API to get touch gesture `ssd7317_get_gesture()` is executed:
 
 ## Infinite Content Scrolling
 
-Pending
+In SSD7317Z controller there are advanced graphic commands that allow the user to scroll the full-frame or a segment of the screen content without having to recopy graphical data from the MCU. The commands are particularly useful for low-resource MCUs that do not have a lot of memory but animations like an icon swipe up and down controlled by different gestures are required. Modes of scrolling supported in SSD7317Z are summarized in the table below.
+
+| Illustration | Graphical effect | Command |
+| :------------ | :------: | :------- |
+| <img src="./Images/Scrolling_illust1.png" width=250> | Continuous vertical scroll up/down with graphical contents wraparound | 0x27 (scroll up)<br/>0x26 (scroll down) |
+| <img src="./Images/Scrolling_illust2.png" width = 250> | Continuous horizontal scroll left/right with graphical contents wraparound | 0x29 (scroll left)<br/>0x2A (scroll right) |
+| <img src="./Images/Scrolling_illust3.png" width=250> | Content scroll down a pre-defined area with new graphical contents copied to GDDRAM. Illustration at the left box shows the case when character **A** is copied from MCU's FLASH to update GDDRAM with character **B** scrolled down. An effect similar to infinite content scroll beyond the screen area can be achieved. | 0x2C (scroll down) |
+| <img src="./Images/Scrolling_illust4.png" width=250> | Content scroll up a pre-defined area with new graphical contents copied to GDDRAM. Illustration at the left box shows the case when character **B** is copied from MCU's FLASH to update GDDRAM with character **A** scrolled up. An effect similar to infinite content scroll beyond the screen area can be achieved. | 0x2D (scroll up) |
+
+There is a second confidential document on **[Advanced Graphic Command](./Docs/SSD7317_APPENDIX_IX.pdf)** to describe in full detail the command format so that I am not repeating it in this repository. Instead, I will correlate the commands with functions in **SSD7317.c**.
+
+### API Functions
+
+Continuous vertical/horizontal scroll (commands 0x27,0x26,0x29, & 0x2A) with `ssd7317_cons_scroll_page(args)`:
+
+```C
+/**
+ * @brief
+ * \b Description:<br>
+ * Function to continuously scroll the screen content<br/>
+ * This function is valid for COM-page H mode only and the hardware-specific commands 26h/27h/29h/2Ah.
+ * @param subpage defines the start page and end page address to scroll
+ * @param interval sets time interval between each scroll step in terms of frame frequency from 0-7<br/>
+ * 0(6 frames), 1(32 frames), 2(64 frames), 3(128frames), 4(3 frames), 5(4 frames), 6(5 frames), 7(2 frames)
+ * @param accelerate is the scrolling offset from 1 row to 95 rows
+ * @param dir is the SWIPE direction (SWIPE_UP or SWIPE_DOWN)
+ * @note This function comes from part of the Advanced Graphic Acceleration Command set released by Solomon Systech.<br/>
+ * There are eight consecutive bytes to setup the scrolling parameters including start page, end page, start segment, end segment,
+ * the command itself and some dummy bytes. There is no frame buffer operation with this function.
+ */
+void   ssd7317_cons_scroll_page(rect_t subpage, uint8_t interval, uint8_t accelerate, finger_t dir);
+```
+
+Content vertical scrolling with commands 0x2C/0x2D to copy data from MCU's FLASH to GDDRAM `ssd7317_cntnt_scroll_image(args)`:
+
+```C
+/**
+ * @brief
+ * \b	Description:<br/>
+ * 		Function to scroll an image from FLASH with content scroll command 2Ch/2Dh.<br/>
+ * 		This function is valid for COM-page H mode only.
+ * @param	left is the top left position of the image to scroll in pixel, only valid in a multiple of 8.<br/>
+ * @param	start_col is the start column(segment), it is also the top segment address in native orientation of the OLED.
+ * @param	end_col is the end column(segment), it is also the bottom segment address.
+ * @param 	*image is a pointer to tImage structure.
+ * @param	dir is the swipe direction, either SWIPE_UP(SWIPE_RL) or SWIPE_DOWN(SWIPE_LR).
+ * @note	end_col should be larger than start_col; else, the function will swap it for you.
+ * Scroll direction is controlled by dir.detail==SWIPE_DOWN / SWIPE_UP, not by end_col and start_col pair.
+ */
+void   ssd7317_cntnt_scroll_image(uint16_t left, int16_t start_col, int16_t end_col, const tImage* image, finger_t dir);
+```
+
+### Demo on YouTube
+The demo is available from **../SSD7317Z/Examples/ContentScroll** with YouTube video in the link below:
+[![Watch th video](https://img.youtube.com/vi/pduHxkwt60I/hqdefault.jpg)](https://youtu.be/pduHxkwt60I)
 
 ## Porting the Driver to Your MCU
 

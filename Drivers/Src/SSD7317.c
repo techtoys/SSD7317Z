@@ -1353,7 +1353,6 @@ void ssd7317_put_image_direct(uint16_t left, int16_t top, const tImage* image)
  * @param	dir is the swipe direction, either SWIPE_UP(SWIPE_RL) or SWIPE_DOWN(SWIPE_LR).
  * @note	end_col should be larger than start_col; else, the function will swap it for you.
  * Scroll direction is controlled by dir.detail==SWIPE_DOWN / SWIPE_UP, not by end_col and start_col pair.
- * No frame buffer operation is involved.
  */
 void   ssd7317_cntnt_scroll_image(uint16_t left, int16_t start_col, int16_t end_col, const tImage* image, finger_t dir)
 {
@@ -1449,7 +1448,7 @@ void   ssd7317_cntnt_scroll_image(uint16_t left, int16_t start_col, int16_t end_
 /**
  * @brief
  * \b Description:<br>
- * Function to continuously scrolling the screen content with a page range<br/>
+ * Function to continuously scroll the screen content<br/>
  * This function is valid for COM-page H mode only and the hardware-specific commands 26h/27h/29h/2Ah.
  * @param subpage defines the start page and end page address to scroll
  * @param interval sets time interval between each scroll step in terms of frame frequency from 0-7<br/>
