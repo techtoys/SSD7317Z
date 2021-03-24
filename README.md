@@ -902,8 +902,8 @@ After POR, the API to get touch gesture `ssd7317_get_gesture()` is executed:
 | <img src="./Images/Number_circle_44x44_7.png" width=30> | This code paints the background BLACK by `ssd7317_fill_color(label_bg, BLACK)`. |
 | <img src="./Images/Number_circle_44x44_8.png" width=30> | This code draws the `counter` as a string by `ssd7317_put_string()`. |
 
-### [Demo on YouTube](https://youtu.be/SL3LxhRAtbs)
-<iframe width='360' height='180' src='https://youtu.be/SL3LxhRAtbs'></iframe>
+### Demo on YouTube
+[![Watch th video](https://img.youtube.com/vi/SL3LxhRAtbs/hqdefault.jpg)](https://youtu.be/SL3LxhRAtbs)
 
 ## Infinite Content Scrolling
 
