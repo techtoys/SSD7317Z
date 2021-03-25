@@ -104,7 +104,7 @@ extern "C" {
 * Types and Typedefs
 *******************************************************************************/
 #define BLACK 0 //relates to init table SSD7317_INIT_TBL[] using 0xa6 for pixel ON/OFF config
-#define WHITE 1
+#define WHITE 0xFF
 
 typedef uint8_t color_t;
 
@@ -199,6 +199,7 @@ void   ssd7317_get_charsize(const tFont* font, uint16_t ascii_code, uint16_t *w,
 rect_t ssd7317_put_string(uint16_t left, uint16_t top, const tFont* font, const char *str, bool negative);
 void   ssd7317_get_stringsize(const tFont* font, const char *str, uint16_t *w, uint16_t *h);
 
+color_t *fb_scroll_seg(rect_t area, finger_t gesture);
 #ifdef __cplusplus
 }
 #endif

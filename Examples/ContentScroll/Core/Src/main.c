@@ -62,7 +62,6 @@ TIM_HandleTypeDef htim2;
 UART_HandleTypeDef huart2;
 DMA_HandleTypeDef hdma_usart2_rx;
 
-
 /* USER CODE BEGIN PV */
 
 /* USER CODE END PV */

@@ -188,6 +188,8 @@ static bool fb_flush_pending_get(void);
 static void fb_flush_pending_clear(void);
 static void fb_flush_suspend(void);
 
+static color_t *fb_scroll_segment(rect_t area, finger_t gesture);
+
 static void i2c_write(uint8_t slave, uint16_t reg, const uint8_t *data, uint16_t len);
 static void i2c_read(uint8_t slave, uint16_t reg, uint8_t *buffer, uint16_t len);
 static uint16_t touch_crc_checksum(uint16_t byte_cnt, uint8_t trig_cmd);
@@ -1683,5 +1685,85 @@ void   ssd7317_get_stringsize(const tFont* font, const char *str, uint16_t *w, u
 
 	*w = _x;
 	*h = _h;
+}
+
+/**
+ * @brief Scroll memory by one segment
+ * @param area defines to area to scroll
+ * @param gesture supports only SWIPE_UP or SWIPE_DOWN
+ * @return pointer to the segment that scrolled out.
+ * It can be filled with new data from FLASH for a new image scrolled in.
+ * \b Example:
+ * @code
+ * 		int main(void)
+ * 		{
+ * 			HAL_Init(); //system reset
+ * 			SystemClock_Config(); //Configure the system clock
+ * 			ssd7317_init();	//OLED display On after this function
+ * 			//...
+ * 			rect_t image={16,64,16+63,127}; //image of 64*64 pixels w/ top left (16,64)
+ * 			finger_t gesture;
+ * 			//On an event = gesture.SWIPE_UP
+ * 			uint8_t len=64;
+ * 			while(len--){
+ * 			 color_t *segment = fb_scroll_segment(image, &frame_buffer[0], gesture);
+ * 			 //memset() fills the scrolled area in black -
+ * 			 //it can be replaced by a new image copy to the frame buffer line-by-line
+ * 			 memset(segment, BLACK, 8);
+ * 			 HAL_Delay(1);
+ * 			 fb_flush_pending_set(image);
+ * 			}
+ * 		}
+ * @endcode
+ */
+static color_t *fb_scroll_segment(rect_t area, finger_t gesture)
+{
+	uint16_t x1=min(area.x1,OLED_HOR_RES-1);
+	uint16_t x2=min(area.x2,OLED_HOR_RES-1);
+	uint16_t y1=min(area.y1,OLED_VER_RES-1);
+	uint16_t y2=min(area.y2,OLED_VER_RES-1);
+
+	uint8_t byte_w;
+	uint8_t height = y2 - y1 + 1;
+
+	color_t *pReturn, *pDest, *pSrc;
+
+	if(gesture.detail==SWIPE_UP){
+		/* Data append from below */
+		pReturn = &frame_buffer[BUFIDX(x1,y2)];
+		for(uint16_t y=0; y<(height-1); y++)
+		{
+			byte_w=BUFIDX(x2,0)-BUFIDX(x1,0)+1;
+			pDest = &frame_buffer[BUFIDX(x1, (y1+y))];
+			pSrc  = &frame_buffer[BUFIDX(x1, (y1+y+1))]; //mind the bracket (y1+y+1) inside BUFIDX. It is mandatory
+			while(byte_w--)
+				*pDest++ = *pSrc++;
+		}
+	}
+	else if(gesture.detail==SWIPE_DOWN)
+	{ 	/* Data append over the top */
+		pReturn = &frame_buffer[BUFIDX(x1,y1)];
+		for(uint16_t y=0; y<(height-1); y++)
+		{
+			byte_w=BUFIDX(x2,0)-BUFIDX(x1,0)+1;
+			pDest = &frame_buffer[BUFIDX(x1,(y2-y))];
+			pSrc  = &frame_buffer[BUFIDX(x1,(y2-y-1))];
+			while(byte_w--)
+				*pDest++ = *pSrc++;
+		}
+	}
+	else
+	{
+	//...
+	}
+	//HAL_Delay(1);
+	//fb_flush_pending_set(area);
+
+	/*
+	 * fb_flush_pending_set(area) here for testing only.
+	 * The flush_pending flag should be set after new image content copied to frame buffer.
+	 *
+	 */
+	return pReturn;
 }
 
