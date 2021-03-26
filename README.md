@@ -986,13 +986,13 @@ Driver for SSD7317Z has been designed with portability in mind. However, there a
 
 **Remark :**
 
-The second argument in the function `i2c_write(uint8_t slave, uint16_t reg, const uint8_t *data, uint16_t len)` sets the register address with the lower byte first then the higher byte. In STM32, two hardware-dependent functions look very similar. They are 
+The second argument in the function `i2c_write(uint8_t slave, uint16_t reg, const uint8_t *data, uint16_t len)` sends the register address with the lower byte first followed by the higher byte (byte swap). In STM32, we need two hardware-dependent functions to handle the byte swap and they look very similar. They are 
 
 * `HAL_I2C_Mem_Write()`  & 
 
 * `HAL_I2C_Master_Transmit()`.
 
-A more careful study shows that, a data length `len` as the argument for `HAL_I2C_Mem_Write()` should non-zero; otherwise, an error as ` HAL_I2C_ERROR_INVALID_PARAM ` will return. It leads to a conditional statement to divide it with `len` being zero or non-zero with code snippet as follows:
+A more careful study shows that, a data length `len` as the argument for `HAL_I2C_Mem_Write()` should be non-zero; otherwise, an error as ` HAL_I2C_ERROR_INVALID_PARAM ` will return. It leads to a conditional statement to divide it with `len` being zero or non-zero with code snippet as follows:
 
 ```C
 static void i2c_write(uint8_t slave, uint16_t reg, const uint8_t *data, uint16_t len)
