@@ -1,8 +1,10 @@
+
+
 ## SSD7317Z
 
 is a controller IC designed by [Solomon Systech Ltd.](https://www.solomon-systech.com/) with touch screen and display controller circuits fabricated on the same die. Photo below shows a conventional *out-cell* screen with separated touch screen and LCD module on the left versus the *in-cell* screen with a single Touch and Display Driver Integration (TDDI) IC driver on the right.
 
-<img src="./Images/compare_outcell_incell.png" width=80%>
+<img src="./Images/compare_outcell_incell.jpg" width=1024>
 
 An *out-cell* solution uses a highly conductive and optically transparent Indium Tin Oxide (ITO) printed as grids on a substrate to sense our finger for changes in capacitance. The substrate is bonded to the top glass of the LCD module by some optically clear adhesive [OCA](https://en.wikipedia.org/wiki/Liquid_optically_clear_adhesive). A major advantage of an *out-cell* is flexibility: engineers have the freedom to mix different types of touch screen with a LCD module for different designs. Disadvantages include a larger thickness and weight because the touch substrate is a separate layer that needs OCA to bond it to the top of the LCD module. Additional manufacturing processes also lead to longer production time, more complex quality assurance, higher production cost and yield risks.
 
@@ -14,7 +16,7 @@ Novel *in-cell* solution eliminates the touch and OCA layers altogether. Because
 
 is a passive matrix monochrome OLED display of 96*128 with 4 in-cell touch keys, 1-D slide gesture detect and 4 outside keys fabricated by [WiseChip Semiconductor Inc.](https://www.wisechip.com.tw/en/) This repository describes how the novel in-cell display module is interfaced to a popular STM32 M4 MCU and the display and touch drivers developed.
 
-<img src="./Images/UT2896KSWGG01.png" width=100%>
+<img src="./Images/UT2896KSWGG01.jpg" width=100%>
 
 ## Hardware Interface to PMOLED Module
 
@@ -34,7 +36,7 @@ To facilitate the tasks of testing and development, we have designed an evaluati
 
 The full schematic of the evaluation board is found from this repository at this [link.](./Schematics/UT-2896KSWGG01-WiseChip-EVK-Sch.pdf)
 
-<img src ="./Images/SSL_EVK_Closeup.png" width = 100%>
+<img src ="./Images/SSL_EVK_Closeup.jpg" width = 100%>
 
 ## Setting Up the Integrated Development Environment (IDE)
 
@@ -96,7 +98,7 @@ Click on **Run > Debug** or **F11**, or click on the ladybug icon followed by ru
 
 In 1-2 seconds you will see the PMOLED show **Hello World** on it.
 
-<img src="./Images/hello_world_running.png" width=1024>
+<img src="./Images/hello_world_running.jpg" width=1024>
 
 ## How It Works
 
@@ -580,7 +582,7 @@ Line 5	`snprintf(str, 5, "%d", counter)` converts the integer `counter` to an ar
 
 Line 6	`ssd7317_put_string(0,26,&ArialBlack_36h,str,0)` displays the counter value as a string at (0,26)
 
-<img src="./Images/LCD_Img_Cov_HIW.png" width=1280>
+<img src="./Images/LCD_Img_Cov_HIW.jpg" width=1280>
 
 
 
@@ -598,7 +600,7 @@ The technique to drive display and touch sensing is called **Time Multiplex Driv
 
 SSD7317Z supports up to 4 *in-cell* touch keys and 4 *out-cell* touch keys and the number of keys is software configurable. On our evaluation board, the mapping is illustrated in the photo below. 
 
-<img src = "./Images/Touchscreen_map1.png" width=800>
+<img src = "./Images/Touchscreen_map1.jpg" width=800>
 
 In SSD7317Z there are only two registers to care about for touch screen: 
 
@@ -842,7 +844,7 @@ Running the project will show you a GUI similar to the photo below with:
 
 * monitoring **Gesture Upload Data** at register address 0x0AF1 through serial terminal
 
-  <img src="./Images/Touchscreen_running_example.png" width=800>
+  <img src="./Images/Touchscreen_running_example.jpg" width=800>
 
 ### How It Works
 
@@ -964,4 +966,68 @@ The demo is available from **../SSD7317Z/Examples/ContentScroll** with YouTube v
 
 ## Porting the Driver to Your MCU
 
-Pending
+### HAL driver to port
+
+Driver for SSD7317Z has been designed with portability in mind. However, there are still hardware-dependent codes you will need to develop. The table below summarizes the files and codes you need to port for your MCU.
+
+| File                                        | Code to port                                                 | Description                                                  |
+| ------------------------------------------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
+| `Dwt_stm32_delay.h`<br/>`Dwt_stm32_delay.c` | `uint32_t HAL_DWT_Delay_Init(void)`                          | Initialization of software delay in microsecond precision. This function is called only once in `SSD7317.c::touch_init().` |
+| `Dwt_stm32_delay.h`                         | `void HAL_DWT_Delay_us(volatile uint32_t microseconds)`      | Software delay in microsecond precision. This function is called only once in `SSD7317.c::i2c_read().` |
+| `SSD7317.c`                                 | `void HAL_Delay(uint32_t Delay)`                             | Software delay in millisecond precision.                     |
+|                                             | All codes with `HAL_` prefixes  include:                     | Codes with `HAL_` prefixes indicate hardware-dependent code generated by **STM32CubeIDE** with HAL being `Hardware Abstraction Layer`. |
+|                                             | `HAL_GPIO_EXTI_Callback()`                                   | External interrupt detection callback for <br/>(1) Touch event triggered by a falling edge on `IRQ` pin,<br/>(2) Frame synchronization signal on a rising edge on `FR` pin. |
+|                                             | `HAL_GPIO_WritePin()`                                        | GPIO output.                                                 |
+|                                             | `HAL_SPI_Transmit()`                                         | SPI transfer in functions:<br/>(1) `ssd7317_put_image_direct()`<br/>(2) `ssd7317_cntnt_scroll_image()`<br/>(3) `spi_write_command()`<br/>(4) `spi_write_data()`<br/>(5) `fb_spi_transfer()` |
+|                                             | `HAL_I2C_Mem_Write(..., slave,reg,*data, ...)`               | Write a block of data (`*data`) to a designated memory address at `reg` of slave device `slave`. This function is called only once in `i2c_write()`. |
+|                                             | `HAL_I2C_Master_Transmit(..., uint16_t DevAddress, uint8_t *pData, ...)` | Set register address `DevAddress` for read/write operation thereafter in `i2c_read()` and `i2c_write()`. Please refer to a remark below this table for further explanation. |
+|                                             | `HAL_I2C_Master_Receive()`                                   | Receives in master mode an amount of data in blocking mode.  |
+|                                             | `HAL_StatusTypeDef`                                          | The data type `HAL_StatusTypeDef` is used for error assertion in `SSD7317.c`  to catch low level I/O exception, e.g. `HAL_StatusTypeDef err = HAL_SPI_Transmit()` to catch an error with the variable `err`. If a return handler is not available in your SDK, it is possible to skip it by calling `HAL_SPI_Transmit()` without returning any value. |
+
+**Remark :**
+
+The second argument in the function `i2c_write(uint8_t slave, uint16_t reg, const uint8_t *data, uint16_t len)` sets the register address with the lower byte first then the higher byte. In STM32, two hardware-dependent functions look very similar. They are 
+
+* `HAL_I2C_Mem_Write()`  & 
+
+* `HAL_I2C_Master_Transmit()`.
+
+A more careful study shows that, a data length `len` as the argument for `HAL_I2C_Mem_Write()` should non-zero; otherwise, an error as ` HAL_I2C_ERROR_INVALID_PARAM ` will return. It leads to a conditional statement to divide it with `len` being zero or non-zero with code snippet as follows:
+
+```C
+static void i2c_write(uint8_t slave, uint16_t reg, const uint8_t *data, uint16_t len)
+{
+	if(len){
+		//swap high and low bytes so that lower byte is sent first
+		uint16_t reg_byte_swap = ((reg<<8)&0xff00) | ((reg>>8)&0x00ff);
+		HAL_I2C_Mem_Write(&hi2c1, slave<<1, reg_byte_swap, 2, (uint8_t *)data, len, 5000);
+	}
+	else
+	{
+		//[high:low] bytes of reg are swapped with HAL_I2C_Master_Transmit()
+		//i.e. Byte 0x01 is sent first followed by 0x00 when reg=0x0001.
+		//Example in i2c_write(TOUCH_SA, 0x0001, 0, 0)
+		HAL_I2C_Master_Transmit(&hi2c1, slave<<1, (uint8_t *)&reg, 2, 500);
+	}
+}
+```
+
+The I2C waveform below may help you to visualize the data format required.
+
+<img src="./Images/Porting_driver_pict1.png" width=800>
+
+---
+
+| File        | Code to port                           | Description                                                  |
+| ----------- | -------------------------------------- | ------------------------------------------------------------ |
+| `SSD7317.c` | All codes with `MX_` prefixes include: | Codes with `MX_` prefixes indicate hardware-dependent code generated by **STM32CubeIDE**. |
+|             | `MX_GPIO_Init()`                       | Initialization of GPIO for `DC` pin, `FR` pin, `TRES` pin and `IRQ` pin. |
+|             | `MX_SPI1_Init()`                       | Initialization of SPI module for display.                    |
+|             | `MX_I2C1_Init()`                       | Initialization of I2C module for touchscreen.                |
+
+### Which Code to Get Started?
+
+After porting all of the `HAL_*` and `MX_*` functions, I would suggest starting with the function `void ssd7317_put_image_direct(uint16_t left, int16_t top, const tImage* image)` to draw an image without going through the frame buffer.  No `FR` synchronization is involved either. This function simply copies pixels from MCU's FLASH to GDDRAM of the OLED to get an image displayed. The procedure of image conversion has been fully described in the section [LCD Image Converter](#lcd-image-converter) above. 
+
+**Thank you!**
+

@@ -205,8 +205,8 @@ static bool touch_event_get(void);
  * @brief
  * \b	Description:<br>
  * 	External interrupt detection callback for two cases:<br>
- * 	(1) A touch event is detected with a high-to-low edge transition on PA12 (IRQ interface).<br>
- * 	(2) Frame synchronization signal (FR) goes from low-to-high on PB0.<br>
+ * 	(1) Touch event triggered by a falling edge on IRQ pin (PA12),<br>
+ * 	(2) Frame synchronization signal on a rising edge on FR pin (PB0).<br>
  *
  * @param  GPIO_Pin Specifies the port pin connected to corresponding EXTI line.
  *
@@ -897,6 +897,9 @@ static void i2c_write(uint8_t slave, uint16_t reg, const uint8_t *data, uint16_t
 	}
 	else
 	{
+		//[high:low] bytes of reg are swapped with HAL_I2C_Master_Transmit()
+		//i.e. Byte 0x01 is sent first followed by 0x00 when reg=0x0001.
+		//Example in i2c_write(TOUCH_SA, 0x0001, 0, 0)
 		err = HAL_I2C_Master_Transmit(&hi2c1, slave<<1, (uint8_t *)&reg, 2, 500);
 	}
 
