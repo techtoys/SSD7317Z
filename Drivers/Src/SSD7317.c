@@ -173,8 +173,9 @@ static void MX_DMA_Init(void);
 static void MX_SPI1_Init(void);
 static void MX_I2C1_Init(void);
 
-void spi_write_command(const uint8_t *command, uint16_t len);
-void spi_write_data(const uint8_t *data, uint16_t len);
+/* spi_write_command() and spi_write_data() moved to SSD7317.h for rpc.c */
+//void spi_write_command(const uint8_t *command, uint16_t len);
+//void spi_write_data(const uint8_t *data, uint16_t len);
 
 /*Functions with operations on frame buffer with fb_ prefix*/
 static void fb_set_pixel(int16_t x, int16_t y, color_t color);
@@ -1448,6 +1449,59 @@ void   ssd7317_cntnt_scroll_image(uint16_t left, int16_t start_col, int16_t end_
 	}
 
 	ssd7317_put_image(page_start<<3, start_col, image, 0); //Update the frame buffer after scrolling
+}
+
+/**
+ * @brief
+ * \b Description:<br/>
+ * This function is the counterpart of ssd7317_cntnt_image() which scrolling effect is done by graphic commands.
+ * @param	left is the top left position of the image to scroll in pixel, only valid in a multiple of 8.<br/>
+ * @param	start_col is the start column(segment), it is also the top segment address in native orientation of the OLED.
+ * @param	end_col is the end column(segment), it is also the bottom segment address.
+ * @param	tick is the delay in millisecond precision.
+ * @param 	*image is a pointer to tImage structure.
+ * @param	dir is the swipe direction, either SWIPE_UP(SWIPE_RL) or SWIPE_DOWN(SWIPE_LR).
+ * @note	In this function, scrolling is done in the frame buffer. It turns out that a delay of 15ms is not required and
+ * a much better performance is achieved. Parameter end_col should be larger than start_col; else, the function will swap it for you.
+ * Scroll direction is controlled by dir.detail==SWIPE_DOWN / SWIPE_UP, not by end_col and start_col pair.
+ */
+void   ssd7317_cntnt_fbscroll_image(uint16_t left, int16_t start_col, int16_t end_col, uint8_t tick, const tImage* image, finger_t dir)
+{
+	if((dir.detail!=SWIPE_DOWN) && (dir.detail!=SWIPE_UP))
+	{
+#ifdef  USE_FULL_ASSERT
+		assert_failed((uint8_t *)__FILE__, __LINE__);
+#endif
+		return;
+	}
+
+	if(left > (OLED_HOR_RES-1)){
+#ifdef  USE_FULL_ASSERT
+		assert_failed((uint8_t *)__FILE__, __LINE__);
+#endif
+		return;
+	}
+
+	int16_t _start_col = start_col;
+	int16_t _end_col = end_col;
+
+	if(start_col > end_col){
+		_start_col = end_col;
+		_end_col = start_col;
+	}
+
+	const uint8_t *px;// = image->data;
+	uint16_t byte_w = min(((OLED_HOR_RES>>3)-(left>>3)), (image->width)>>3);
+	rect_t area = {left, _start_col, left+image->height-1, _end_col};
+
+	for(uint16_t col=0; col<(_end_col-_start_col+1); col++){
+		color_t *fb = fb_scroll_segment(area, dir);
+		(dir.detail==SWIPE_DOWN)?(px = &image->data[(image->height-1-col)*(image->width>>3)]):(px = &image->data[col*(image->width>>3)]);
+		while(byte_w--)
+			*fb++ = *px++;
+		HAL_Delay(tick);
+		fb_flush_pending_set(area);
+	}
 }
 
 /**
