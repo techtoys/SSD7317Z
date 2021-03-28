@@ -962,10 +962,9 @@ void   ssd7317_cntnt_scroll_image(uint16_t left, int16_t start_col, int16_t end_
 
 ### Demo on YouTube
 The demo is available from **../SSD7317Z/Examples/ContentScroll** with YouTube video in the link below:
-<iframe width="560" height="315" src="https://www.youtube.com/embed/pduHxkwt60I" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+[![Watch th video](https://img.youtube.com/vi/pduHxkwt60I/hqdefault.jpg)](https://youtu.be/pduHxkwt60I)
 
 ## Porting the Driver to Your MCU
-
 ### HAL driver to port
 
 Driver for SSD7317Z has been designed with portability in mind. However, there are still hardware-dependent codes you will need to develop. The table below summarizes the files and codes you need to port for your MCU.
