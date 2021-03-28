@@ -962,7 +962,7 @@ void   ssd7317_cntnt_scroll_image(uint16_t left, int16_t start_col, int16_t end_
 
 ### Demo on YouTube
 The demo is available from **../SSD7317Z/Examples/ContentScroll** with YouTube video in the link below:
-[![Watch th video](https://img.youtube.com/vi/pduHxkwt60I/hqdefault.jpg)](https://youtu.be/pduHxkwt60I)
+<iframe width="560" height="315" src="https://www.youtube.com/embed/pduHxkwt60I" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
 ## Porting the Driver to Your MCU
 
