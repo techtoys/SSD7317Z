@@ -35,6 +35,7 @@
 #include "linkedin.h"
 #include "youtube.h"
 #include "battery-status-full.h"
+#include "Tahoma_12h.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -105,6 +106,10 @@ const tIcon icons[ICON_MAX] = {
 
 #define LABEL_X 0
 #define LABEL_Y 10
+#define ICON_X	16
+#define ICON_Y	64
+#define BATTERY_X	72
+#define BATTERY_Y	0
 
 void app_touch_task(void)
 {
@@ -112,16 +117,17 @@ void app_touch_task(void)
 	static bool por = true;
 	static bool cons_scroll = false;
 	static uint8_t icon_index = 0;
-	static char str[5];
-	uint16_t label_w, label_h;
-	ssd7317_get_stringsize(&ArialBlack_36h, "0000", &label_w, &label_h);
+	static char str[3];
+	static uint16_t label_w, label_h;
 
 	if(por){
 		snprintf(str, 3, "%d", icon_index);
 		por = false;
-		ssd7317_put_image(72,0,&batterystatusfull,0);
+		ssd7317_put_image(BATTERY_X,BATTERY_Y,&batterystatusfull,0);
 		ssd7317_put_string(LABEL_X,LABEL_Y,&ArialBlack_36h,str,0);
-		ssd7317_put_image(16,64, icons[icon_index].image, 0);
+		ssd7317_get_stringsize(&Tahoma_12h, icons[icon_index].name, &label_w, &label_h);
+		ssd7317_put_string(OLED_HOR_RES-label_w, ICON_Y-label_h-6, &Tahoma_12h, icons[icon_index].name, 0);
+		ssd7317_put_image(ICON_X,ICON_Y, icons[icon_index].image, 0);
 	}
 	finger_t finger = ssd7317_get_gesture();
 	switch(finger.act){
@@ -145,10 +151,10 @@ void app_touch_task(void)
 		}else{
 			tone_pwm_set(1000);
 			tone_pwm_on();
-			ssd7317_put_image(16,64, icons[icon_index].image, 1);
+			ssd7317_put_image(ICON_X,ICON_Y, icons[icon_index].image, 1);
 			tone_pwm_set(500);
 			HAL_Delay(50);
-			ssd7317_put_image(16,64, icons[icon_index].image, 0);
+			ssd7317_put_image(ICON_X,ICON_Y, icons[icon_index].image, 0);
 			tone_pwm_off();
 		}
 		break;
@@ -157,6 +163,12 @@ void app_touch_task(void)
 			if(finger.tap_down_key!=finger.tap_up_key){
 				tone_pwm_set(500);
 				tone_pwm_on();
+
+				//clear the icon's name background first
+				rect_t string_bg = {OLED_HOR_RES-label_w, ICON_Y-label_h-6, OLED_HOR_RES-1, ICON_Y-7};
+				ssd7317_fill_color(string_bg, BLACK);
+
+				//increment / decrement on the icon index
 				if(finger.detail==SWIPE_DOWN){
 					icon_index++;
 					icon_index%=ICON_MAX;
@@ -164,9 +176,22 @@ void app_touch_task(void)
 					icon_index--;
 					if(icon_index>ICON_MAX-1) icon_index=ICON_MAX-1;
 				}
+
+				//update the icon's name
+				ssd7317_get_stringsize(&Tahoma_12h, icons[icon_index].name, &label_w, &label_h);
+				ssd7317_put_string(OLED_HOR_RES-label_w, ICON_Y-label_h-6, &Tahoma_12h, icons[icon_index].name, 0);
+
+				/**
+				 * Update the icon by graphic command: ssd7317_cntnt_scroll_image() -or-
+				 * Update by frame buffer: ssd7317_cntnt_fbscroll_image()
+				 */
+				//ssd7317_cntnt_scroll_image(ICON_X,ICON_Y,icons[icon_index].image,finger);
+				ssd7317_cntnt_fbscroll_image(ICON_X,ICON_Y,0,icons[icon_index].image,finger);
+
+				//update the icon index
 				snprintf(str, 3, "%d", icon_index);
 				ssd7317_put_string(LABEL_X,LABEL_Y,&ArialBlack_36h,str,0);
-				ssd7317_cntnt_scroll_image(16,64,127,icons[icon_index].image,finger);
+
 				tone_pwm_off();
 			}else{
 				rect_t full_page={0,0,OLED_HOR_RES-1,OLED_VER_RES-1};

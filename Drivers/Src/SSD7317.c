@@ -1353,14 +1353,13 @@ void ssd7317_put_image_direct(uint16_t left, int16_t top, const tImage* image)
  * 		Function to scroll an image from FLASH with content scroll command 2Ch/2Dh.<br/>
  * 		This function is valid for COM-page H mode only.
  * @param	left is the top left position of the image to scroll in pixel, only valid in a multiple of 8.<br/>
- * @param	start_col is the start column(segment), it is also the top segment address in native orientation of the OLED.
- * @param	end_col is the end column(segment), it is also the bottom segment address.
+ * @param	top is the start column(segment), it is also the top segment address in native orientation of the OLED.
  * @param 	*image is a pointer to tImage structure.
  * @param	dir is the swipe direction, either SWIPE_UP(SWIPE_RL) or SWIPE_DOWN(SWIPE_LR).
  * @note	end_col should be larger than start_col; else, the function will swap it for you.
  * Scroll direction is controlled by dir.detail==SWIPE_DOWN / SWIPE_UP, not by end_col and start_col pair.
  */
-void   ssd7317_cntnt_scroll_image(uint16_t left, int16_t start_col, int16_t end_col, const tImage* image, finger_t dir)
+void   ssd7317_cntnt_scroll_image(uint16_t left, uint16_t top, const tImage* image, finger_t dir)
 {
 	if((dir.detail!=SWIPE_DOWN) && (dir.detail!=SWIPE_UP))
 	{
@@ -1383,19 +1382,7 @@ void   ssd7317_cntnt_scroll_image(uint16_t left, int16_t start_col, int16_t end_
 
 	uint8_t cmd[8]; //command sequence to send to OLED to scroll an image
 
-	int16_t _start_col = start_col;
-	int16_t _end_col = end_col;
-
-	if(start_col > end_col){
-		_start_col = end_col;
-		_end_col = start_col;
-	}
-
-	_end_col = min(_end_col, OLED_VER_RES-1);
-
-	if(_start_col < 0){
-		_start_col = - min(-_start_col,image->height); //bound the start column to the image height higher than OLED's top
-	}
+	uint16_t _end_col =  min(top+image->height-1, OLED_VER_RES-1);
 
 	const uint8_t *px = image->data;
 	uint16_t byte_w = min((OLED_HOR_RES>>3)-page_start, (image->width)>>3);
@@ -1403,13 +1390,13 @@ void   ssd7317_cntnt_scroll_image(uint16_t left, int16_t start_col, int16_t end_
 	uint8_t pad[byte_w]; //pad is useful when scrolling height is larger than the image height
 	memset((uint8_t *)&pad, BLACK, byte_w);
 
-	for(uint16_t col=0; col<(_end_col-_start_col+1); col++)
+	for(uint16_t col=0; col<image->height; col++)
 	{
 		/* Area setup for the line to write */
 		cmd[0]=0x21;
 		if(dir.detail==SWIPE_DOWN){
-			cmd[1]=max(_start_col, 0); //only a line is written in scrolling therefore cmd[1]=cmd[2]
-			cmd[2]=max(_start_col, 0); //on SWIPE_DOWN, the top line is written
+			cmd[1]=top; //only a line is written in scrolling therefore cmd[1]=cmd[2]
+			cmd[2]=top; //on SWIPE_DOWN, the top line is written
 		}else{
 			cmd[1]=_end_col; //on SWIPE_UP, the bottom line is written
 			cmd[2]=_end_col;
@@ -1421,17 +1408,12 @@ void   ssd7317_cntnt_scroll_image(uint16_t left, int16_t start_col, int16_t end_
 		spi_write_command((const uint8_t*)cmd, 6); //define the line to write data from the bottom
 
 		HAL_GPIO_WritePin(OLED_DC_GPIO_Port, OLED_DC_Pin, GPIO_PIN_SET);//DC pin set high for data
-		if(col<image->height)
-		{
-			/* Write pixels from FLASH to GDDRAM */
-			if(dir.detail==SWIPE_DOWN){
-				HAL_SPI_Transmit(&hspi1, (uint8_t *)&px[(image->height-1-col)*(image->width>>3)], byte_w, 10);
-			}else{
-				HAL_SPI_Transmit(&hspi1, (uint8_t *)&px[col*(image->width>>3)], byte_w, 10);
-			}
+
+		/* Write pixels from FLASH to GDDRAM */
+		if(dir.detail==SWIPE_DOWN){
+			HAL_SPI_Transmit(&hspi1, (uint8_t *)&px[(image->height-1-col)*(image->width>>3)], byte_w, 10);
 		}else{
-			/* Padding the area larger than image height */
-			HAL_SPI_Transmit(&hspi1, (uint8_t *)&pad, byte_w, 10);
+			HAL_SPI_Transmit(&hspi1, (uint8_t *)&px[col*(image->width>>3)], byte_w, 10);
 		}
 
 		/* Scroll the area */
@@ -1441,14 +1423,14 @@ void   ssd7317_cntnt_scroll_image(uint16_t left, int16_t start_col, int16_t end_
 		cmd[3]=0x01; 		//no wrap around of RAM content
 		cmd[4]=page_start+(uint8_t)byte_w-1;
 		cmd[5]=0;			//another dummy byte
-		cmd[6]=max(_start_col, 0);
+		cmd[6]=top;
 		cmd[7]=_end_col;
 		spi_write_command((const uint8_t*)cmd, 8); //scroll it
 
 		HAL_Delay(15); //Data sheet tells us a delay of 20ms is required. Actual experiments show 15ms is also good.
 	}
 
-	ssd7317_put_image(page_start<<3, start_col, image, 0); //Update the frame buffer after scrolling
+	ssd7317_put_image(page_start<<3, top, image, 0); //Update the frame buffer after scrolling
 }
 
 /**
@@ -1456,16 +1438,37 @@ void   ssd7317_cntnt_scroll_image(uint16_t left, int16_t start_col, int16_t end_
  * \b Description:<br/>
  * This function is the counterpart of ssd7317_cntnt_image() which scrolling effect is done by graphic commands.
  * @param	left is the top left position of the image to scroll in pixel, only valid in a multiple of 8.<br/>
- * @param	start_col is the start column(segment), it is also the top segment address in native orientation of the OLED.
- * @param	end_col is the end column(segment), it is also the bottom segment address.
- * @param	tick is the delay in millisecond precision.
+ * @param	top is the start column(segment), it is also the top segment address in native orientation of the OLED.
+ * @param	tick is the delay between successive line update of the image in millisecond precision.
  * @param 	*image is a pointer to tImage structure.
  * @param	dir is the swipe direction, either SWIPE_UP(SWIPE_RL) or SWIPE_DOWN(SWIPE_LR).
  * @note	In this function, scrolling is done in the frame buffer. It turns out that a delay of 15ms is not required and
  * a much better performance is achieved. Parameter end_col should be larger than start_col; else, the function will swap it for you.
  * Scroll direction is controlled by dir.detail==SWIPE_DOWN / SWIPE_UP, not by end_col and start_col pair.
+ * \b Example:
+ * @code
+ * 		int main(void)
+ * 		{
+ * 			HAL_Init(); //system reset
+ * 			SystemClock_Config(); //Configure the system clock
+ * 			ssd7317_init();	//OLED display On after this function
+ * 			//...
+ * 			static uint8_t icon_index=0;
+ * 			finger_t gesture;
+ * 			while(1)
+ * 			{
+ * 			switch(gesture.act){
+ * 			case SWIPE:
+ * 			(finger.detail==SWIPE_DOWN)?(icon_index++):(icon_index--);
+ * 			//assume there are icons of 64x64 pixels declared as tIcon icons[]
+ * 			ssd7317_cntnt_fbscroll_image(16,64,1,icons[icon_index].image,finger);
+ * 			break;
+ * 			}
+ * 			}
+ * 		}
+ * @endcode
  */
-void   ssd7317_cntnt_fbscroll_image(uint16_t left, int16_t start_col, int16_t end_col, uint8_t tick, const tImage* image, finger_t dir)
+void   ssd7317_cntnt_fbscroll_image(uint16_t left, uint16_t top, uint8_t tick, const tImage* image, finger_t dir)
 {
 	if((dir.detail!=SWIPE_DOWN) && (dir.detail!=SWIPE_UP))
 	{
@@ -1482,24 +1485,19 @@ void   ssd7317_cntnt_fbscroll_image(uint16_t left, int16_t start_col, int16_t en
 		return;
 	}
 
-	int16_t _start_col = start_col;
-	int16_t _end_col = end_col;
-
-	if(start_col > end_col){
-		_start_col = end_col;
-		_end_col = start_col;
-	}
-
 	const uint8_t *px;// = image->data;
-	uint16_t byte_w = min(((OLED_HOR_RES>>3)-(left>>3)), (image->width)>>3);
-	rect_t area = {left, _start_col, left+image->height-1, _end_col};
 
-	for(uint16_t col=0; col<(_end_col-_start_col+1); col++){
+	rect_t area = {left, top, left+image->height-1, top+image->height-1};
+
+	for(uint16_t col=0; col<image->height; col++){
 		color_t *fb = fb_scroll_segment(area, dir);
 		(dir.detail==SWIPE_DOWN)?(px = &image->data[(image->height-1-col)*(image->width>>3)]):(px = &image->data[col*(image->width>>3)]);
+		uint16_t byte_w = min(((OLED_HOR_RES>>3)-(left>>3)), (image->width)>>3);
 		while(byte_w--)
 			*fb++ = *px++;
-		HAL_Delay(tick);
+		if(tick>0)
+			HAL_Delay(tick);
+		//fb_flush_suspend();
 		fb_flush_pending_set(area);
 	}
 }
@@ -1779,6 +1777,17 @@ static color_t *fb_scroll_segment(rect_t area, finger_t gesture)
 	uint16_t x2=min(area.x2,OLED_HOR_RES-1);
 	uint16_t y1=min(area.y1,OLED_VER_RES-1);
 	uint16_t y2=min(area.y2,OLED_VER_RES-1);
+
+	x1=max(x1,0);
+	x2=max(x2,0);
+	y1=max(y1,0);
+	y2=max(y2,0);
+
+	if(y1>y2){
+		uint16_t _tmp=y2;
+		y2=y1;
+		y1=_tmp;
+	}
 
 	uint8_t byte_w;
 	uint8_t height = y2 - y1 + 1;
