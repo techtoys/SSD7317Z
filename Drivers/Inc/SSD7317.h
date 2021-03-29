@@ -1,14 +1,13 @@
 /****************************************************************************
-* Filename              :   SSD7317.h
-* Description			: 	Device header for an PMOLED with
-* 							Touch and Display Driver Integrated (TDDI)
-* 							driver IC on the same die (SSD7317)
-* Author                :   John Leung
-* Origin Date           :   13/02/2020
-* Version               :   1.0.0
-* Compiler              :   GNU
-* Target                :   STM32L432KCUx on NUCLEO-L432KC
-* Notes                 :   IDE is STM32CubeIDE
+* Filename              : SSD7317.h
+* Description		: Device header for an PMOLED with TDDI
+* (Touch and Display Driver Integrated) driver IC on the same die (SSD7317)
+* Author                : John Leung
+* Origin Date           : 13/02/2020
+* Version               : 1.0.0
+* Compiler              : GNU
+* Target                : STM32L432KCUx on NUCLEO-L432KC
+* Notes                 : IDE is STM32CubeIDE
 *****************************************************************************
 * @attention
 *
@@ -190,9 +189,10 @@ finger_t ssd7317_get_gesture(void);
 rect_t ssd7317_put_image(uint16_t left, uint16_t top, const tImage* image, bool negative);
 void   ssd7317_put_image_direct(uint16_t left, int16_t top, const tImage* image);
 
-void   ssd7317_cntnt_scroll_image(uint16_t left, uint16_t top, const tImage* image, finger_t dir);
 void   ssd7317_cntnt_fbscroll_image(uint16_t left, uint16_t top, uint8_t tick, const tImage* image, finger_t dir);
-
+void   ssd7317_spring_scroll_image(uint16_t left, uint16_t top, unit8_t tick, const tImage* image, finger_t dir);
+	
+void   ssd7317_cntnt_scroll_image(uint16_t left, uint16_t top, const tImage* image, finger_t dir);
 void   ssd7317_cons_scroll_page(rect_t subpage, uint8_t interval, uint8_t accelerate, finger_t dir);
 void   ssd7317_cons_scroll_brake(void);
 
