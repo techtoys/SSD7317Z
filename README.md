@@ -5,14 +5,14 @@
 ## [An Evaluation Board](#an-evaluation-board-1)
 ## [Setting Up the IDE](#setting-up-the-integrated-development-environment)
 ## [Download and Build the Hello World Project](#download-and-build-the-hello-world-project-1)
-## [How Hello World Works](#how-hello-world-works)
-## [LCD Image Converter](#lcd-image-converter)
-## [Create a New Project](#create-a-new-project)
-## [The Touch Screen and How It Works](#the-touch-screen-and-how-it-works)
-## [Infinite Content Scrolling](#infinite-content-scrolling)
-## [Porting the Driver to Your MCU](#porting-the-driver-to-your-mcu)
+## [How Hello World Works](#how-hello-world-works-1)
+## [LCD Image Converter](#lcd-image-converter-1)
+## [Create a New Project](#create-a-new-project-1)
+## [The Touch Screen and How It Works](#the-touch-screen-and-how-it-works-1)
+## [Infinite Content Scrolling](#infinite-content-scrolling-1)
+## [Porting the Driver to Your MCU](#porting-the-driver-to-your-mcu-1)
 ---
-# Introduction
+## Introduction
 **SSD7317Z** is a controller IC designed by [Solomon Systech Ltd.](https://www.solomon-systech.com/) with touch screen and display controller circuits fabricated on the same die. The photo below shows a conventional *out-cell* screen with a separated touch screen and LCD module on the left versus the *in-cell* screen with a single Touch and Display Driver Integration (TDDI) IC driver on the right.
 
 <img src="./Images/compare_outcell_incell.jpg" width=1024>
@@ -23,15 +23,15 @@ Novel *in-cell* solution eliminates the touch and OCA layers. Because there is n
 
 ![](./Images/Solomon-Systech-In-Cell-Touch-PMOLED-Technology.png)
 
-# Our First PMOLED TDDI Display Module
+## Our First PMOLED TDDI Display Module
 UT2896KSWGG01 is a passive matrix monochrome OLED display of 96*128 with 4 in-cell touch keys, 1-D slide gesture detect and 4 outside keys fabricated by [WiseChip Semiconductor Inc.](https://www.wisechip.com.tw/en/) This repository describes how the novel in-cell display module is interfaced to a popular STM32 M4 MCU and the display and touch drivers developed.
 <img src="./Images/UT2896KSWGG01.jpg" width=100%>
 
-# Interfacing to PMOLED Module
+## Interfacing to PMOLED Module
 Two interface types are required to drive the PMOLED module: SPI for display and I2C for touch screen. There are also GPIOs required for interrupts: FR (frame synchronization) and IRQ (touch event).
 ![](./Images/Interface_diagram.png)
 
-# An Evaluation Board
+## An Evaluation Board
 To facilitate the tasks of testing and development, we have designed an evaluation board with the following features:
 
 1. Compatible pin headers for a low-cost and standard evaluation kit of ST MCU [STM32L432KC](https://www.st.com/en/microcontrollers-microprocessors/stm32l432kc.html)
