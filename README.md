@@ -25,12 +25,10 @@ Novel *in-cell* solution eliminates the touch and OCA layers. Because there is n
 
 ## Our First PMOLED TDDI Display Module
 UT2896KSWGG01 is a passive matrix monochrome OLED display of 96*128 with 4 in-cell touch keys, 1-D slide gesture detect and 4 outside keys fabricated by [WiseChip Semiconductor Inc.](https://www.wisechip.com.tw/en/) This repository describes how the novel in-cell display module is interfaced to a popular STM32 M4 MCU and the display and touch drivers developed.
-
 <img src="./Images/UT2896KSWGG01.jpg" width=100%>
 
 ## Interfacing to PMOLED Module
-Two interface types are required to drive the PMOLED module: SPI for display and I2C for touch screen. There are also GPIOs required for interrupts for FR (frame synchronization) and IRQ (touch event).
-
+Two interface types are required to drive the PMOLED module: SPI for display and I2C for touch screen. There are also GPIOs required for interrupts: FR (frame synchronization) and IRQ (touch event).
 ![](./Images/Interface_diagram.png)
 
 ## An Evaluation Board
@@ -955,14 +953,13 @@ Content vertical scrolling with commands 0x2C/0x2D to copy data from MCU's FLASH
  * 		Function to scroll an image from FLASH with content scroll command 2Ch/2Dh.<br/>
  * 		This function is valid for COM-page H mode only.
  * @param	left is the top-left position of the image to scroll in pixel, only valid in a multiple of 8.<br/>
- * @param	start_col is the start column(segment), it is also the top segment address in the native orientation of the OLED.
- * @param	end_col is the end column(segment), it is also the bottom segment address.
+ * @param	top is the start column(segment), it is also the top segment address in the native orientation of the OLED.
  * @param 	*image is a pointer to tImage structure.
  * @param	dir is the swipe direction, either SWIPE_UP(SWIPE_RL) or SWIPE_DOWN(SWIPE_LR).
  * @note	end_col should be larger than start_col; else, the function will swap it for you.
  * Scroll direction is controlled by dir.detail==SWIPE_DOWN / SWIPE_UP, not by end_col and start_col pair.
  */
-void   ssd7317_cntnt_scroll_image(uint16_t left, int16_t start_col, int16_t end_col, const tImage* image, finger_t dir);
+void   ssd7317_cntnt_scroll_image(uint16_t left, uint16_t top, const tImage* image, finger_t dir);
 ```
 
 ### Demo on YouTube
@@ -1028,7 +1025,7 @@ The I2C waveform below may help you to visualize the data format required.
 |             | `MX_SPI1_Init()`                       | Initialization of SPI module for display.                    |
 |             | `MX_I2C1_Init()`                       | Initialization of I2C module for touchscreen.                |
 
-### Which Code to Get Started?
+### Which Code to Port First?
 
 After porting all of the `HAL_*` and `MX_*` functions, I would suggest starting with the function `void ssd7317_put_image_direct(uint16_t left, int16_t top, const tImage* image)` to draw an image without going through the frame buffer.  No `FR` synchronization is involved either. This function simply copies pixels from MCU's FLASH to GDDRAM of the OLED to get an image displayed. The procedure of image conversion has been fully described in the section [LCD Image Converter](#lcd-image-converter) above. 
 
