@@ -1,7 +1,7 @@
 # Contents
 ## [Introduction](#Introduction)
 ## [PMOLED Module](#our-first-pmoled-tddi-display-module)
-## [Interfacing to PMOLED Module](#interfacing-to-pmoled-module)
+## [Interfacing to PMOLED Module](#-interfacing-to-pmoled-module)
 ## [An Evaluation Board](#an-evaluation-board)
 ## [Setting Up the IDE](#setting-up-the-integrated-development-environment)
 ## [Download and Build the Hello World Project](#download-and-build-the-hello-world-project)
