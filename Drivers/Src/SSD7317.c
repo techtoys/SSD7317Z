@@ -189,7 +189,7 @@ static bool fb_flush_pending_get(void);
 static void fb_flush_pending_clear(void);
 static void fb_flush_suspend(void);
 
-static color_t *fb_scroll_segment(rect_t area, finger_t gesture);
+static inline color_t *fb_scroll_segment(rect_t area, finger_t gesture);
 
 static void i2c_write(uint8_t slave, uint16_t reg, const uint8_t *data, uint16_t len);
 static void i2c_read(uint8_t slave, uint16_t reg, uint8_t *buffer, uint16_t len);
@@ -1486,14 +1486,14 @@ void   ssd7317_cntnt_fbscroll_image(uint16_t left, uint16_t top, uint8_t tick, c
 	}
 
 	const uint8_t *px;// = image->data;
-
 	rect_t area = {left, top, left+image->height-1, top+image->height-1};
-
+	uint16_t byte_w = min(((OLED_HOR_RES>>3)-(left>>3)), (image->width)>>3);
+	
 	for(uint16_t col=0; col<image->height; col++){
 		color_t *fb = fb_scroll_segment(area, dir);
 		(dir.detail==SWIPE_DOWN)?(px = &image->data[(image->height-1-col)*(image->width>>3)]):(px = &image->data[col*(image->width>>3)]);
-		uint16_t byte_w = min(((OLED_HOR_RES>>3)-(left>>3)), (image->width)>>3);
-		while(byte_w--)
+		uint16_t ctr = byte_w;
+		while(ctr--)
 			*fb++ = *px++;
 		if(tick>0)
 			HAL_Delay(tick);
@@ -1771,7 +1771,7 @@ void   ssd7317_get_stringsize(const tFont* font, const char *str, uint16_t *w, u
  * 		}
  * @endcode
  */
-static color_t *fb_scroll_segment(rect_t area, finger_t gesture)
+static inline color_t *fb_scroll_segment(rect_t area, finger_t gesture)
 {
 	uint16_t x1=min(area.x1,OLED_HOR_RES-1);
 	uint16_t x2=min(area.x2,OLED_HOR_RES-1);
