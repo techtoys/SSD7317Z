@@ -1,7 +1,7 @@
 # Contents
 ## [Introduction](#Introduction)
 ## [PMOLED Module](#our-first-pmoled-tddi-display-module)
-## [Hardware Interface to PMOLED Module](#hardware-interface-to-pmoled-module)
+## [Interfacing to PMOLED Module](#interfacing-to-pmoled-module)
 ## [An Evaluation Board](#an-evaluation-board)
 ## [Setting Up the IDE](#setting-up-the-integrated-development-environment)
 ## [Download and Build the Hello World Project](#download-and-build-the-hello-world-project)
@@ -28,14 +28,12 @@ UT2896KSWGG01 is a passive matrix monochrome OLED display of 96*128 with 4 in-ce
 
 <img src="./Images/UT2896KSWGG01.jpg" width=100%>
 
-## Hardware Interface to PMOLED Module
-
+## Interfacing to PMOLED Module
 Two interface types are required to drive the PMOLED module: SPI for display and I2C for touch screen. There are also GPIOs required for interrupts for FR (frame synchronization) and IRQ (touch event).
 
 ![](./Images/Interface_diagram.png)
 
 ## An Evaluation Board
-
 To facilitate the tasks of testing and development, we have designed an evaluation board with the following features:
 
 1. Compatible pin headers for a low-cost and standard evaluation kit of ST MCU [STM32L432KC](https://www.st.com/en/microcontrollers-microprocessors/stm32l432kc.html)
