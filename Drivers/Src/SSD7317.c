@@ -1369,9 +1369,16 @@ void   ssd7317_cntnt_scroll_image(uint16_t left, uint16_t top, const tImage* ima
 		return;
 	}
 
+	if(image==0){
+#ifdef  USE_FULL_ASSERT
+		assert_failed((uint8_t *)__FILE__, __LINE__);
+#endif
+		return;
+	}
+
 	uint8_t page_start = 0;
 
-	if(left > (OLED_HOR_RES-1)){
+	if(left > (OLED_HOR_RES-1) || top > (OLED_VER_RES-1)){
 #ifdef  USE_FULL_ASSERT
 		assert_failed((uint8_t *)__FILE__, __LINE__);
 #endif
@@ -1479,7 +1486,14 @@ void   ssd7317_linear_scroll_image(uint16_t left, uint16_t top, uint8_t tick, co
 		return;
 	}
 
-	if(left > (OLED_HOR_RES-1)){
+	if(left > (OLED_HOR_RES-1) || top > (OLED_VER_RES-1)){
+#ifdef  USE_FULL_ASSERT
+		assert_failed((uint8_t *)__FILE__, __LINE__);
+#endif
+		return;
+	}
+
+	if(image==0){
 #ifdef  USE_FULL_ASSERT
 		assert_failed((uint8_t *)__FILE__, __LINE__);
 #endif
@@ -1517,63 +1531,64 @@ void   ssd7317_spring_scroll_image(uint16_t left, uint16_t top, uint8_t tick, co
 		return;
 	}
 
-	if(left > (OLED_HOR_RES-1)){
+	if(left > (OLED_HOR_RES-1) || top > (OLED_VER_RES-1)){
 #ifdef  USE_FULL_ASSERT
 		assert_failed((uint8_t *)__FILE__, __LINE__);
 #endif
 		return;
 	}
 
-	const uint8_t *px;// = image->data;
-	rect_t area = {left, top, left+image->height-1, top+image->height-1};
-	color_t *fb, *fb_save;
-	uint16_t byte_w = min(((OLED_HOR_RES>>3)-(left>>3)), (image->width)>>3);
-	uint16_t ctr, col;
-
-	/* 0) Save the framebuffer's contents that will be scrolled out */
-	for(col=0; col<(image->height>>2); col++){
-		//fb_save = (color_t *)malloc((image->height>>2)*(image->width>>3)*sizeof(color_t));
-		if(dir.detail==SWIPE_DOWN){
-			//save the top
-			ctr = (image->height>>2)*(image->width>>3);
-			fb = &frame_buffer[BUFIDX(left,top)];
-			while(ctr--){
-				*fb_save++ = *fb++;
-			}
-		}else{
-			//save the bottom
-		}
+	if(image==0){
+#ifdef  USE_FULL_ASSERT
+		assert_failed((uint8_t *)__FILE__, __LINE__);
+#endif
+		return;
 	}
 
-	/* 1) Animate with scrolling to the opposite direction (for 1/4*height) like a spring */
-	for(col=0; col<(image->height>>2); col++){
-		finger_t opposite;
-		(dir.detail==SWIPE_DOWN)?(opposite.detail=SWIPE_UP):(opposite.detail=SWIPE_DOWN);
-		fb = fb_scroll_segment(area, opposite);
+	rect_t area = {left, top, left+image->height-1, top+image->height-1};
+	uint16_t byte_w = min(((OLED_HOR_RES>>3)-(left>>3)), (image->width)>>3);
+	uint16_t ctr, col, recoil_div=2; //recoil_div is a right-shift divisor; i.e. a value of 2 means the image shifts by 1/4*(image height)
+	color_t *fb_save = (color_t *)malloc((image->height>>recoil_div)*(image->width>>3)*sizeof(color_t));
+	color_t *fb;
+
+	/* 1) Save the framebuffer's contents scrolled out */
+	for(col=0; col<(image->height>>recoil_div); col++){
+		ctr = (image->height>>recoil_div)*(image->width>>3);
+		//when SWIPE_DOWN->save the top, when SWIPE_UP->save the bottom
+		(dir.detail==SWIPE_DOWN)?(fb = &frame_buffer[BUFIDX(left,(top+col))]):(fb = &frame_buffer[BUFIDX(left,(image->height-1-col))]);
+		while(ctr--)
+			*fb_save++ = *fb++; //save the contents
+	}
+
+	/* 2) Animate by scrolling to the opposite direction like spring recoil */
+	for(col=0; col<(image->height>>recoil_div); col++){
+		finger_t recoil_dir;
+		(dir.detail==SWIPE_DOWN)?(recoil_dir.detail=SWIPE_UP):(recoil_dir.detail=SWIPE_DOWN);
+		fb = fb_scroll_segment(area, recoil_dir);
 		ctr = byte_w;
-		while(ctr--){
-			*fb++ = BLACK; //black out the line that scrolled out
-		}
+		while(ctr--)
+			*fb++ = BLACK; //fill the empty area in BLACK
 		if(tick>0)
 			HAL_Delay(tick+5);
 		fb_flush_pending_set(area);
 	}
 
-	/* 2) refill the content scrolled out in step 1 */
-	for(col=0; col<(image->height>>2); col++){
+	/* 3) restore the contents scrolled out in step 1 */
+	for(col=0; col<(image->height>>recoil_div); col++){
 		fb = fb_scroll_segment(area, dir);
 		ctr = byte_w;
-		uint16_t i=0;
+		color_t *fb_restore = &fb_save[0];
 		while(ctr--)
-			*fb++ = fb_save[i++];
+			*fb++ = *fb_restore++;
 		if(tick>0)
 			HAL_Delay(tick+5);
 		fb_flush_pending_set(area);
 	}
-	//free(fb_save);
+	free(fb_save); //important to free fb_save otherwise memory leakage results
 
 
-	/* 3) Scroll in new content from FLASH */
+	/* 4) Scroll in new content from FLASH */
+	const uint8_t *px;
 	for(col=0; col<image->height; col++){
 		fb = fb_scroll_segment(area, dir);
 		(dir.detail==SWIPE_DOWN)?(px = &image->data[(image->height-1-col)*(image->width>>3)]):(px = &image->data[col*(image->width>>3)]);
@@ -1582,7 +1597,6 @@ void   ssd7317_spring_scroll_image(uint16_t left, uint16_t top, uint8_t tick, co
 			*fb++ = *px++;
 		if(tick>0)
 			HAL_Delay(tick);
-		//fb_flush_suspend();
 		fb_flush_pending_set(area);
 	}
 }
