@@ -39,6 +39,7 @@
 #include "sysfont.h"
 #include <stdbool.h>
 #include <stdio.h>
+#include <stdlib.h> //for malloc
 #include <string.h>
 
 /*@note	Slave addresses of SSD7317 is programmable for higher flexibility:
@@ -189,8 +190,8 @@ finger_t ssd7317_get_gesture(void);
 rect_t ssd7317_put_image(uint16_t left, uint16_t top, const tImage* image, bool negative);
 void   ssd7317_put_image_direct(uint16_t left, int16_t top, const tImage* image);
 
-void   ssd7317_cntnt_fbscroll_image(uint16_t left, uint16_t top, uint8_t tick, const tImage* image, finger_t dir);
-void   ssd7317_spring_scroll_image(uint16_t left, uint16_t top, unit8_t tick, const tImage* image, finger_t dir);
+void   ssd7317_linear_scroll_image(uint16_t left, uint16_t top, uint8_t tick, const tImage* image, finger_t dir);
+void   ssd7317_spring_scroll_image(uint16_t left, uint16_t top, uint8_t tick, const tImage* image, finger_t dir);
 	
 void   ssd7317_cntnt_scroll_image(uint16_t left, uint16_t top, const tImage* image, finger_t dir);
 void   ssd7317_cons_scroll_page(rect_t subpage, uint8_t interval, uint8_t accelerate, finger_t dir);

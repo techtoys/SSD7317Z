@@ -1436,7 +1436,8 @@ void   ssd7317_cntnt_scroll_image(uint16_t left, uint16_t top, const tImage* ima
 /**
  * @brief
  * \b Description:<br/>
- * This function is the counterpart of ssd7317_cntnt_image() which scrolling effect is done by graphic commands.
+ * This function scrolls an image by copying data from MCU's FLASH to the frame buffer `frame_buffer[]`
+ * followed by transferring the buffer to the OLED's GDDRAM.
  * @param	left is the top left position of the image to scroll in pixel, only valid in a multiple of 8.<br/>
  * @param	top is the start column(segment), it is also the top segment address in native orientation of the OLED.
  * @param	tick is the delay between successive line update of the image in millisecond precision.
@@ -1461,14 +1462,14 @@ void   ssd7317_cntnt_scroll_image(uint16_t left, uint16_t top, const tImage* ima
  * 			case SWIPE:
  * 			(finger.detail==SWIPE_DOWN)?(icon_index++):(icon_index--);
  * 			//assume there are icons of 64x64 pixels declared as tIcon icons[]
- * 			ssd7317_cntnt_fbscroll_image(16,64,1,icons[icon_index].image,finger);
+ * 			ssd7317_linear_scroll_image(16,64,1,icons[icon_index].image,finger);
  * 			break;
  * 			}
  * 			}
  * 		}
  * @endcode
  */
-void   ssd7317_cntnt_fbscroll_image(uint16_t left, uint16_t top, uint8_t tick, const tImage* image, finger_t dir)
+void   ssd7317_linear_scroll_image(uint16_t left, uint16_t top, uint8_t tick, const tImage* image, finger_t dir)
 {
 	if((dir.detail!=SWIPE_DOWN) && (dir.detail!=SWIPE_UP))
 	{
@@ -1493,6 +1494,90 @@ void   ssd7317_cntnt_fbscroll_image(uint16_t left, uint16_t top, uint8_t tick, c
 		color_t *fb = fb_scroll_segment(area, dir);
 		(dir.detail==SWIPE_DOWN)?(px = &image->data[(image->height-1-col)*(image->width>>3)]):(px = &image->data[col*(image->width>>3)]);
 		uint16_t ctr = byte_w;
+		while(ctr--)
+			*fb++ = *px++;
+		if(tick>0)
+			HAL_Delay(tick);
+		//fb_flush_suspend();
+		fb_flush_pending_set(area);
+	}
+}
+
+/**
+ * @brief
+ * Scroll with spring animation (pending)
+ */
+void   ssd7317_spring_scroll_image(uint16_t left, uint16_t top, uint8_t tick, const tImage* image, finger_t dir)
+{
+	if((dir.detail!=SWIPE_DOWN) && (dir.detail!=SWIPE_UP))
+	{
+#ifdef  USE_FULL_ASSERT
+		assert_failed((uint8_t *)__FILE__, __LINE__);
+#endif
+		return;
+	}
+
+	if(left > (OLED_HOR_RES-1)){
+#ifdef  USE_FULL_ASSERT
+		assert_failed((uint8_t *)__FILE__, __LINE__);
+#endif
+		return;
+	}
+
+	const uint8_t *px;// = image->data;
+	rect_t area = {left, top, left+image->height-1, top+image->height-1};
+	color_t *fb, *fb_save;
+	uint16_t byte_w = min(((OLED_HOR_RES>>3)-(left>>3)), (image->width)>>3);
+	uint16_t ctr, col;
+
+	/* 0) Save the framebuffer's contents that will be scrolled out */
+	for(col=0; col<(image->height>>2); col++){
+		//fb_save = (color_t *)malloc((image->height>>2)*(image->width>>3)*sizeof(color_t));
+		if(dir.detail==SWIPE_DOWN){
+			//save the top
+			ctr = (image->height>>2)*(image->width>>3);
+			fb = &frame_buffer[BUFIDX(left,top)];
+			while(ctr--){
+				*fb_save++ = *fb++;
+			}
+		}else{
+			//save the bottom
+		}
+	}
+
+	/* 1) Animate with scrolling to the opposite direction (for 1/4*height) like a spring */
+	for(col=0; col<(image->height>>2); col++){
+		finger_t opposite;
+		(dir.detail==SWIPE_DOWN)?(opposite.detail=SWIPE_UP):(opposite.detail=SWIPE_DOWN);
+		fb = fb_scroll_segment(area, opposite);
+		ctr = byte_w;
+		while(ctr--){
+			*fb++ = BLACK; //black out the line that scrolled out
+		}
+		if(tick>0)
+			HAL_Delay(tick+5);
+		fb_flush_pending_set(area);
+	}
+
+	/* 2) refill the content scrolled out in step 1 */
+	for(col=0; col<(image->height>>2); col++){
+		fb = fb_scroll_segment(area, dir);
+		ctr = byte_w;
+		uint16_t i=0;
+		while(ctr--)
+			*fb++ = fb_save[i++];
+		if(tick>0)
+			HAL_Delay(tick+5);
+		fb_flush_pending_set(area);
+	}
+	//free(fb_save);
+
+
+	/* 3) Scroll in new content from FLASH */
+	for(col=0; col<image->height; col++){
+		fb = fb_scroll_segment(area, dir);
+		(dir.detail==SWIPE_DOWN)?(px = &image->data[(image->height-1-col)*(image->width>>3)]):(px = &image->data[col*(image->width>>3)]);
+		ctr = byte_w;
 		while(ctr--)
 			*fb++ = *px++;
 		if(tick>0)

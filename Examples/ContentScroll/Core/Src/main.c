@@ -186,8 +186,8 @@ void app_touch_task(void)
 				 * Update by frame buffer: ssd7317_cntnt_fbscroll_image()
 				 */
 				//ssd7317_cntnt_scroll_image(ICON_X,ICON_Y,icons[icon_index].image,finger);
-				ssd7317_cntnt_fbscroll_image(ICON_X,ICON_Y,0,icons[icon_index].image,finger);
-
+				ssd7317_linear_scroll_image(ICON_X,ICON_Y,0,icons[icon_index].image,finger);
+				//ssd7317_spring_scroll_image(ICON_X,ICON_Y,3,icons[icon_index].image,finger);
 				//update the icon index
 				snprintf(str, 3, "%d", icon_index);
 				ssd7317_put_string(LABEL_X,LABEL_Y,&ArialBlack_36h,str,0);
