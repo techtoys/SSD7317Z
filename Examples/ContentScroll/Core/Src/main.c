@@ -162,7 +162,7 @@ void app_touch_task(void)
 		if(!sleep){
 			if(finger.tap_down_key!=finger.tap_up_key){
 				tone_pwm_set(500);
-				//tone_pwm_on();
+				tone_pwm_on();
 
 				//clear the icon's name background first
 				rect_t string_bg = {OLED_HOR_RES-label_w, ICON_Y-label_h-6, OLED_HOR_RES-1, ICON_Y-7};
@@ -194,7 +194,7 @@ void app_touch_task(void)
 				snprintf(str, 3, "%d", icon_index);
 				ssd7317_put_string(LABEL_X,LABEL_Y,&ArialBlack_36h,str,0);
 
-				//tone_pwm_off();
+				tone_pwm_off();
 			}else{
 				rect_t full_page={0,0,OLED_HOR_RES-1,OLED_VER_RES-1};
 				ssd7317_cons_scroll_page(full_page,7,5,finger);
