@@ -39,7 +39,6 @@
 #include "sysfont.h"
 #include <stdbool.h>
 #include <stdio.h>
-#include <stdlib.h> //for malloc
 #include <string.h>
 
 /*@note	Slave addresses of SSD7317 is programmable for higher flexibility:

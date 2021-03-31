@@ -1519,7 +1519,41 @@ void   ssd7317_linear_scroll_image(uint16_t left, uint16_t top, uint8_t tick, co
 
 /**
  * @brief
- * Scroll with spring animation (pending)
+ * \b Description:<br/>
+ * This function scrolls an image with an animation effect of spring-like recoil.
+ * @param	left is the top left position of the image to scroll in pixel, only valid in a multiple of 8.<br/>
+ * @param	top is the start column(segment), it is also the top segment address in native orientation of the OLED.
+ * @param	tick is the delay between successive line update of the image in millisecond precision.
+ * @param 	*image is a pointer to tImage structure.
+ * @param	dir is the swipe direction, either SWIPE_UP(SWIPE_RL) or SWIPE_DOWN(SWIPE_LR).
+ * @note	There are 4 steps to scroll and recoil an image:<br/>
+ * 1) Save the framebuffer's contents scrolled out<br/>
+ * 2) Animate by scrolling to the opposite direction like spring recoil<br/>
+ * 3) Restore the contents scrolled out in step 1<br/>
+ * 4) Scroll in new content from FLASH<br/>
+ *
+ * \b Example:
+ * @code
+ * 		int main(void)
+ * 		{
+ * 			HAL_Init(); //system reset
+ * 			SystemClock_Config(); //Configure the system clock
+ * 			ssd7317_init();	//OLED display On after this function
+ * 			//...
+ * 			static uint8_t icon_index=0;
+ * 			finger_t gesture;
+ * 			while(1)
+ * 			{
+ * 			switch(gesture.act){
+ * 			case SWIPE:
+ * 			(finger.detail==SWIPE_DOWN)?(icon_index++):(icon_index--);
+ * 			//assume there are icons of 64x64 pixels declared as tIcon icons[]
+ * 			ssd7317_spring_scroll_image(16,64,2,icons[icon_index].image,finger);
+ * 			break;
+ * 			}
+ * 			}
+ * 		}
+ * @endcode
  */
 void   ssd7317_spring_scroll_image(uint16_t left, uint16_t top, uint8_t tick, const tImage* image, finger_t dir)
 {
@@ -1548,53 +1582,50 @@ void   ssd7317_spring_scroll_image(uint16_t left, uint16_t top, uint8_t tick, co
 	rect_t area = {left, top, left+image->height-1, top+image->height-1};
 	uint16_t byte_w = min(((OLED_HOR_RES>>3)-(left>>3)), (image->width)>>3);
 	uint16_t ctr, col, recoil_div=2; //recoil_div is a right-shift divisor; i.e. a value of 2 means the image shifts by 1/4*(image height)
-	color_t *fb_save = (color_t *)malloc((image->height>>recoil_div)*(image->width>>3)*sizeof(color_t));
-	color_t *fb;
+	color_t fb_save[(image->height>>recoil_div)*(image->width>>3)*sizeof(color_t)];
+	color_t *pfb_save = &fb_save[0];
+	color_t *pfb;
 
 	/* 1) Save the framebuffer's contents scrolled out */
 	for(col=0; col<(image->height>>recoil_div); col++){
-		ctr = (image->height>>recoil_div)*(image->width>>3);
+		ctr = byte_w;
 		//when SWIPE_DOWN->save the top, when SWIPE_UP->save the bottom
-		(dir.detail==SWIPE_DOWN)?(fb = &frame_buffer[BUFIDX(left,(top+col))]):(fb = &frame_buffer[BUFIDX(left,(image->height-1-col))]);
+		(dir.detail==SWIPE_DOWN)?(pfb = &frame_buffer[BUFIDX(left,(top+col))]):(pfb = &frame_buffer[BUFIDX(left,(top+image->height-1-col))]);
 		while(ctr--)
-			*fb_save++ = *fb++; //save the contents
+			*pfb_save++ = *pfb++; //save the contents
 	}
 
 	/* 2) Animate by scrolling to the opposite direction like spring recoil */
 	for(col=0; col<(image->height>>recoil_div); col++){
 		finger_t recoil_dir;
 		(dir.detail==SWIPE_DOWN)?(recoil_dir.detail=SWIPE_UP):(recoil_dir.detail=SWIPE_DOWN);
-		fb = fb_scroll_segment(area, recoil_dir);
+		pfb = fb_scroll_segment(area, recoil_dir);
 		ctr = byte_w;
 		while(ctr--)
-			*fb++ = BLACK; //fill the empty area in BLACK
-		if(tick>0)
-			HAL_Delay(tick+5);
+			*pfb++ = BLACK; //fill the empty area in BLACK
+		HAL_Delay(tick+5); //hardcode a slightly longer recoil time with tick+5
 		fb_flush_pending_set(area);
 	}
 
-	/* 3) restore the contents scrolled out in step 1 */
+	/* 3) Restore the contents scrolled out in step 1 */
 	for(col=0; col<(image->height>>recoil_div); col++){
-		fb = fb_scroll_segment(area, dir);
+		pfb = fb_scroll_segment(area, dir);
 		ctr = byte_w;
-		color_t *fb_restore = &fb_save[0];
+		color_t *pfb_restore=&fb_save[((image->height>>recoil_div)-1-col)*byte_w];
 		while(ctr--)
-			*fb++ = *fb_restore++;
-		if(tick>0)
-			HAL_Delay(tick+5);
+			*pfb++ = *pfb_restore++;
+		HAL_Delay(tick+5);
 		fb_flush_pending_set(area);
 	}
-	free(fb_save); //important to free fb_save otherwise memory leakage results
-
 
 	/* 4) Scroll in new content from FLASH */
 	const uint8_t *px;
 	for(col=0; col<image->height; col++){
-		fb = fb_scroll_segment(area, dir);
+		pfb = fb_scroll_segment(area, dir);
 		(dir.detail==SWIPE_DOWN)?(px = &image->data[(image->height-1-col)*(image->width>>3)]):(px = &image->data[col*(image->width>>3)]);
 		ctr = byte_w;
 		while(ctr--)
-			*fb++ = *px++;
+			*pfb++ = *px++;
 		if(tick>0)
 			HAL_Delay(tick);
 		fb_flush_pending_set(area);

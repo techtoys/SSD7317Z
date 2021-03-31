@@ -1,7 +1,7 @@
 # Contents
 ## [Introduction](#Introduction-1)
 ## [PMOLED Module](#our-first-pmoled-tddi-display-module)
-## [Interfacing to PMOLED Module](#interfacing-to-pmoled-module-1)
+## [Interfacing PMOLED Module](#interfacing-pmoled-module-1)
 ## [An Evaluation Board](#an-evaluation-board-1)
 ## [Setting Up the IDE](#setting-up-the-integrated-development-environment)
 ## [Download and Build the Hello World Project](#download-and-build-the-hello-world-project-1)
@@ -27,7 +27,7 @@ Novel *in-cell* solution eliminates the touch and OCA layers. Because there is n
 UT2896KSWGG01 is a passive matrix monochrome OLED display of 96*128 with 4 in-cell touch keys, 1-D slide gesture detect and 4 outside keys fabricated by [WiseChip Semiconductor Inc.](https://www.wisechip.com.tw/en/) This repository describes how the novel in-cell display module is interfaced to a popular STM32 M4 MCU and the display and touch drivers developed.
 <img src="./Images/UT2896KSWGG01.jpg" width=100%>
 
-## Interfacing to PMOLED Module
+## Interfacing PMOLED Module
 Two interface types are required to drive the PMOLED module: SPI for display and I2C for touch screen. There are also GPIOs required for interrupts: FR (frame synchronization) and IRQ (touch event).
 ![](./Images/Interface_diagram.png)
 
