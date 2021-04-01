@@ -1603,7 +1603,7 @@ void   ssd7317_spring_scroll_image(uint16_t left, uint16_t top, uint8_t tick, co
 		ctr = byte_w;
 		while(ctr--)
 			*pfb++ = BLACK; //fill the empty area in BLACK
-		HAL_Delay(tick+5); //hardcode a slightly longer recoil time with tick+5
+		HAL_Delay(tick+7); //hardcode a slightly longer recoil time with tick+7
 		fb_flush_pending_set(area);
 	}
 
@@ -1614,7 +1614,7 @@ void   ssd7317_spring_scroll_image(uint16_t left, uint16_t top, uint8_t tick, co
 		color_t *pfb_restore=&fb_save[((image->height>>recoil_div)-1-col)*byte_w];
 		while(ctr--)
 			*pfb++ = *pfb_restore++;
-		HAL_Delay(tick+5);
+		HAL_Delay(tick+7);
 		fb_flush_pending_set(area);
 	}
 

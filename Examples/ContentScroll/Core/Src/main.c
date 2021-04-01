@@ -187,8 +187,8 @@ void app_touch_task(void)
 				 * scroll with animation like a spring: ssd7317_spring_scroll_image()
 				 */
 				//ssd7317_cntnt_scroll_image(ICON_X,ICON_Y,icons[icon_index].image,finger);
-				//ssd7317_linear_scroll_image(ICON_X,ICON_Y,2,icons[icon_index].image,finger);
-				ssd7317_spring_scroll_image(ICON_X,ICON_Y,2,icons[icon_index].image,finger);
+				//ssd7317_linear_scroll_image(ICON_X,ICON_Y,1,icons[icon_index].image,finger);
+				ssd7317_spring_scroll_image(ICON_X,ICON_Y,1,icons[icon_index].image,finger);
 
 				//update the icon index
 				snprintf(str, 3, "%d", icon_index);
