@@ -112,21 +112,34 @@ typedef enum{
 	LONG_TAP_ANYKEY = 2,
 	DOUBLE_TAP_ANYKEY = 3,
 	SWIPE = 4,
+	SINGLE_EXT_ANYKEY = 5, //single click on any external key with direction ID byte (byte 5) = 2
+	LONG_EXT_ANYKEY = 6, //long tap on any external key with direction ID byte (byte 5) = 2
 	LARGE_OBJ = 0x40,
 	ACT_ERROR = 0xFF,
 }gesture_act_t;
 
 typedef enum{
 	SINGLE_TAP_ANYKEY_DETAIL = 0,
-	SINGLE_TAP_KEY1 = 1,
+	SINGLE_EXT_RX3  = 1, //external key RX3 with Gesture Detail(byte 2) return 1, ID(byte 5)=2
+	SINGLE_TAP_KEY1 = 1, //tap key on touch screen with Gesture Detail(byte 2) return 1, ID(byte 5)=0
+	SINGLE_EXT_RX2  = 2,
 	SINGLE_TAP_KEY2 = 2,
+	SINGLE_EXT_RX1  = 3,
 	SINGLE_TAP_KEY3 = 3,
+	SINGLE_EXT_RX0  = 4,
 	SINGLE_TAP_KEY4 = 4,
+
 	LONG_TAP_ANYKEY_DETAIL = 0,
+
+	LONG_EXT_RX3  = SINGLE_TAP_KEY1,
 	LONG_TAP_KEY1 = SINGLE_TAP_KEY1,
+	LONG_EXT_RX2  = SINGLE_TAP_KEY2,
 	LONG_TAP_KEY2 = SINGLE_TAP_KEY2,
+	LONG_EXT_RX1  = SINGLE_TAP_KEY3,
 	LONG_TAP_KEY3 = SINGLE_TAP_KEY3,
+	LONG_EXT_RX0  = SINGLE_TAP_KEY4,
 	LONG_TAP_KEY4 = SINGLE_TAP_KEY4,
+
 	DOUBLE_TAP_ANYKEY_DETAIL = 0,
 	DOUBLE_TAP_KEY1 = SINGLE_TAP_KEY1,
 	DOUBLE_TAP_KEY2= SINGLE_TAP_KEY2,

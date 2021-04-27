@@ -25,6 +25,7 @@
 #include "SSD7317.h"
 #include "rpc.h"
 #include "tone.h"
+#include "Tahoma_12h.h"
 #include "ArialBlack_36h.h"
 #include "ArialBlack_arrows.h"
 #include "battery-status-full.h"
@@ -93,6 +94,8 @@ int __io_putchar(int ch)
 /**
  * @brief	Touch screen demo for this application
  */
+#define EXT_LABEL_X 32
+#define EXT_LABEL_Y 4
 #define LABEL_X 0
 #define LABEL_Y 26
 #define ICON_X	32
@@ -122,6 +125,28 @@ void app_touch_task(void)
 	finger_t finger = ssd7317_get_gesture();
 
 	switch(finger.act){
+	case SINGLE_EXT_ANYKEY:
+
+		if(finger.detail==SINGLE_EXT_RX0){
+			tone_pwm_set(493);
+			ssd7317_put_string(EXT_LABEL_X,EXT_LABEL_Y,&Tahoma_12h," RX0 ",1);
+		}
+		else if (finger.detail==SINGLE_EXT_RX1){
+			tone_pwm_set(523);
+			ssd7317_put_string(EXT_LABEL_X,EXT_LABEL_Y,&Tahoma_12h," RX1 ",1);
+		}
+		else if (finger.detail==SINGLE_EXT_RX2){
+			tone_pwm_set(554);
+			ssd7317_put_string(EXT_LABEL_X,EXT_LABEL_Y,&Tahoma_12h," RX2 ",1);
+		}
+		else if (finger.detail==SINGLE_EXT_RX3){
+			tone_pwm_set(587);
+			ssd7317_put_string(EXT_LABEL_X,EXT_LABEL_Y,&Tahoma_12h," RX3 ",1);
+		}
+		tone_pwm_on();
+		HAL_Delay(50);
+		tone_pwm_off();
+		break;
 	case LONG_TAP_ANYKEY:
 		ssd7317_enter_lpm();
 		tone_pwm_set(500); tone_pwm_on();

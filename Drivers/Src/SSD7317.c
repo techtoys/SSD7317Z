@@ -1122,7 +1122,13 @@ finger_t ssd7317_get_gesture(void){
 
 	if(touch_event_get()){
 		uint16_t status;
-		/*gesture_upload[0]=Gesture ACT, gesture_upload[1]=Gesture Detail, gesture_upload[2]=KeyNum[6:4]KeyNum[2:0]*/
+		/* gesture_upload[0]=0xf6
+		 * gesture_upload[1]=Gesture ACT
+		 * gesture_upload[2]=Gesture Detail
+		 * gesture_upload[3]=KeyNum[6:4]KeyNum[2:0]
+		 * gesture_upload[4] reserved
+		 * gesture_upload[5]=Direction ID
+		 * */
 		uint8_t gesture_upload[6];
 
 		i2c_read(TOUCH_SA, 0x0af0, (uint8_t *)&status, 2);
@@ -1143,10 +1149,11 @@ finger_t ssd7317_get_gesture(void){
 #endif
 		touch_event_clear();
 
-		switch(gesture_upload[1]){
-		case 0x01:
+	switch(gesture_upload[1]){
+	case 0x01:
+		if(gesture_upload[5]==0){
 			finger.act = SINGLE_TAP_ANYKEY;
-			if(gesture_upload[2]==1)
+			if(gesture_upload[2]==1)//Gesture Detail
 				finger.detail = SINGLE_TAP_KEY1;
 			else if (gesture_upload[2]==2)
 				finger.detail = SINGLE_TAP_KEY2;
@@ -1156,8 +1163,30 @@ finger_t ssd7317_get_gesture(void){
 				finger.detail = SINGLE_TAP_KEY4;
 			else
 				finger.detail = SINGLE_TAP_ANYKEY_DETAIL;
-			break;
-		case 0x02:
+		}
+		else if (gesture_upload[5]==2)
+		{
+			finger.act = SINGLE_EXT_ANYKEY;
+			if(gesture_upload[2]==1)//Gesture Detail
+				finger.detail = SINGLE_EXT_RX3;
+			else if (gesture_upload[2]==2)
+				finger.detail = SINGLE_EXT_RX2;
+			else if (gesture_upload[2]==3)
+				finger.detail = SINGLE_EXT_RX1;
+			else if (gesture_upload[2]==4)
+				finger.detail = SINGLE_EXT_RX0;
+			else
+				finger.detail = SINGLE_TAP_ANYKEY_DETAIL;
+		}
+		else
+		{
+#ifdef USE_FULL_ASSERT
+			assert_failed((uint8_t *)__FILE__, __LINE__);
+#endif
+		}
+		break;
+	case 0x02:
+		if(gesture_upload[5]==0){
 			finger.act = LONG_TAP_ANYKEY;
 			if(gesture_upload[2]==1)
 				finger.detail = LONG_TAP_KEY1;
@@ -1169,42 +1198,62 @@ finger_t ssd7317_get_gesture(void){
 				finger.detail = LONG_TAP_KEY4;
 			else
 				finger.detail = LONG_TAP_ANYKEY_DETAIL;
-			break;
-		case 0x03:
-			finger.act = DOUBLE_TAP_ANYKEY;
-			if(gesture_upload[2]==1)
-				finger.detail = DOUBLE_TAP_KEY1;
-			else if (gesture_upload[2]==2)
-				finger.detail = DOUBLE_TAP_KEY2;
-			else if (gesture_upload[2]==3)
-				finger.detail = DOUBLE_TAP_KEY3;
-			else if (gesture_upload[2]==4)
-				finger.detail = DOUBLE_TAP_KEY4;
-			else
-				finger.detail = DOUBLE_TAP_ANYKEY_DETAIL;
-			break;
-		case 0x04:
-			finger.act = SWIPE;
-			if(gesture_upload[2]==1){
-				finger.detail = SWIPE_LR;
-			}else if(gesture_upload[2]==2){
-				finger.detail = SWIPE_RL;
-			}
-			finger.tap_down_key = (gesture_upload[3]>>4)&0x07;
-			finger.tap_up_key = gesture_upload[3]&0x07;
-			break;
-		case 0x40:
-			finger.act = LARGE_OBJ;
-			if(gesture_upload[2]==1)
-				finger.detail = LARGE_OBJ_DETECT;
-			else
-				finger.detail = LARGE_OBJ_RELEASE;
-			break;
-		case 0xFF:
-			finger.act = ACT_ERROR;
-			finger.detail = DETAIL_ERROR;
-			break;
 		}
+		else if (gesture_upload[5]==2){
+			finger.act = LONG_EXT_ANYKEY;
+			if(gesture_upload[2]==1)
+				finger.detail = LONG_EXT_RX3;
+			else if (gesture_upload[2]==2)
+				finger.detail = LONG_EXT_RX2;
+			else if (gesture_upload[2]==3)
+				finger.detail = LONG_EXT_RX1;
+			else if (gesture_upload[2]==4)
+				finger.detail = LONG_EXT_RX0;
+			else
+				finger.detail = LONG_TAP_ANYKEY_DETAIL;
+		}
+		else {
+#ifdef USE_FULL_ASSERT
+			assert_failed((uint8_t *)__FILE__, __LINE__);
+#endif
+		}
+
+		break;
+	case 0x03:
+		finger.act = DOUBLE_TAP_ANYKEY;
+		if(gesture_upload[2]==1)
+			finger.detail = DOUBLE_TAP_KEY1;
+		else if (gesture_upload[2]==2)
+			finger.detail = DOUBLE_TAP_KEY2;
+		else if (gesture_upload[2]==3)
+			finger.detail = DOUBLE_TAP_KEY3;
+		else if (gesture_upload[2]==4)
+			finger.detail = DOUBLE_TAP_KEY4;
+		else
+			finger.detail = DOUBLE_TAP_ANYKEY_DETAIL;
+		break;
+	case 0x04:
+		finger.act = SWIPE;
+		if(gesture_upload[2]==1){
+			finger.detail = SWIPE_LR;
+		}else if(gesture_upload[2]==2){
+			finger.detail = SWIPE_RL;
+		}
+		finger.tap_down_key = (gesture_upload[3]>>4)&0x07;
+		finger.tap_up_key = gesture_upload[3]&0x07;
+		break;
+	case 0x40:
+		finger.act = LARGE_OBJ;
+		if(gesture_upload[2]==1)
+			finger.detail = LARGE_OBJ_DETECT;
+		else
+			finger.detail = LARGE_OBJ_RELEASE;
+		break;
+	case 0xFF:
+		finger.act = ACT_ERROR;
+		finger.detail = DETAIL_ERROR;
+		break;
+	}
 	}
 	return finger;
 }
