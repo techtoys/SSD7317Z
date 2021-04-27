@@ -908,7 +908,9 @@ After POR, the API to get touch gesture `ssd7317_get_gesture()` is executed:
 | <img src="./Images/Number_circle_44x44_6.png" width=30> | With a swipe-down gesture, the counter is decremented `(counter--)` with a DOWN arrow displayed `ssd7317_put_char(ARROW_DOWN_X, ARROW_DOWN_Y, &ArialBlack_arrows, 0x21e9, 0)` at the upper-left corner. Similarly with a swipe-up gesture, the counter is incremented and an UP arrow displayed. The integer `counter` is converted to a string by `snprintf()` for printout. |
 | <img src="./Images/Number_circle_44x44_7.png" width=30> | This code paints the background BLACK by `ssd7317_fill_color(label_bg, BLACK)`. |
 | <img src="./Images/Number_circle_44x44_8.png" width=30> | This code draws the `counter` as a string by `ssd7317_put_string()`. |
-Four capacitive out-cell keys (external keys wired to RX0 - RX3) are available to provide flexibility in user interface design. Listing below shows the code snippet to support them.
+------
+
+**Four capacitive out-cell keys** (external keys wired to RX0 - RX3) are available to provide flexibility in user interface design. Listing below shows the code snippet to support them.
 
 <img src="./Images/Touchscreen_hiw_1_4.jpg" width=800>
 
@@ -919,11 +921,11 @@ Four capacitive out-cell keys (external keys wired to RX0 - RX3) are available t
 
 ### Demo on YouTube
 
-A simple In-cell key demo
+A simple in-cell key demo
 
 [![Watch th video](https://img.youtube.com/vi/SL3LxhRAtbs/hqdefault.jpg)](https://youtu.be/SL3LxhRAtbs)
 
-Now with out-cell key demo with metal pads soldered to RX1 and RX3
+Video below shows an out-cell key demo with metal pads soldered to RX1 and RX3
 
 [![Watch th video](https://img.youtube.com/vi/bRPoASLlDkI/hqdefault.jpg)](https://youtu.be/bRPoASLlDkI)
 
