@@ -833,21 +833,23 @@ Import the project **Touchscreen** to your IDE workspace by following the same p
 
 Running the project will show you a GUI similar to the photo below with:
 
-* gesture support for swipe up and down to change the number on the screen
+* gesture support for swipe up and down to change a counter
 
 * up arrow for swipe up and down arrow for swipe down shown at the upper left corner
 
-* ski icon as a button with color inverse on a touch event
+* ski icon as a button with color inverse on a touch event at Key 3 or 4
 
 * long press on any area of the screen to put OLED to sleep
 
-* single click on any area of the screen to wake it up with its screen content restored
+* double click on any area of the screen to wake it up with its screen content restored
 
-* beeping the buzzer on touch event
+* single click on any of the four external keys to play a note and display a label `RXn` with n=0 to 3.
+
+* beeping the buzzer on touch event on display or external key
 
 * monitoring **Gesture Upload Data** at register address 0x0AF1 through a serial terminal
 
-  <img src="./Images/Touchscreen_running_example.jpg" width=800>
+  <img src="./Images/Touchscreen_running_example_2.jpg" width=800>
 
 ### How It Works
 
@@ -906,8 +908,26 @@ After POR, the API to get touch gesture `ssd7317_get_gesture()` is executed:
 | <img src="./Images/Number_circle_44x44_6.png" width=30> | With a swipe-down gesture, the counter is decremented `(counter--)` with a DOWN arrow displayed `ssd7317_put_char(ARROW_DOWN_X, ARROW_DOWN_Y, &ArialBlack_arrows, 0x21e9, 0)` at the upper-left corner. Similarly with a swipe-up gesture, the counter is incremented and an UP arrow displayed. The integer `counter` is converted to a string by `snprintf()` for printout. |
 | <img src="./Images/Number_circle_44x44_7.png" width=30> | This code paints the background BLACK by `ssd7317_fill_color(label_bg, BLACK)`. |
 | <img src="./Images/Number_circle_44x44_8.png" width=30> | This code draws the `counter` as a string by `ssd7317_put_string()`. |
+Four capacitive out-cell keys (external keys wired to RX0 - RX3) are available to provide flexibility in user interface design. Listing below shows the code snippet to support them.
+
+<img src="./Images/Touchscreen_hiw_1_4.jpg" width=800>
+
+| Marker                                                  | Descriptions                                                 |
+| ------------------------------------------------------- | ------------------------------------------------------------ |
+| <img src="./Images/Number_circle_44x44_1.png" width=30> | Out-cell keys are read by polling the same function `ssd7317_get_gesture()` as in-cell keys. There are new enumeration values `SINGLE_EXT_ANYKEY` and `LONG_EXT_ANYKEY` to differentiate an out-cell touch event against an in-cell. |
+| <img src="./Images/Number_circle_44x44_2.png" width=30> | Variable `finger.detail` returns which out-cell key is clicked. Possible values `SINGLE_EXT_RXn` are declared in `SSD7317.h` in the enum value type `gesture_detail_t`. |
+
 ### Demo on YouTube
+
+A simple In-cell key demo
+
 [![Watch th video](https://img.youtube.com/vi/SL3LxhRAtbs/hqdefault.jpg)](https://youtu.be/SL3LxhRAtbs)
+
+Now with out-cell key demo with metal pads soldered to RX1 and RX3
+
+[![Watch th video](https://img.youtube.com/vi/bRPoASLlDkI/hqdefault.jpg)](https://youtu.be/bRPoASLlDkI)
+
+
 
 ## Infinite Content Scrolling
 
@@ -966,7 +986,12 @@ void   ssd7317_cntnt_scroll_image(uint16_t left, uint16_t top, const tImage* ima
 The demo is available from **../SSD7317Z/Examples/ContentScroll** with YouTube video in the link below:
 [![Watch th video](https://img.youtube.com/vi/pduHxkwt60I/hqdefault.jpg)](https://youtu.be/pduHxkwt60I)
 
+Acceleration of the scrolling effect with frame buffer is now available.
+
+[![Watch th video](https://img.youtube.com/vi/nRsLk51PaaQ/hqdefault.jpg)](https://youtu.be/nRsLk51PaaQ)
+
 ## Porting the Driver to Your MCU
+
 ### Porting the HAL (Hardware Abstraction Layer)
 Driver for SSD7317Z has been designed with portability in mind. However, there are still hardware-dependent codes you will need to develop. The table below summarizes the files and codes you need to port for your MCU.
 

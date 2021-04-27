@@ -126,7 +126,6 @@ void app_touch_task(void)
 
 	switch(finger.act){
 	case SINGLE_EXT_ANYKEY:
-
 		if(finger.detail==SINGLE_EXT_RX0){
 			tone_pwm_set(493);
 			ssd7317_put_string(EXT_LABEL_X,EXT_LABEL_Y,&Tahoma_12h," RX0 ",1);
